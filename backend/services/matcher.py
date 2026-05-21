@@ -8,19 +8,19 @@ def is_eligible(user: UserProfile, scheme: dict) -> bool:
     Returns True if the user passes ALL non-null criteria.
     """
 
-    # State check — if scheme has states listed, user must be in one of them
+    # State check — if scheme has states listed, user must be in one of them or 'All'
     if scheme["applicable_states"] is not None:
-        if user.state not in scheme["applicable_states"]:
+        if user.state not in scheme["applicable_states"] and "All" not in scheme["applicable_states"]:
             return False
 
     # Gender check
     if scheme["gender"] is not None:
-        if user.gender != scheme["gender"]:
+        if user.gender != scheme["gender"] and scheme["gender"] != "any":
             return False
 
-    # Caste check — user must match at least one listed caste category
+    # Caste check — user must match at least one listed caste category or 'All'
     if scheme["caste_categories"] is not None:
-        if user.caste_category not in scheme["caste_categories"]:
+        if user.caste_category not in scheme["caste_categories"] and "All" not in scheme["caste_categories"]:
             return False
 
     # Age check — min and max are independent (either can be null)
@@ -39,7 +39,7 @@ def is_eligible(user: UserProfile, scheme: dict) -> bool:
 
     # Occupation check — user must match at least one listed type
     if scheme["occupation_types"] is not None:
-        if user.occupation_type not in scheme["occupation_types"]:
+        if user.occupation_type not in scheme["occupation_types"] and "All" not in scheme["occupation_types"]:
             return False
 
     return True
@@ -53,17 +53,17 @@ def explain_mismatch(user: UserProfile, scheme: dict) -> list[str]:
     reasons = []
 
     if scheme["applicable_states"] is not None:
-        if user.state not in scheme["applicable_states"]:
+        if user.state not in scheme["applicable_states"] and "All" not in scheme["applicable_states"]:
             reasons.append(
                 f"This scheme is only for residents of: {', '.join(scheme['applicable_states'])}"
             )
 
     if scheme["gender"] is not None:
-        if user.gender != scheme["gender"]:
+        if user.gender != scheme["gender"] and scheme["gender"] != "any":
             reasons.append(f"This scheme is only for {scheme['gender']} applicants")
 
     if scheme["caste_categories"] is not None:
-        if user.caste_category not in scheme["caste_categories"]:
+        if user.caste_category not in scheme["caste_categories"] and "All" not in scheme["caste_categories"]:
             reasons.append(
                 f"This scheme is only for: {', '.join(scheme['caste_categories'])} categories"
             )
@@ -83,7 +83,7 @@ def explain_mismatch(user: UserProfile, scheme: dict) -> list[str]:
             )
 
     if scheme["occupation_types"] is not None:
-        if user.occupation_type not in scheme["occupation_types"]:
+        if user.occupation_type not in scheme["occupation_types"] and "All" not in scheme["occupation_types"]:
             reasons.append(
                 f"This scheme is only for: {', '.join(scheme['occupation_types'])}"
             )
