@@ -14,6 +14,7 @@ async def connect_db():
         min_size=2,
         max_size=10,
         ssl="require",
+        statement_cache_size=0,
     )
     print("✅ Supabase database connected")
 
