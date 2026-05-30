@@ -13,8 +13,7 @@ from dotenv import load_dotenv
 load_dotenv(os.path.join(BACKEND_DIR, ".env"))
 
 from database import connect_db, disconnect_db
-from routers import health, schemes
-
+from routers import health, schemes, chat
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -42,6 +41,7 @@ app.add_middleware(
 
 app.include_router(health.router, tags=["health"])
 app.include_router(schemes.router, prefix="/schemes", tags=["schemes"])
+app.include_router(chat.router, prefix="/chat", tags=["chat"])
 
 
 @app.get("/")

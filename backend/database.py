@@ -9,14 +9,23 @@ _pool = None
 
 async def connect_db():
     global _pool
-    _pool = await asyncpg.create_pool(
-        dsn=os.getenv("DATABASE_URL"),
-        min_size=2,
-        max_size=10,
-        ssl="require",
-        statement_cache_size=0,
-    )
-    print("✅ Supabase database connected")
+    dsn = os.getenv("DATABASE_URL")
+    if not dsn:
+        print("[WARNING] DATABASE_URL environment variable is not set. Supabase database features will be unavailable.")
+        return
+        
+    try:
+        _pool = await asyncpg.create_pool(
+            dsn=dsn,
+            min_size=2,
+            max_size=10,
+            ssl="require",
+            statement_cache_size=0,
+        )
+        print("[SUCCESS] Supabase database connected")
+    except Exception as e:
+        print(f"[WARNING] Failed to connect to database: {e}. Running in local offline mode.")
+        _pool = None
 
 
 async def disconnect_db():
@@ -27,6 +36,5 @@ async def disconnect_db():
 
 
 def get_pool():
-    if _pool is None:
-        raise RuntimeError("Database pool not initialized. Did startup run?")
+    global _pool
     return _pool

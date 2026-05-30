@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import ChatBot from "../../components/ChatBot";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -42,10 +43,26 @@ function SchemeCard({ scheme, onClick }) {
   };
   return (
     <div onClick={onClick}
-      style={{ background: "#fff", border: "1px solid #f3f4f6", borderRadius: 16, padding: 20, marginBottom: 12, cursor: "pointer" }}>
+      style={{ background: "#fff", border: "1px solid #f3f4f6", borderRadius: 16, padding: 20, marginBottom: 12, cursor: "pointer", transition: "transform 0.2s, box-shadow 0.2s" }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "translateY(-2px)";
+        e.currentTarget.style.boxShadow = "0 6px 20px rgba(0, 0, 0, 0.05)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "translateY(0)";
+        e.currentTarget.style.boxShadow = "none";
+      }}
+    >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
         <h3 style={{ fontSize: 15, fontWeight: 600, color: "#111827", margin: 0, flex: 1, paddingRight: 12, lineHeight: 1.4 }}>{scheme.name}</h3>
-        <span style={{ background: bt.bg, color: bt.color, fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 20, whiteSpace: "nowrap", flexShrink: 0 }}>{bt.label}</span>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6 }}>
+          <span style={{ background: bt.bg, color: bt.color, fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 20, whiteSpace: "nowrap", flexShrink: 0 }}>{bt.label}</span>
+          {scheme.similarity !== undefined && (
+            <span style={{ background: "#f0fdf4", color: "#166534", fontSize: 10, fontWeight: 600, padding: "3px 8px", borderRadius: 6, whiteSpace: "nowrap" }}>
+              🎯 {Math.round(scheme.similarity * 100)}% Match
+            </span>
+          )}
+        </div>
       </div>
       <p style={{ fontSize: 13, color: "#6b7280", margin: "0 0 14px" }}>{scheme.ministry}</p>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -70,23 +87,36 @@ export default function SchemesPage() {
   const [error,   setError]   = useState(null);
   const [profile, setProfile] = useState(null);
   const [filter,  setFilter]  = useState("all");
+  const [language, setLanguage] = useState("en");
+
+  // Semantic search state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
     const raw = localStorage.getItem("user_profile");
     if (!raw) { router.push("/onboarding"); return; }
     const p = JSON.parse(raw);
     setProfile(p);
-    fetchSchemes(p);
+    
+    const savedLang = localStorage.getItem("language") || "en";
+    setLanguage(savedLang);
+    
+    fetchSchemes(p, savedLang);
   }, []);
 
-  const fetchSchemes = async (p) => {
+  const fetchSchemes = async (p, langCode = "en") => {
     setLoading(true);
     setError(null);
+    setIsSearching(false);
+    setSearchQuery("");
+    setSearchResults([]);
     try {
       const res = await fetch(`${API_URL}/schemes/match`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_profile: p, language: "en" }),
+        body: JSON.stringify({ user_profile: p, language: langCode }),
       });
       if (!res.ok) throw new Error(`Server error: ${res.status}`);
       const data = await res.json();
@@ -98,8 +128,35 @@ export default function SchemesPage() {
     }
   };
 
+  const handleSemanticSearch = async (q) => {
+    const queryTerm = q || searchQuery;
+    if (!queryTerm.trim() || queryTerm.length < 2) return;
+
+    setLoading(true);
+    setError(null);
+    setIsSearching(true);
+    try {
+      const res = await fetch(`${API_URL}/schemes/semantic-search?q=${encodeURIComponent(queryTerm)}&lang=${language}`);
+      if (!res.ok) throw new Error("Search service error");
+      const data = await res.json();
+      setSearchResults(data.results || []);
+    } catch (err) {
+      setError("Could not connect to semantic search server. Verify backend is running.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+    setIsSearching(false);
+    setSearchResults([]);
+    setError(null);
+  };
+
   const FILTERS = ["all", "cash_transfer", "scholarship", "subsidy", "insurance", "housing"];
-  const filtered = filter === "all" ? schemes : schemes.filter((s) => s.benefit_type === filter);
+  const activeSchemes = isSearching ? searchResults : schemes;
+  const filtered = filter === "all" ? activeSchemes : activeSchemes.filter((s) => s.benefit_type === filter);
 
   return (
     <div style={{ minHeight: "100vh", maxWidth: 480, margin: "0 auto", background: "#f9fafb", fontFamily: "Inter, sans-serif" }}>
@@ -108,17 +165,80 @@ export default function SchemesPage() {
       <div style={{ background: "#fff", padding: "20px 20px 0", borderBottom: "1px solid #f3f4f6", position: "sticky", top: 0, zIndex: 10 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
           <div>
-            <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0, color: "#111827" }}>Your Schemes</h1>
+            <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0, color: "#111827" }}>
+              {isSearching ? "Search Results" : "Your Schemes"}
+            </h1>
             {!loading && (
               <p style={{ fontSize: 13, color: "#6b7280", margin: "2px 0 0" }}>
-                {filtered.length} scheme{filtered.length !== 1 ? "s" : ""} matched
+                {filtered.length} scheme{filtered.length !== 1 ? "s" : ""} {isSearching ? "found" : "matched"}
               </p>
             )}
           </div>
-          <button onClick={() => profile && fetchSchemes(profile)}
+          <button onClick={() => { handleClearSearch(); if (profile) fetchSchemes(profile, language); }}
             style={{ background: "#eff6ff", color: "#2563eb", border: "none", borderRadius: 10, padding: "8px 14px", fontSize: 13, fontWeight: 500, cursor: "pointer" }}>
-            Refresh
+            {isSearching ? "Reset" : "Refresh"}
           </button>
+        </div>
+
+        {/* Semantic Search Box */}
+        <div style={{ marginBottom: 14, position: "relative" }}>
+          <form onSubmit={(e) => { e.preventDefault(); handleSemanticSearch(searchQuery); }}
+            style={{ display: "flex", gap: 8 }}>
+            <div style={{ position: "relative", flex: 1 }}>
+              <input 
+                type="text" 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by intent (e.g. poor girl student aid)..."
+                style={{ 
+                  width: "100%", 
+                  padding: "10px 36px 10px 14px", 
+                  borderRadius: 12, 
+                  border: "1px solid #e5e7eb", 
+                  fontSize: 14, 
+                  boxSizing: "border-box", 
+                  outline: "none",
+                  transition: "border-color 0.2s"
+                }}
+              />
+              {searchQuery && (
+                <button 
+                  type="button" 
+                  onClick={handleClearSearch}
+                  style={{ 
+                    position: "absolute", 
+                    right: 8, 
+                    top: "50%", 
+                    transform: "translateY(-50%)", 
+                    background: "none", 
+                    border: "none", 
+                    color: "#9ca3af", 
+                    fontSize: 18, 
+                    cursor: "pointer",
+                    padding: 4
+                  }}
+                >
+                  ×
+                </button>
+              )}
+            </div>
+            <button 
+              type="submit" 
+              style={{ 
+                background: "linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)",
+                color: "#fff", 
+                border: "none", 
+                borderRadius: 12, 
+                padding: "10px 16px", 
+                fontSize: 13, 
+                fontWeight: 600, 
+                cursor: "pointer",
+                whiteSpace: "nowrap"
+              }}
+            >
+              Search
+            </button>
+          </form>
         </div>
 
         {/* Filter chips */}
@@ -176,6 +296,7 @@ export default function SchemesPage() {
           </div>
         )}
       </div>
+      <ChatBot language={language} />
     </div>
   );
 }
