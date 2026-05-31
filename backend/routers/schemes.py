@@ -10,29 +10,36 @@ router = APIRouter()
 async def match_schemes(request: MatchRequest):
     pool = get_pool()
     user = request.user_profile
+    lang = request.language or "en"
 
-    async with pool.acquire() as conn:
-        rows = await conn.fetch(
-            """
-            SELECT
-                scheme_id, name, name_ta, name_hi,
-                ministry, benefit_type,
-                benefit_amount, benefit_frequency,
-                applicable_states, gender, caste_categories,
-                min_age, max_age, max_income, occupation_types,
-                documents_required, application_url,
-                application_deadline, is_rolling
-            FROM schemes
-            WHERE active = TRUE
-            ORDER BY name
-            """
-        )
+    schemes_list = []
+    
+    # Graceful fallback to local MOCK_SCHEMES if Supabase is offline
+    if pool is None:
+        from services.fallback_data import MOCK_SCHEMES
+        schemes_list = MOCK_SCHEMES
+    else:
+        async with pool.acquire() as conn:
+            rows = await conn.fetch(
+                """
+                SELECT
+                    scheme_id, name, name_ta, name_hi,
+                    ministry, benefit_type,
+                    benefit_amount, benefit_frequency,
+                    applicable_states, gender, caste_categories,
+                    min_age, max_age, max_income, occupation_types,
+                    documents_required, application_url,
+                    application_deadline, is_rolling
+                FROM schemes
+                WHERE active = TRUE
+                ORDER BY name
+                """
+            )
+            schemes_list = [dict(row) for row in rows]
 
     matched = []
-    for row in rows:
-        scheme = dict(row)
+    for scheme in schemes_list:
         if is_eligible(user, scheme):
-            lang = request.language or "en"
             if lang == "ta" and scheme.get("name_ta"):
                 display_name = scheme["name_ta"]
             elif lang == "hi" and scheme.get("name_hi"):
@@ -50,8 +57,8 @@ async def match_schemes(request: MatchRequest):
                 "benefit_frequency":    scheme["benefit_frequency"],
                 "application_url":      scheme["application_url"],
                 "application_deadline": str(scheme["application_deadline"])
-                                        if scheme["application_deadline"] else None,
-                "is_rolling":           scheme["is_rolling"],
+                                        if scheme.get("application_deadline") else None,
+                "is_rolling":           scheme.get("is_rolling", True),
                 "documents_required":   scheme["documents_required"],
             })
 
@@ -65,6 +72,19 @@ async def match_schemes(request: MatchRequest):
 @router.get("/search")
 async def search_schemes(q: str = Query(min_length=2)):
     pool = get_pool()
+    
+    # Fallback search locally
+    if pool is None:
+        from services.fallback_data import MOCK_SCHEMES
+        results = [
+            s for s in MOCK_SCHEMES
+            if q.lower() in s["name"].lower() or
+               (s.get("name_ta") and q.lower() in s["name_ta"].lower()) or
+               (s.get("name_hi") and q.lower() in s["name_hi"].lower()) or
+               q.lower() in s["ministry"].lower()
+        ]
+        return {"query": q, "results": results}
+        
     async with pool.acquire() as conn:
         rows = await conn.fetch(
             """
@@ -87,9 +107,119 @@ async def search_schemes(q: str = Query(min_length=2)):
     return {"query": q, "results": [dict(r) for r in rows]}
 
 
+@router.get("/semantic-search")
+async def semantic_search_schemes(q: str = Query(min_length=2), lang: str = "en"):
+    pool = get_pool()
+    
+    # Local fallback for semantic search
+    if pool is None:
+        from services.fallback_data import MOCK_SCHEMES
+        results = []
+        for idx, scheme in enumerate(MOCK_SCHEMES):
+            # Calculate mock similarity based on query word occurrences
+            words_matched = sum(1 for w in q.lower().split() if w in scheme["name"].lower() or w in scheme["ministry"].lower())
+            score = 0.85 - (idx * 0.04) + (words_matched * 0.05)
+            score = max(0.55, min(0.98, score))
+            
+            # Select appropriate display name
+            if lang == "ta" and scheme.get("name_ta"):
+                display_name = scheme["name_ta"]
+            elif lang == "hi" and scheme.get("name_hi"):
+                display_name = scheme["name_hi"]
+            else:
+                display_name = scheme["name"]
+                
+            results.append({
+                "scheme_id":            scheme["scheme_id"],
+                "name":                 display_name,
+                "name_en":              scheme["name"],
+                "ministry":             scheme["ministry"],
+                "benefit_type":         scheme["benefit_type"],
+                "benefit_amount":       scheme["benefit_amount"],
+                "benefit_frequency":    scheme.get("benefit_frequency"),
+                "application_url":      scheme.get("application_url"),
+                "is_rolling":           scheme.get("is_rolling", True),
+                "documents_required":   scheme.get("documents_required", []),
+                "similarity":           round(score, 4)
+            })
+        
+        # Sort results by mock similarity score
+        results.sort(key=lambda x: x["similarity"], reverse=True)
+        return {"query": q, "results": results}
+
+    from services.gemini import generate_embedding
+    try:
+        query_vector = await generate_embedding(q)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to generate query vector: {e}")
+        
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(
+            """
+            SELECT 
+                scheme_id, name, name_ta, name_hi,
+                ministry, benefit_type, benefit_amount, benefit_frequency,
+                applicable_states, gender, caste_categories,
+                min_age, max_age, max_income, occupation_types,
+                documents_required, application_url, is_rolling,
+                1 - (embedding <=> $1) as similarity
+            FROM schemes
+            WHERE active = TRUE AND embedding IS NOT NULL
+            ORDER BY embedding <=> $1
+            LIMIT 10
+            """,
+            str(query_vector)
+        )
+        
+    results = []
+    for r in rows:
+        scheme = dict(r)
+        
+        # Select appropriate display name
+        if lang == "ta" and scheme.get("name_ta"):
+            display_name = scheme["name_ta"]
+        elif lang == "hi" and scheme.get("name_hi"):
+            display_name = scheme["name_hi"]
+        else:
+            display_name = scheme["name"]
+            
+        results.append({
+            "scheme_id":            scheme["scheme_id"],
+            "name":                 display_name,
+            "name_en":              scheme["name"],
+            "ministry":             scheme["ministry"],
+            "benefit_type":         scheme["benefit_type"],
+            "benefit_amount":       scheme["benefit_amount"],
+            "benefit_frequency":    scheme["benefit_frequency"],
+            "application_url":      scheme["application_url"],
+            "is_rolling":           scheme["is_rolling"],
+            "documents_required":   scheme["documents_required"],
+            "similarity":           round(float(scheme["similarity"] or 0), 4)
+        })
+        
+    return {
+        "query": q,
+        "results": results
+    }
+
+
 @router.get("/{scheme_id}")
 async def get_scheme(scheme_id: str):
     pool = get_pool()
+    
+    # Fallback details locally
+    if pool is None:
+        from services.fallback_data import MOCK_SCHEMES
+        scheme = next((s for s in MOCK_SCHEMES if s["scheme_id"] == scheme_id), None)
+        if not scheme:
+            raise HTTPException(status_code=404, detail="Scheme not found")
+        # Return a copy to mutate date fields
+        scheme_copy = dict(scheme)
+        for date_field in ["application_deadline", "verified_at", "created_at", "updated_at"]:
+            if scheme_copy.get(date_field):
+                scheme_copy[date_field] = str(scheme_copy[date_field])
+        return scheme_copy
+
     async with pool.acquire() as conn:
         row = await conn.fetchrow(
             "SELECT * FROM schemes WHERE scheme_id = $1 AND active = TRUE",
@@ -108,15 +238,24 @@ async def get_scheme(scheme_id: str):
 @router.post("/check/{scheme_id}")
 async def check_single_scheme(scheme_id: str, user: UserProfile):
     pool = get_pool()
-    async with pool.acquire() as conn:
-        row = await conn.fetchrow(
-            "SELECT * FROM schemes WHERE scheme_id = $1 AND active = TRUE",
-            scheme_id,
-        )
-    if not row:
-        raise HTTPException(status_code=404, detail="Scheme not found")
+    scheme = None
+    
+    # Fallback eligibility locally
+    if pool is None:
+        from services.fallback_data import MOCK_SCHEMES
+        scheme = next((s for s in MOCK_SCHEMES if s["scheme_id"] == scheme_id), None)
+        if not scheme:
+            raise HTTPException(status_code=404, detail="Scheme not found")
+    else:
+        async with pool.acquire() as conn:
+            row = await conn.fetchrow(
+                "SELECT * FROM schemes WHERE scheme_id = $1 AND active = TRUE",
+                scheme_id,
+            )
+        if not row:
+            raise HTTPException(status_code=404, detail="Scheme not found")
+        scheme = dict(row)
 
-    scheme = dict(row)
     eligible = is_eligible(user, scheme)
     reasons = [] if eligible else explain_mismatch(user, scheme)
 
@@ -126,3 +265,4 @@ async def check_single_scheme(scheme_id: str, user: UserProfile):
         "eligible":  eligible,
         "reasons":   reasons,
     }
+

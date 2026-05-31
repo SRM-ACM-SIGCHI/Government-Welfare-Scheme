@@ -9,12 +9,12 @@ echo ==============================================
 cd backend
 if not exist venv (
     echo Creating virtual environment...
-    python -m venv venv
+    py -m venv venv
 )
 call venv\Scripts\activate.bat
 echo Installing Backend Dependencies (if missing)...
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+venv\Scripts\python -m pip install --upgrade pip
+venv\Scripts\python -m pip install -r requirements.txt
 cd ..
 
 echo.

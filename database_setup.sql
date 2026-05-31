@@ -1,6 +1,8 @@
 -- Connect to Supabase or your Postgres instance and run this
 -- to initialize your database schema.
 
+CREATE EXTENSION IF NOT EXISTS vector;
+
 CREATE TABLE IF NOT EXISTS schemes (
     scheme_id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
@@ -22,8 +24,11 @@ CREATE TABLE IF NOT EXISTS schemes (
     application_deadline DATE,
     is_rolling BOOLEAN DEFAULT TRUE,
     verified_at DATE,
+    embedding vector(768),
     active BOOLEAN DEFAULT TRUE
 );
+
+CREATE INDEX IF NOT EXISTS schemes_embedding_idx ON schemes USING hnsw (embedding vector_cosine_ops);
 
 -- Hardcoded Scheme Inserts
 

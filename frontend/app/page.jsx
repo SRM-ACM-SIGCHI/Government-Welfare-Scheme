@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import ChatBot from "../components/ChatBot";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -80,6 +81,8 @@ export default function HomePage() {
 
   useEffect(() => {
     if (localStorage.getItem("user_profile")) setHasProfile(true);
+    const savedLang = localStorage.getItem("language");
+    if (savedLang) setLang(savedLang);
   }, []);
 
   const t = LANGS.find((l) => l.code === lang);
@@ -157,7 +160,7 @@ export default function HomePage() {
         {/* Language switcher */}
         <div style={{ display: "flex", gap: 8 }}>
           {LANGS.map((l) => (
-            <button key={l.code} onClick={() => setLang(l.code)}
+            <button key={l.code} onClick={() => { setLang(l.code); localStorage.setItem("language", l.code); }}
               style={{ padding: "8px 16px", borderRadius: 20, border: "none", cursor: "pointer", fontSize: 14, fontWeight: 500, background: lang === l.code ? "#2563eb" : "#f3f4f6", color: lang === l.code ? "#fff" : "#374151" }}>
               {l.label}
             </button>
@@ -258,6 +261,7 @@ export default function HomePage() {
         <p style={{ textAlign: "center", color: "#9ca3af", fontSize: 12, margin: 0 }}>Takes less than 1 minute • No sign up required</p>
       </div>
 
+      <ChatBot language={lang} />
       <style>{`
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
       `}</style>
