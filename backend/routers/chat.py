@@ -25,14 +25,18 @@ async def chat_counselor(request: ChatRequest):
     if pool is None:
         from services.fallback_data import MOCK_SCHEMES
         # Perform heuristic keyword matching to score relevant schemes
+    if pool is None:
+        from services.fallback_data import MOCK_SCHEMES
+        # Perform heuristic keyword matching to score relevant schemes
         scored = []
         for s in MOCK_SCHEMES:
             # Check how many query words match the scheme name or ministry
             match_score = sum(1 for w in query.lower().split() if w in s["name"].lower() or w in s["ministry"].lower())
-            scored.append((match_score, s))
+            if match_score > 0:
+                scored.append((match_score, s))
         # Sort by match score descending
         scored.sort(key=lambda x: x[0], reverse=True)
-        # Choose top 2 relevant schemes as context
+        # Choose top 2 relevant schemes as context (only if any actually matched)
         schemes_list = [item[1] for item in scored[:2]]
     else:
         # 1.1 Generate embedding for the user's chat message
