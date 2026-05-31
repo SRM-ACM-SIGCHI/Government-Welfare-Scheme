@@ -19,9 +19,9 @@ async def generate_all_embeddings():
         print("[ERROR] DATABASE_URL not set in environment.")
         return
     
-    gemini_key = os.getenv("GEMINI_API_KEY")
-    if not gemini_key:
-        print("[ERROR] GEMINI_API_KEY not set in environment. Aborting embedding job to prevent corrupting embeddings with zero vectors.")
+    gemini_api_key = os.getenv("GEMINI_API_KEY")
+    if not gemini_api_key:
+        print("[ERROR] GEMINI_API_KEY not set in environment. Cannot proceed with embedding generation.")
         return
         
     print("Connecting to Supabase database...")
@@ -49,7 +49,7 @@ async def generate_all_embeddings():
         search_text = build_scheme_search_text(scheme)
         
         try:
-            # Generate the 768-dimensional embedding from gemini-embedding-001
+            # Generate the 768-dimensional embedding from text-embedding-004
             vector = await generate_embedding(search_text)
             
             # Save into Postgres pgvector embedding field

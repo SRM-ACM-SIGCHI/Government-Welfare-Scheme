@@ -68,7 +68,7 @@ export default function ChatBot({ language = "en" }) {
         { role: "assistant", content: t.greeting }
       ]);
     }
-  }, [language, t]);
+  }, [language]);
 
   // Autoscroll chat history
   useEffect(() => {
