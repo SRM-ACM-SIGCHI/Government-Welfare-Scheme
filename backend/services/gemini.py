@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-EMBED_MODEL = "gemini-embedding-2"
+EMBED_MODEL = "gemini-embedding-001"
 CHAT_MODEL = "gemini-2.5-flash"
 
 def build_scheme_search_text(scheme: dict) -> str:
@@ -84,7 +84,7 @@ def build_scheme_search_text(scheme: dict) -> str:
 async def generate_embedding(text: str) -> List[float]:
     """
     Generate 768-dimensional vector embedding for a given text using
-    Google's gemini-embedding-2 API via REST call.
+    Google's gemini-embedding-001 API via REST call.
     """
     if not GEMINI_API_KEY:
         # Fallback dummy embedding of size 768 for development/testing when no key is set

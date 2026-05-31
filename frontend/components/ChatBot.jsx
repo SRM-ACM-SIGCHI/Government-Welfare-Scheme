@@ -63,10 +63,12 @@ export default function ChatBot({ language = "en" }) {
 
   // Initialize conversation history
   useEffect(() => {
-    setMessages([
-      { role: "assistant", content: t.greeting }
-    ]);
-  }, [language]);
+    if (messages.length === 0) {
+      setMessages([
+        { role: "assistant", content: t.greeting }
+      ]);
+    }
+  }, [language, t]);
 
   // Autoscroll chat history
   useEffect(() => {

@@ -28,6 +28,8 @@ CREATE TABLE IF NOT EXISTS schemes (
     active BOOLEAN DEFAULT TRUE
 );
 
+CREATE INDEX IF NOT EXISTS schemes_embedding_idx ON schemes USING hnsw (embedding vector_cosine_ops);
+
 -- Hardcoded Scheme Inserts
 
 INSERT INTO schemes (

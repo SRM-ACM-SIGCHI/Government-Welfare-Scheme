@@ -25,9 +25,6 @@ async def chat_counselor(request: ChatRequest):
     if pool is None:
         from services.fallback_data import MOCK_SCHEMES
         # Perform heuristic keyword matching to score relevant schemes
-    if pool is None:
-        from services.fallback_data import MOCK_SCHEMES
-        # Perform heuristic keyword matching to score relevant schemes
         scored = []
         for s in MOCK_SCHEMES:
             # Check how many query words match the scheme name or ministry
