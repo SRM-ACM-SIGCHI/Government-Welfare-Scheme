@@ -1,8 +1,44 @@
 from fastapi import APIRouter, Query, HTTPException
 from database import get_pool
 from services.fallback_data import MOCK_CENTERS, haversine_distance
+from pydantic import BaseModel
+from typing import Optional
 
 router = APIRouter()
+
+class CenterCreate(BaseModel):
+    name: str
+    type: str # 'csc' or 'post_office'
+    address: str
+    state: str
+    latitude: float
+    longitude: float
+    phone_number: Optional[str] = None
+    working_hours: Optional[str] = None
+
+@router.post("")
+async def create_center(center: CenterCreate):
+    pool = get_pool()
+    if pool is not None:
+        try:
+            async with pool.acquire() as conn:
+                await conn.execute(
+                    """
+                    INSERT INTO centers (
+                        name, type, address, state, 
+                        latitude, longitude, phone_number, working_hours
+                    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+                    ON CONFLICT (name, latitude, longitude) DO NOTHING
+                    """,
+                    center.name, center.type, center.address, center.state,
+                    center.latitude, center.longitude, center.phone_number, center.working_hours
+                )
+            return {"status": "success", "mode": "database", "message": f"Center '{center.name}' successfully added to database."}
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Database insertion failed: {e}")
+    else:
+        return {"status": "offline_saved", "mode": "offline_fallback", "message": f"Running in offline mode. Center '{center.name}' should be saved locally in localStorage."}
+
 
 @router.get("/nearby")
 async def get_nearby_centers(
