@@ -1,9 +1,23 @@
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, BackgroundTasks
 from database import get_pool
 from models.scheme import UserProfile, MatchRequest
 from services.matcher import is_eligible, explain_mismatch
+from services.pipeline import run_scraping_pipeline
 
 router = APIRouter()
+
+@router.post("/sync-scraped")
+async def sync_scraped_schemes(background_tasks: BackgroundTasks, max_schemes: int = Query(5, ge=1, le=50)):
+    """
+    Triggers the scraper pipeline in a background task to fetch new schemes,
+    save/insert them, and generate embeddings.
+    """
+    background_tasks.add_task(run_scraping_pipeline, max_schemes)
+    return {
+        "status": "started",
+        "message": f"Scraper pipeline execution triggered in background (collecting up to {max_schemes} schemes)."
+    }
+
 
 
 @router.post("/match")

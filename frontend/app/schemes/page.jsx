@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ChatBot from "../../components/ChatBot";
+import BottomNav from "../../components/Bottomnav";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -297,6 +298,7 @@ export default function SchemesPage() {
         )}
       </div>
       <ChatBot language={language} />
+      <BottomNav />
     </div>
   );
 }

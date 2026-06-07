@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import BottomNav from "../../components/Bottomnav";
 
 const STATES = [
   ["AN","Andaman & Nicobar"],["AP","Andhra Pradesh"],["AR","Arunachal Pradesh"],
@@ -188,6 +189,7 @@ export default function ProfilePage() {
           </button>
         </div>
       )}
+      {!editing && <BottomNav />}
     </div>
   );
 }

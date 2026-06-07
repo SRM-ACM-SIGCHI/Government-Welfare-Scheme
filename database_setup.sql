@@ -98,3 +98,34 @@ INSERT INTO schemes (
  'https://www.pfrda.org.in/', TRUE, TRUE)
 ON CONFLICT (scheme_id) DO NOTHING;
 
+
+-- Center Locator Table & Seed Data
+
+CREATE TABLE IF NOT EXISTS centers (
+    center_id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    type TEXT NOT NULL, -- 'csc' or 'post_office'
+    address TEXT NOT NULL,
+    state TEXT NOT NULL,
+    latitude DOUBLE PRECISION NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL,
+    phone_number TEXT,
+    working_hours TEXT,
+    CONSTRAINT centers_unique_name_coords UNIQUE (name, latitude, longitude)
+);
+
+INSERT INTO centers (name, type, address, state, latitude, longitude, phone_number, working_hours) VALUES
+('Chennai GPO (India Post)', 'post_office', 'Rajaji Salai, George Town, Chennai', 'TN', 13.0899, 80.2872, '044-25220031', '9:00 AM - 6:00 PM'),
+('CSC E-Sevai Centre George Town', 'csc', 'No 12, Armenian St, Chennai', 'TN', 13.0885, 80.2835, '9876543210', '10:00 AM - 5:00 PM'),
+('CSC E-Sevai Centre Nungambakkam', 'csc', 'Corporation Building, College Rd, Nungambakkam, Chennai', 'TN', 13.0612, 80.2461, '9876543211', '10:00 AM - 5:00 PM'),
+('Mumbai GPO (India Post)', 'post_office', 'Chhatrapati Shivaji Maharaj Terminus Area, Fort, Mumbai', 'MH', 18.9401, 72.8358, '022-22621671', '9:00 AM - 6:00 PM'),
+('CSC Digital Seva Centre Andheri', 'csc', 'Shop 4, J.P. Road, Andheri West, Mumbai', 'MH', 19.1202, 72.8465, '9876543212', '10:00 AM - 6:00 PM'),
+('Bengaluru GPO (India Post)', 'post_office', 'Raj Bhawan Road, Bengaluru', 'KA', 12.9818, 77.5952, '080-22262330', '9:00 AM - 6:00 PM'),
+('CSC Common Service Center Indiranagar', 'csc', '12th Main Road, Indiranagar, Bengaluru', 'KA', 12.9718, 77.6412, '9876543213', '10:00 AM - 6:00 PM'),
+('New Delhi GPO (India Post)', 'post_office', 'Ashoka Road, Connaught Place, New Delhi', 'DL', 28.6273, 77.2144, '011-23363385', '9:00 AM - 6:00 PM'),
+('CSC Digital Center Connaught Place', 'csc', 'Super Bazar, Connaught Circus, New Delhi', 'DL', 28.6315, 77.2198, '9876543214', '10:00 AM - 5:00 PM'),
+('CSC Seva Center Lucknow', 'csc', 'Hazratganj, Lucknow', 'UP', 26.8467, 80.9462, '9876543215', '10:00 AM - 5:00 PM'),
+('Hazratganj Post Office', 'post_office', 'Hazratganj, Lucknow', 'UP', 26.8502, 80.9441, '0522-2622415', '9:00 AM - 5:00 PM')
+ON CONFLICT (name, latitude, longitude) DO NOTHING;
+
+

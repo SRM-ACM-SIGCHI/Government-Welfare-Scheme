@@ -201,10 +201,10 @@ def run_scraper(max_schemes: int = 50):
 
     # myscheme.gov.in category pages
     category_urls = [
-        f"{BASE_URL}/schemes",
-        f"{BASE_URL}/schemes?category=women",
-        f"{BASE_URL}/schemes?category=farmer",
-        f"{BASE_URL}/schemes?category=student",
+        f"{BASE_URL}/search/category/Social%20Welfare%20&%20Empowerment",
+        f"{BASE_URL}/search/category/Education%20&%20Learning",
+        f"{BASE_URL}/search/category/Agriculture,Rural%20&%20Environment",
+        f"{BASE_URL}/search/category/Health%20&%20Wellness",
     ]
 
     all_schemes = []

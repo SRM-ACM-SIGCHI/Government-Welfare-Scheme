@@ -138,3 +138,147 @@ MOCK_SCHEMES = [
         "active": True
     }
 ]
+
+import math
+
+def haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """
+    Calculate the great-circle distance between two points
+    on the Earth in kilometers.
+    """
+    R = 6371.0  # Radius of the Earth in km
+    
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    
+    a = (math.sin(dlat / 2) ** 2 + 
+         math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * 
+         math.sin(dlon / 2) ** 2)
+         
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    return R * c
+
+MOCK_CENTERS = [
+    {
+        "center_id": 1,
+        "name": "Chennai GPO (India Post)",
+        "type": "post_office",
+        "address": "Rajaji Salai, George Town, Chennai",
+        "state": "TN",
+        "latitude": 13.0899,
+        "longitude": 80.2872,
+        "phone_number": "044-25220031",
+        "working_hours": "9:00 AM - 6:00 PM"
+    },
+    {
+        "center_id": 2,
+        "name": "CSC E-Sevai Centre George Town",
+        "type": "csc",
+        "address": "No 12, Armenian St, Chennai",
+        "state": "TN",
+        "latitude": 13.0885,
+        "longitude": 80.2835,
+        "phone_number": "9876543210",
+        "working_hours": "10:00 AM - 5:00 PM"
+    },
+    {
+        "center_id": 3,
+        "name": "CSC E-Sevai Centre Nungambakkam",
+        "type": "csc",
+        "address": "Corporation Building, College Rd, Nungambakkam, Chennai",
+        "state": "TN",
+        "latitude": 13.0612,
+        "longitude": 80.2461,
+        "phone_number": "9876543211",
+        "working_hours": "10:00 AM - 5:00 PM"
+    },
+    {
+        "center_id": 4,
+        "name": "Mumbai GPO (India Post)",
+        "type": "post_office",
+        "address": "Chhatrapati Shivaji Maharaj Terminus Area, Fort, Mumbai",
+        "state": "MH",
+        "latitude": 18.9401,
+        "longitude": 72.8358,
+        "phone_number": "022-22621671",
+        "working_hours": "9:00 AM - 6:00 PM"
+    },
+    {
+        "center_id": 5,
+        "name": "CSC Digital Seva Centre Andheri",
+        "type": "csc",
+        "address": "Shop 4, J.P. Road, Andheri West, Mumbai",
+        "state": "MH",
+        "latitude": 19.1202,
+        "longitude": 72.8465,
+        "phone_number": "9876543212",
+        "working_hours": "10:00 AM - 6:00 PM"
+    },
+    {
+        "center_id": 6,
+        "name": "Bengaluru GPO (India Post)",
+        "type": "post_office",
+        "address": "Raj Bhawan Road, Bengaluru",
+        "state": "KA",
+        "latitude": 12.9818,
+        "longitude": 77.5952,
+        "phone_number": "080-22262330",
+        "working_hours": "9:00 AM - 6:00 PM"
+    },
+    {
+        "center_id": 7,
+        "name": "CSC Common Service Center Indiranagar",
+        "type": "csc",
+        "address": "12th Main Road, Indiranagar, Bengaluru",
+        "state": "KA",
+        "latitude": 12.9718,
+        "longitude": 77.6412,
+        "phone_number": "9876543213",
+        "working_hours": "10:00 AM - 6:00 PM"
+    },
+    {
+        "center_id": 8,
+        "name": "New Delhi GPO (India Post)",
+        "type": "post_office",
+        "address": "Ashoka Road, Connaught Place, New Delhi",
+        "state": "DL",
+        "latitude": 28.6273,
+        "longitude": 77.2144,
+        "phone_number": "011-23363385",
+        "working_hours": "9:00 AM - 6:00 PM"
+    },
+    {
+        "center_id": 9,
+        "name": "CSC Digital Center Connaught Place",
+        "type": "csc",
+        "address": "Super Bazar, Connaught Circus, New Delhi",
+        "state": "DL",
+        "latitude": 28.6315,
+        "longitude": 77.2198,
+        "phone_number": "9876543214",
+        "working_hours": "10:00 AM - 5:00 PM"
+    },
+    {
+        "center_id": 10,
+        "name": "CSC Seva Center Lucknow",
+        "type": "csc",
+        "address": "Hazratganj, Lucknow",
+        "state": "UP",
+        "latitude": 26.8467,
+        "longitude": 80.9462,
+        "phone_number": "9876543215",
+        "working_hours": "10:00 AM - 5:00 PM"
+    },
+    {
+        "center_id": 11,
+        "name": "Hazratganj Post Office",
+        "type": "post_office",
+        "address": "Hazratganj, Lucknow",
+        "state": "UP",
+        "latitude": 26.8502,
+        "longitude": 80.9441,
+        "phone_number": "0522-2622415",
+        "working_hours": "9:00 AM - 5:00 PM"
+    }
+]
+
