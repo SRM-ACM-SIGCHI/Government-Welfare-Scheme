@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import BottomNav from "../../components/Bottomnav";
+import AppLayout from "../../components/AppLayout";
+import ChatBot from "../../components/ChatBot";
 
 const STATES = [
   ["AN","Andaman & Nicobar"],["AP","Andhra Pradesh"],["AR","Arunachal Pradesh"],
@@ -74,122 +75,183 @@ export default function ProfilePage() {
   const incomeLabel  = INCOME_RANGES.find((r) => r.value === profile.income_annual)?.label || `₹${profile.income_annual}`;
 
   const btn = (active, onClick, children) => (
-    <button onClick={onClick} style={{ padding: "10px 8px", borderRadius: 12, border: `1px solid ${active ? "#2563eb" : "#e5e7eb"}`, background: active ? "#2563eb" : "#fff", color: active ? "#fff" : "#374151", fontSize: 14, fontWeight: 500, cursor: "pointer", width: "100%" }}>
+    <button
+      type="button"
+      onClick={onClick}
+      className={`px-3 py-2.5 rounded-xl border text-xs font-bold transition-all duration-150 cursor-pointer ${
+        active 
+          ? "border-blue-600 bg-blue-900 text-white shadow-sm" 
+          : "border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
+      }`}
+    >
       {children}
     </button>
   );
 
   return (
-    <div style={{ minHeight: "100vh", maxWidth: 480, margin: "0 auto", background: "#f9fafb", fontFamily: "Inter, sans-serif", paddingBottom: 100 }}>
-
-      {/* Header */}
-      <div style={{ background: "#fff", padding: "20px 20px 16px", borderBottom: "1px solid #f3f4f6", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <button onClick={() => router.back()} style={{ background: "none", border: "none", color: "#6b7280", fontSize: 14, cursor: "pointer" }}>← Back</button>
-        <h1 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>My Profile</h1>
-        <button onClick={() => setEditing(!editing)} style={{ background: "none", border: "none", color: "#2563eb", fontSize: 14, fontWeight: 500, cursor: "pointer" }}>
-          {editing ? "Cancel" : "Edit"}
-        </button>
-      </div>
-
-      <div style={{ padding: 16 }}>
-
-        {saved && (
-          <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 12, padding: "12px 16px", marginBottom: 12, color: "#166534", fontSize: 14, fontWeight: 500 }}>
-            ✅ Profile saved!
+    <AppLayout activeTab="/profile">
+      <div className="w-full max-w-xl mx-auto pb-24 md:pb-6">
+        
+        {/* Profile Card Shell */}
+        <div className="bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
+          
+          {/* Header */}
+          <div className="border-b border-gray-100 px-6 py-5 flex items-center justify-between bg-white">
+            <button
+              onClick={() => router.back()}
+              className="bg-transparent border-0 text-gray-500 text-xs font-semibold cursor-pointer"
+            >
+              ← Back
+            </button>
+            <h1 className="text-sm font-bold text-gray-900 m-0">My Welfare Profile</h1>
+            <button
+              onClick={() => setEditing(!editing)}
+              className="bg-transparent border-0 text-blue-600 text-xs font-bold cursor-pointer"
+            >
+              {editing ? "Cancel" : "Edit"}
+            </button>
           </div>
-        )}
 
-        {!editing ? (
-          <div style={{ background: "#fff", border: "1px solid #f3f4f6", borderRadius: 16, padding: "4px 20px" }}>
-            {[
-              { label: "State",      value: stateName },
-              { label: "Gender",     value: profile.gender },
-              { label: "Category",   value: profile.caste_category },
-              { label: "Age",        value: `${profile.age} years` },
-              { label: "Income",     value: incomeLabel },
-              { label: "Occupation", value: occLabel },
-            ].map(({ label, value }) => (
-              <div key={label} style={{ display: "flex", justifyContent: "space-between", padding: "14px 0", borderBottom: "1px solid #f9fafb" }}>
-                <span style={{ fontSize: 14, color: "#6b7280" }}>{label}</span>
-                <span style={{ fontSize: 14, fontWeight: 500, color: "#111827", textTransform: "capitalize" }}>{value}</span>
+          <div className="p-6">
+            {saved && (
+              <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3.5 mb-4 text-xs font-semibold text-emerald-800">
+                ✅ Profile saved successfully!
               </div>
-            ))}
-          </div>
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <div>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 500, marginBottom: 6, color: "#374151" }}>State</label>
-              <select value={form.state} onChange={(e) => update("state", e.target.value)}
-                style={{ width: "100%", padding: "12px 16px", borderRadius: 12, border: "1px solid #e5e7eb", fontSize: 15, background: "#fff" }}>
-                {STATES.map(([code, name]) => <option key={code} value={code}>{name}</option>)}
-              </select>
-            </div>
+            )}
 
-            <div>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 500, marginBottom: 6, color: "#374151" }}>Gender</label>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
-                {["male","female","other"].map((g) => btn(form.gender===g, () => update("gender",g), g))}
-              </div>
-            </div>
-
-            <div>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 500, marginBottom: 6, color: "#374151" }}>Category</label>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
-                {["SC","ST","OBC","EWS","GEN"].map((c) => btn(form.caste_category===c, () => update("caste_category",c), c))}
-              </div>
-            </div>
-
-            <div>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 500, marginBottom: 6, color: "#374151" }}>Age</label>
-              <input type="number" value={form.age} onChange={(e) => update("age", e.target.value)} min="1" max="120"
-                style={{ width: "100%", padding: "12px 16px", borderRadius: 12, border: "1px solid #e5e7eb", fontSize: 15, boxSizing: "border-box" }} />
-            </div>
-
-            <div>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 500, marginBottom: 6, color: "#374151" }}>Annual income</label>
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                {INCOME_RANGES.map((r) => (
-                  <button key={r.value} onClick={() => update("income_annual", r.value)}
-                    style={{ textAlign: "left", padding: "12px 16px", borderRadius: 12, border: `1px solid ${form.income_annual===r.value ? "#2563eb" : "#e5e7eb"}`, background: form.income_annual===r.value ? "#eff6ff" : "#fff", color: form.income_annual===r.value ? "#1d4ed8" : "#374151", fontSize: 14, cursor: "pointer", fontWeight: form.income_annual===r.value ? 500 : 400 }}>
-                    {r.label}
-                  </button>
+            {!editing ? (
+              <div className="border border-gray-100 rounded-2xl px-5 py-1.5 space-y-1 bg-gray-50/10">
+                {[
+                  { label: "State of Residence", value: stateName },
+                  { label: "Gender Profile", value: profile.gender },
+                  { label: "Social Category", value: profile.caste_category },
+                  { label: "Age Verification", value: `${profile.age} years` },
+                  { label: "Annual Household Income", value: incomeLabel },
+                  { label: "Occupation Type", value: occLabel },
+                ].map(({ label, value }) => (
+                  <div key={label} className="flex justify-between items-center py-3.5 border-b border-gray-50 last:border-b-0">
+                    <span className="text-xs text-gray-400 font-semibold">{label}</span>
+                    <span className="text-xs font-semibold text-gray-800 capitalize">{value}</span>
+                  </div>
                 ))}
               </div>
-            </div>
+            ) : (
+              <div className="space-y-5">
+                
+                <div className="space-y-1.5">
+                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">State</label>
+                  <select
+                    value={form.state}
+                    onChange={(e) => update("state", e.target.value)}
+                    className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-sm bg-white outline-none focus:border-blue-500"
+                  >
+                    {STATES.map(([code, name]) => (
+                      <option key={code} value={code}>{name}</option>
+                    ))}
+                  </select>
+                </div>
 
-            <div>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 500, marginBottom: 6, color: "#374151" }}>Occupation</label>
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                {OCCUPATIONS.map((o) => (
-                  <button key={o.value} onClick={() => update("occupation_type", o.value)}
-                    style={{ textAlign: "left", padding: "12px 16px", borderRadius: 12, border: `1px solid ${form.occupation_type===o.value ? "#2563eb" : "#e5e7eb"}`, background: form.occupation_type===o.value ? "#eff6ff" : "#fff", color: form.occupation_type===o.value ? "#1d4ed8" : "#374151", fontSize: 14, cursor: "pointer", fontWeight: form.occupation_type===o.value ? 500 : 400 }}>
-                    {o.label}
+                <div className="space-y-1.5">
+                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">Gender</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {["male", "female", "other"].map((g) => (
+                      btn(form.gender === g, () => update("gender", g), g)
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">Category</label>
+                  <div className="grid grid-cols-5 gap-1.5">
+                    {["SC", "ST", "OBC", "EWS", "GEN"].map((c) => (
+                      btn(form.caste_category === c, () => update("caste_category", c), c)
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">Age</label>
+                  <input
+                    type="number"
+                    value={form.age}
+                    onChange={(e) => update("age", e.target.value)}
+                    min="1"
+                    max="120"
+                    className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-sm outline-none focus:border-blue-500 box-border"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">Annual income</label>
+                  <div className="flex flex-col gap-2">
+                    {INCOME_RANGES.map((r) => (
+                      <button
+                        key={r.value}
+                        type="button"
+                        onClick={() => update("income_annual", r.value)}
+                        className={`text-left px-4 py-3 rounded-xl border transition-colors cursor-pointer text-xs font-semibold ${
+                          form.income_annual === r.value 
+                            ? "border-blue-600 bg-blue-50/50 text-blue-700" 
+                            : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+                        }`}
+                      >
+                        {r.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">Occupation</label>
+                  <div className="flex flex-col gap-2">
+                    {OCCUPATIONS.map((o) => (
+                      <button
+                        key={o.value}
+                        type="button"
+                        onClick={() => update("occupation_type", o.value)}
+                        className={`text-left px-4 py-3 rounded-xl border transition-colors cursor-pointer text-xs font-semibold ${
+                          form.occupation_type === o.value 
+                            ? "border-blue-600 bg-blue-50/50 text-blue-700" 
+                            : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+                        }`}
+                      >
+                        {o.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Save button inline in the edit form */}
+                <div className="pt-4 border-t border-gray-50">
+                  <button
+                    type="button"
+                    onClick={handleSave}
+                    className="w-full bg-blue-900 text-white border-0 rounded-xl py-3.5 text-xs font-bold cursor-pointer shadow-sm hover:bg-blue-800 transition-colors"
+                  >
+                    Save Changes
                   </button>
-                ))}
+                </div>
               </div>
-            </div>
-          </div>
-        )}
+            )}
 
-        {/* Delete */}
-        <div style={{ marginTop: 20 }}>
-          <button onClick={handleDelete}
-            style={{ width: "100%", padding: 14, borderRadius: 14, border: "1px solid #fecaca", background: "#fff", color: "#ef4444", fontSize: 14, fontWeight: 500, cursor: "pointer" }}>
-            Delete my profile
-          </button>
+            {/* Profile Delete Action */}
+            {!editing && (
+              <div className="mt-5 border-t border-gray-50 pt-5">
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  className="w-full py-3 rounded-xl border border-red-200 bg-white text-red-600 text-xs font-semibold cursor-pointer transition-colors hover:bg-red-50/50"
+                >
+                  Delete My Profile
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-
-      {/* Save button */}
-      {editing && (
-        <div style={{ position: "fixed", bottom: 0, left: "50%", transform: "translateX(-50%)", width: "100%", maxWidth: 480, padding: "16px 16px 32px", background: "#fff", borderTop: "1px solid #f3f4f6" }}>
-          <button onClick={handleSave}
-            style={{ width: "100%", background: "#2563eb", color: "#fff", border: "none", borderRadius: 14, padding: 16, fontSize: 16, fontWeight: 600, cursor: "pointer" }}>
-            Save changes
-          </button>
-        </div>
-      )}
-      {!editing && <BottomNav />}
-    </div>
+      
+      {/* Floating chatbot bubble */}
+      <ChatBot language={language} />
+    </AppLayout>
   );
 }

@@ -50,7 +50,7 @@ const DICT = {
   }
 };
 
-export default function ChatBot({ language = "en" }) {
+export default function ChatBot({ language = "en", isInline = false }) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -158,6 +158,210 @@ export default function ChatBot({ language = "en" }) {
       setLoading(false);
     }
   };
+
+  if (isInline) {
+    return (
+      <div
+        className="flex flex-col h-full bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-sm"
+        style={{ height: "100%", width: "100%", display: "flex", flexDirection: "column", boxSizing: "border-box" }}
+      >
+        {/* Header */}
+        <div
+          style={{
+            background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
+            padding: "20px 24px",
+            color: "#fff",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center"
+          }}
+        >
+          <div>
+            <h3 style={{ fontSize: 17, fontWeight: 700, margin: 0 }}>✨ {t.title}</h3>
+            <p style={{ fontSize: 11, color: "#e0e7ff", margin: "2px 0 0" }}>{t.subtitle}</p>
+          </div>
+        </div>
+
+        {/* Safety Reminder Banner */}
+        <div
+          style={{
+            background: "#f0fdf4",
+            borderBottom: "1px solid #dcfce7",
+            padding: "8px 20px",
+            display: "flex",
+            alignItems: "center",
+            gap: 8
+          }}
+        >
+          <span style={{ fontSize: 12 }}>🔒</span>
+          <span style={{ fontSize: 11, color: "#166534", fontWeight: 500 }}>{t.safety}</span>
+        </div>
+
+        {/* Conversation Window */}
+        <div
+          style={{
+            flex: 1,
+            padding: "20px",
+            overflowY: "auto",
+            background: "#f9fafb",
+            display: "flex",
+            flexDirection: "column",
+            gap: 16
+          }}
+          className="custom-scrollbar"
+        >
+          {messages.map((msg, idx) => (
+            <div
+              key={idx}
+              style={{
+                alignSelf: msg.role === "user" ? "flex-end" : "flex-start",
+                maxWidth: "85%",
+                display: "flex",
+                flexDirection: "column",
+                gap: 6
+              }}
+            >
+              <div
+                style={{
+                  background: msg.role === "user" ? "#1e3a8a" : "#fff",
+                  color: msg.role === "user" ? "#fff" : "#1f2937",
+                  borderRadius: msg.role === "user" ? "18px 18px 2px 18px" : "18px 18px 18px 2px",
+                  padding: "12px 16px",
+                  fontSize: 14,
+                  lineHeight: 1.5,
+                  boxShadow: msg.role === "user" ? "0 4px 12px rgba(30,58,138,0.15)" : "0 4px 12px rgba(0,0,0,0.02)",
+                  whiteSpace: "pre-line",
+                  wordBreak: "break-word"
+                }}
+              >
+                {msg.content}
+              </div>
+
+              {/* Related Schemes */}
+              {msg.references && msg.references.length > 0 && (
+                <div style={{ marginTop: 4, display: "flex", flexDirection: "column", gap: 6 }}>
+                  <span style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600 }}>{t.referenced}</span>
+                  {msg.references.map((sid) => (
+                    <button
+                      key={sid}
+                      onClick={() => router.push(`/schemes/${sid}`)}
+                      style={{
+                        background: "#fff",
+                        border: "1px solid #e5e7eb",
+                        borderRadius: 10,
+                        padding: "8px 12px",
+                        fontSize: 12,
+                        fontWeight: 600,
+                        color: "#2563eb",
+                        textAlign: "left",
+                        cursor: "pointer",
+                        boxShadow: "0 2px 6px rgba(0,0,0,0.01)"
+                      }}
+                    >
+                      🏛️ {schemesMap[sid] || sid}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+
+          {loading && (
+            <div style={{ alignSelf: "flex-start", display: "flex", gap: 4, padding: "12px 16px", background: "#fff", borderRadius: "18px 18px 18px 2px", boxShadow: "0 4px 12px rgba(0,0,0,0.02)" }}>
+              <div className="dot" style={{ width: 6, height: 6, background: "#9ca3af", borderRadius: "50%", animation: "bounce 1.4s infinite ease-in-out both" }} />
+              <div className="dot" style={{ width: 6, height: 6, background: "#9ca3af", borderRadius: "50%", animation: "bounce 1.4s infinite ease-in-out both", animationDelay: "0.2s" }} />
+              <div className="dot" style={{ width: 6, height: 6, background: "#9ca3af", borderRadius: "50%", animation: "bounce 1.4s infinite ease-in-out both", animationDelay: "0.4s" }} />
+            </div>
+          )}
+
+          {/* Quick Suggestions */}
+          {!loading && messages.length <= 1 && (
+            <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 10 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {t.suggestions.map((s, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleSend(s)}
+                    style={{
+                      textAlign: "left",
+                      background: "#fff",
+                      border: "1px solid #e5e7eb",
+                      borderRadius: 14,
+                      padding: "12px 16px",
+                      fontSize: 13,
+                      color: "#4b5563",
+                      cursor: "pointer",
+                      transition: "all 0.2s",
+                      fontWeight: 500
+                    }}
+                  >
+                    💡 {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input Bar */}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSend();
+          }}
+          style={{
+            background: "#fff",
+            borderTop: "1px solid #f3f4f6",
+            padding: "16px",
+            display: "flex",
+            gap: 8
+          }}
+        >
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={t.placeholder}
+            disabled={loading}
+            style={{
+              flex: 1,
+              border: "1px solid #e5e7eb",
+              borderRadius: 14,
+              padding: "12px 16px",
+              fontSize: 14,
+              outline: "none",
+              boxSizing: "border-box"
+            }}
+          />
+          <button
+            type="submit"
+            disabled={loading || !input.trim()}
+            style={{
+              background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
+              color: "#fff",
+              border: "none",
+              borderRadius: 14,
+              padding: "0 20px",
+              fontSize: 15,
+              fontWeight: 600,
+              cursor: "pointer",
+              opacity: loading || !input.trim() ? 0.6 : 1
+            }}
+          >
+            Send
+          </button>
+        </form>
+        <style>{`
+          @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   return (
     <>

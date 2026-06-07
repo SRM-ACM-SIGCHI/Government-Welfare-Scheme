@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import AppLayout from "../../components/AppLayout";
 import ChatBot from "../../components/ChatBot";
-import BottomNav from "../../components/Bottomnav";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -77,7 +77,7 @@ const DICT = {
     subtitle: "योजना आवेदनों में सहायता के लिए अपने पास के डाकघर और सीएससी खोजें",
     useLocation: "मेरे पास के केंद्र खोजें",
     gpsDenied: "स्थान अनुमति अस्वीकृत। कृपया मैन्युअल रूप से राज्य का चयन करें।",
-    gpsError: "आपका स्थान प्राप्त नहीं किया जा सका। कृपया मैन्युअल रूप से चुनें।",
+    gpsError: "स्थान प्राप्त नहीं किया जा सका। कृपया मैन्युअल रूप से चुनें।",
     manualSelect: "अपना राज्य मैन्युअल रूप से चुनें",
     kmAway: "किमी दूर",
     hours: "समय:",
@@ -116,103 +116,278 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
 
 function CenterSkeleton() {
   return (
-    <div style={{ background: "#fff", border: "1px solid #f3f4f6", borderRadius: 16, padding: 20, marginBottom: 12 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
-        <div style={{ height: 20, width: "55%", background: "#f3f4f6", borderRadius: 6 }} />
-        <div style={{ height: 20, width: "25%", background: "#f3f4f6", borderRadius: 20 }} />
+    <div className="bg-white border border-gray-100 rounded-2xl p-5 mb-3 animate-pulse">
+      <div className="flex justify-between mb-3">
+        <div className="h-5 w-3/5 bg-gray-100 rounded-md" />
+        <div className="h-5 w-1/4 bg-gray-100 rounded-full" />
       </div>
-      <div style={{ height: 14, width: "70%", background: "#f3f4f6", borderRadius: 6, marginBottom: 12 }} />
-      <div style={{ height: 14, width: "40%", background: "#f3f4f6", borderRadius: 6, marginBottom: 16 }} />
-      <div style={{ height: 36, background: "#f3f4f6", borderRadius: 10 }} />
+      <div className="h-3.5 w-11/12 bg-gray-100 rounded-md mb-3" />
+      <div className="h-3.5 w-2/5 bg-gray-100 rounded-md mb-4" />
+      <div className="h-9 bg-gray-100 rounded-lg" />
     </div>
   );
 }
 
-function CenterCard({ center, dict }) {
+function CenterCard({ center, dict, isActive, onSelect }) {
   const isCsc = center.type === "csc";
   const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${center.latitude},${center.longitude}`;
 
   return (
     <div
-      style={{
-        background: "#fff",
-        border: "1px solid #f3f4f6",
-        borderRadius: 16,
-        padding: 20,
-        marginBottom: 12,
-        boxShadow: "0 4px 10px rgba(0,0,0,0.01)",
-        animation: "fadeIn 0.3s ease-out"
-      }}
+      onClick={onSelect}
+      className={`bg-white border rounded-2xl p-5 mb-3 cursor-pointer shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 ${
+        isActive ? "border-blue-600 ring-2 ring-blue-50" : "border-gray-100"
+      }`}
     >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8, gap: 8 }}>
-        <h3 style={{ fontSize: 15, fontWeight: 600, color: "#111827", margin: 0, flex: 1, lineHeight: 1.4 }}>
+      <div className="flex justify-between items-start mb-2 gap-2">
+        <h3 className="text-[15px] font-semibold text-gray-900 leading-snug flex-1">
           {center.name}
         </h3>
         <span
-          style={{
-            background: isCsc ? "#eff6ff" : "#fdf2f8",
-            color: isCsc ? "#1d4ed8" : "#9d174d",
-            fontSize: 10,
-            fontWeight: 600,
-            padding: "3px 8px",
-            borderRadius: 20,
-            whiteSpace: "nowrap"
-          }}
+          className={`text-[9px] font-bold px-2.5 py-0.5 rounded-full whitespace-nowrap ${
+            isCsc ? "bg-blue-50 text-blue-700" : "bg-pink-50 text-pink-700"
+          }`}
         >
           {isCsc ? dict.csc : dict.postOffice}
         </span>
       </div>
 
-      <p style={{ fontSize: 13, color: "#4b5563", margin: "0 0 10px", lineHeight: 1.4 }}>
+      <p className="text-xs text-gray-600 mb-2.5 leading-relaxed">
         📍 {center.address}
       </p>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 4, marginBottom: 16, borderTop: "1px solid #f9fafb", paddingTop: 10 }}>
+      <div className="flex flex-col gap-1.5 mb-4 border-t border-gray-50 pt-2.5">
         {center.working_hours && (
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#6b7280" }}>
+          <div className="flex justify-between text-[11px] text-gray-500">
             <span>🕒 {dict.hours}</span>
-            <span style={{ fontWeight: 500, color: "#374151" }}>{center.working_hours}</span>
+            <span className="font-medium text-gray-700">{center.working_hours}</span>
           </div>
         )}
         {center.phone_number && (
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#6b7280" }}>
+          <div className="flex justify-between text-[11px] text-gray-500">
             <span>📞 {dict.phone}</span>
-            <a href={`tel:${center.phone_number}`} style={{ fontWeight: 500, color: "#2563eb", textDecoration: "none" }}>
+            <a href={`tel:${center.phone_number}`} className="font-medium text-blue-600 no-underline" onClick={e => e.stopPropagation()}>
               {center.phone_number}
             </a>
           </div>
         )}
       </div>
 
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div className="flex justify-between items-center">
         {center.distance !== undefined ? (
-          <span style={{ fontSize: 13, fontWeight: 600, color: "#10b981", background: "#ecfdf5", padding: "4px 8px", borderRadius: 8 }}>
+          <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md">
             🚀 {center.distance} {dict.kmAway}
           </span>
         ) : (
-          <span style={{ fontSize: 12, color: "#9ca3af" }}>{center.state}</span>
+          <span className="text-[11px] text-gray-400">{center.state}</span>
         )}
 
         <a
           href={googleMapsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          style={{
-            background: "linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)",
-            color: "#fff",
-            textDecoration: "none",
-            fontSize: 13,
-            fontWeight: 600,
-            padding: "8px 16px",
-            borderRadius: 10,
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-            boxShadow: "0 4px 12px rgba(37,99,235,0.15)"
-          }}
+          onClick={e => e.stopPropagation()}
+          className="bg-blue-900 text-white no-underline text-xs font-bold px-4 py-2 rounded-xl inline-flex items-center gap-1.5 transition-transform duration-100 active:scale-95 shadow-sm"
         >
           🗺️ {dict.getDirections}
         </a>
+      </div>
+    </div>
+  );
+}
+
+function MockMap({ centers, userCoords, centerLat, centerLng, selectedCenterId, onSelectCenter, previewCenter }) {
+  let range = 0.08; 
+  const activeCenters = previewCenter ? [...centers, previewCenter] : centers;
+  
+  if (activeCenters.length > 0) {
+    let maxDelta = 0.01;
+    activeCenters.forEach(c => {
+      const dLat = Math.abs(c.latitude - centerLat);
+      const dLng = Math.abs(c.longitude - centerLng);
+      if (dLat > maxDelta) maxDelta = dLat;
+      if (dLng > maxDelta) maxDelta = dLng;
+    });
+    range = Math.max(0.04, maxDelta * 2.2);
+  }
+
+  const getSvgCoords = (lat, lng) => {
+    const pctX = 50 + ((lng - centerLng) / range) * 50;
+    const pctY = 50 - ((lat - centerLat) / range) * 50;
+    return { x: pctX, y: pctY };
+  };
+
+  const [hoveredCenter, setHoveredCenter] = useState(null);
+
+  return (
+    <div className="relative w-full h-full bg-slate-50 rounded-3xl overflow-hidden shadow-inner border border-gray-200/80 min-h-[450px]">
+      
+      {/* SVG Canvas */}
+      <svg className="w-full h-full" viewBox="0 0 400 400" preserveAspectRatio="none">
+        
+        {/* Background Grid Patterns */}
+        <defs>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" strokeWidth="1" />
+          </pattern>
+          <pattern id="dotGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1" fill="#cbd5e1" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#dotGrid)" />
+        <rect width="100%" height="100%" fill="url(#grid)" opacity="0.4" />
+
+        {/* Concentric Range Rings */}
+        <circle cx="200" cy="200" r="55" fill="none" stroke="#3b82f6" strokeWidth="1" strokeDasharray="3,4" opacity="0.25" />
+        <circle cx="200" cy="200" r="110" fill="none" stroke="#3b82f6" strokeWidth="1" strokeDasharray="3,4" opacity="0.2" />
+        <circle cx="200" cy="200" r="165" fill="none" stroke="#3b82f6" strokeWidth="1" strokeDasharray="3,4" opacity="0.15" />
+
+        {/* Mock Streets/Roads */}
+        <path d="M 0,200 Q 150,185 200,200 T 400,200" fill="none" stroke="#e2e8f0" strokeWidth="6" opacity="0.8" />
+        <path d="M 200,0 Q 215,150 200,200 T 200,400" fill="none" stroke="#e2e8f0" strokeWidth="6" opacity="0.8" />
+        <path d="M 40,40 L 360,360" fill="none" stroke="#e2e8f0" strokeWidth="3" opacity="0.4" />
+        <path d="M 40,360 L 360,40" fill="none" stroke="#e2e8f0" strokeWidth="3" opacity="0.4" />
+
+        {/* Legend Radar Title */}
+        <text x="16" y="28" fill="#94a3b8" fontSize="9" fontWeight="bold" letterSpacing="1.2">COORDINATE MONITOR</text>
+
+        {/* User GPS Location Beacon */}
+        {userCoords && (() => {
+          const { x, y } = getSvgCoords(userCoords.latitude, userCoords.longitude);
+          if (x >= 0 && x <= 100 && y >= 0 && y <= 100) {
+            return (
+              <g className="cursor-pointer">
+                {/* Pulsing Outer Ring */}
+                <circle cx={`${x}%`} cy={`${y}%`} r="18" fill="#10b981" opacity="0.2">
+                  <animate attributeName="r" values="8;24;8" dur="3s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.3;0;0.3" dur="3s" repeatCount="indefinite" />
+                </circle>
+                <circle cx={`${x}%`} cy={`${y}%`} r="10" fill="#10b981" opacity="0.3">
+                  <animate attributeName="r" values="4;14;4" dur="2s" repeatCount="indefinite" />
+                </circle>
+                {/* Core Beacon */}
+                <circle cx={`${x}%`} cy={`${y}%`} r="6" fill="#10b981" stroke="#fff" strokeWidth="2" />
+              </g>
+            );
+          }
+        })()}
+
+        {/* Center Markers */}
+        {centers.map(center => {
+          const { x, y } = getSvgCoords(center.latitude, center.longitude);
+          const isCsc = center.type === "csc";
+          const isHovered = hoveredCenter?.center_id === center.center_id;
+          const isSelected = selectedCenterId === center.center_id;
+
+          if (x < 0 || x > 100 || y < 0 || y > 100) return null;
+
+          return (
+            <g
+              key={center.center_id}
+              className="cursor-pointer"
+              onMouseEnter={() => setHoveredCenter(center)}
+              onMouseLeave={() => setHoveredCenter(null)}
+              onClick={() => onSelectCenter(center)}
+            >
+              {/* Highlight Circle */}
+              {(isHovered || isSelected) && (
+                <circle
+                  cx={`${x}%`}
+                  cy={`${y}%`}
+                  r={isSelected ? "18" : "14"}
+                  fill={isCsc ? "#3b82f6" : "#ec4899"}
+                  opacity="0.18"
+                />
+              )}
+
+              {/* Pin Base Pointer */}
+              <path
+                d={`M ${x}%,${y}% l -6,-12 a 7,7 0 1,1 12,0 z`}
+                fill={isCsc ? "#2563eb" : "#db2777"}
+                stroke="#fff"
+                strokeWidth="1.5"
+                transform="translate(0, -6)"
+              />
+              
+              {/* Emoji Icon inside Pin */}
+              <text
+                x={`${x}%`}
+                y={`${y}%`}
+                dy="-12"
+                textAnchor="middle"
+                fontSize="7"
+                fill="#fff"
+              >
+                {isCsc ? "💻" : "📮"}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* Form Preview Center Marker */}
+        {previewCenter && (() => {
+          const { x, y } = getSvgCoords(previewCenter.latitude, previewCenter.longitude);
+          if (x >= 0 && x <= 100 && y >= 0 && y <= 100) {
+            return (
+              <g className="cursor-pointer">
+                <circle cx={`${x}%`} cy={`${y}%`} r="16" fill="#f59e0b" opacity="0.2">
+                  <animate attributeName="r" values="10;20;10" dur="2s" repeatCount="indefinite" />
+                </circle>
+                <path
+                  d={`M ${x}%,${y}% l -6,-12 a 7,7 0 1,1 12,0 z`}
+                  fill="#d97706"
+                  stroke="#fff"
+                  strokeWidth="1.5"
+                  transform="translate(0, -6)"
+                />
+                <text x={`${x}%`} y={`${y}%`} dy="-12" textAnchor="middle" fontSize="7" fill="#fff">⭐</text>
+              </g>
+            );
+          }
+        })()}
+      </svg>
+
+      {/* Floating Info Tooltip */}
+      {hoveredCenter && (() => {
+        const isCsc = hoveredCenter.type === "csc";
+        return (
+          <div className="absolute bottom-5 left-5 right-5 bg-white/95 backdrop-blur-md border border-gray-100 rounded-2xl p-4 shadow-xl flex flex-col gap-1 transition-all duration-300 animate-slide-up">
+            <div className="flex justify-between items-center">
+              <span className="text-[9px] font-bold uppercase tracking-wider text-gray-400">
+                {isCsc ? "Common Service Centre" : "India Post Office"}
+              </span>
+              {hoveredCenter.distance !== undefined && (
+                <span className="text-[10px] font-bold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded">
+                  🚀 {hoveredCenter.distance} km away
+                </span>
+              )}
+            </div>
+            <h4 className="text-xs font-bold text-gray-900 m-0">{hoveredCenter.name}</h4>
+            <p className="text-[11px] text-gray-500 m-0 truncate">📍 {hoveredCenter.address}</p>
+          </div>
+        );
+      })()}
+      
+      {/* Legend Card Overlay */}
+      <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3.5 py-2.5 rounded-2xl border border-gray-200/60 shadow-sm flex flex-col gap-1.5 text-[9px] font-bold text-gray-600">
+        <div className="flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block border border-white" />
+          <span>Your Location</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block border border-white" />
+          <span>E-Sevai / CSC Center</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-pink-500 inline-block border border-white" />
+          <span>Post Office</span>
+        </div>
+        {previewCenter && (
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block border border-white" />
+            <span>Form Preview</span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -227,6 +402,7 @@ export default function NearbyCentersPage() {
   const [statusMsg, setStatusMsg] = useState("");
   const [coords, setCoords] = useState(null);
   const [selectedState, setSelectedState] = useState("");
+  const [selectedCenterId, setSelectedCenterId] = useState(null);
 
   // Add Center Form State
   const [formName, setFormName] = useState("");
@@ -256,6 +432,7 @@ export default function NearbyCentersPage() {
     setStatusMsg("");
     setCenters([]);
     setSelectedState("");
+    setSelectedCenterId(null);
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -281,12 +458,10 @@ export default function NearbyCentersPage() {
       
       let backendResults = data.results || [];
       
-      // Load any locally added centers from localStorage to support client-side updates
       const localAddedRaw = localStorage.getItem("added_centers");
       if (localAddedRaw) {
         try {
           const localAdded = JSON.parse(localAddedRaw);
-          // Map distance and push
           localAdded.forEach(c => {
             const dist = haversineDistance(lat, lng, c.latitude, c.longitude);
             backendResults.push({
@@ -295,14 +470,12 @@ export default function NearbyCentersPage() {
             });
           });
           
-          // Remove duplicates (by name and location)
           backendResults = backendResults.filter((value, index, self) =>
             index === self.findIndex((t) => (
               t.name === value.name && t.latitude === value.latitude && t.longitude === value.longitude
             ))
           );
           
-          // Sort by distance
           backendResults.sort((a, b) => a.distance - b.distance);
         } catch (e) {
           console.error("Failed parsing added centers:", e);
@@ -312,7 +485,6 @@ export default function NearbyCentersPage() {
       setCenters(backendResults.slice(0, 5));
     } catch (err) {
       setStatusMsg("Failed to connect to location services. Using offline fallback.");
-      // Offline fallback: use mock + local added centers
       calculateOfflineCenters(lat, lng);
     } finally {
       setLoading(false);
@@ -322,7 +494,6 @@ export default function NearbyCentersPage() {
   const roundToTwo = (num) => Math.round((num + Number.EPSILON) * 100) / 100;
 
   const calculateOfflineCenters = (lat, lng) => {
-    // We will simulate the offline calculation locally
     const fallbackMock = [
       { center_id: 1, name: "Chennai GPO (India Post)", type: "post_office", address: "Rajaji Salai, George Town, Chennai", state: "TN", latitude: 13.0899, longitude: 80.2872, phone_number: "044-25220031", working_hours: "9:00 AM - 6:00 PM" },
       { center_id: 2, name: "CSC E-Sevai Centre George Town", type: "csc", address: "No 12, Armenian St, Chennai", state: "TN", latitude: 13.0885, longitude: 80.2835, phone_number: "9876543210", working_hours: "10:00 AM - 5:00 PM" },
@@ -333,12 +504,10 @@ export default function NearbyCentersPage() {
 
     let results = [];
     
-    // Add mock
     fallbackMock.forEach(c => {
       results.push({ ...c, distance: roundToTwo(haversineDistance(lat, lng, c.latitude, c.longitude)) });
     });
 
-    // Add local added
     const localAddedRaw = localStorage.getItem("added_centers");
     if (localAddedRaw) {
       try {
@@ -351,7 +520,6 @@ export default function NearbyCentersPage() {
       }
     }
 
-    // Sort and limit
     results.sort((a, b) => a.distance - b.distance);
     setCenters(results.slice(0, 5));
   };
@@ -362,18 +530,17 @@ export default function NearbyCentersPage() {
     setLoading(true);
     setStatusMsg("");
     setCoords(null);
+    setSelectedCenterId(null);
     
-    // Simulate coordinates based on state capital
-    let lat = 13.0827, lng = 80.2707; // Chennai default
-    if (stateCode === "MH") { lat = 18.9220; lng = 72.8347; } // Mumbai
-    if (stateCode === "KA") { lat = 12.9716; lng = 77.5946; } // Bengaluru
-    if (stateCode === "DL") { lat = 28.6139; lng = 77.2090; } // Delhi
-    if (stateCode === "UP") { lat = 26.8467; lng = 80.9462; } // Lucknow
+    let lat = 13.0827, lng = 80.2707; 
+    if (stateCode === "MH") { lat = 18.9220; lng = 72.8347; } 
+    if (stateCode === "KA") { lat = 12.9716; lng = 77.5946; } 
+    if (stateCode === "DL") { lat = 28.6139; lng = 77.2090; } 
+    if (stateCode === "UP") { lat = 26.8467; lng = 80.9462; } 
 
     await fetchNearbyCenters(lat, lng);
   };
 
-  // Auto-fill form coordinates using GPS
   const fillGPSInForm = () => {
     if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(
@@ -387,7 +554,6 @@ export default function NearbyCentersPage() {
     );
   };
 
-  // Submit new center
   const handleAddCenter = async (e) => {
     e.preventDefault();
     if (!formName.trim() || !formAddress.trim() || !formLat || !formLng) {
@@ -413,8 +579,6 @@ export default function NearbyCentersPage() {
         body: JSON.stringify(payload)
       });
       
-      const data = await res.json();
-      
       // Save locally in all cases to guarantee offline fallback and immediate client-side listing
       const localAddedRaw = localStorage.getItem("added_centers") || "[]";
       let localAdded = [];
@@ -422,14 +586,12 @@ export default function NearbyCentersPage() {
         localAdded = JSON.parse(localAddedRaw);
       } catch (e) {}
       
-      // Assign fake ID if offline
       payload.center_id = Date.now();
       localAdded.push(payload);
       localStorage.setItem("added_centers", JSON.stringify(localAdded));
 
       setFormMsg({ text: d.addSuccess, type: "success" });
       
-      // Reset form fields
       setFormName("");
       setFormAddress("");
       setFormLat("");
@@ -437,13 +599,14 @@ export default function NearbyCentersPage() {
       setFormPhone("");
       setFormHours("");
 
-      // Automatically switch back to Find Tab after 1.5s
       setTimeout(() => {
         setFormMsg({ text: "", type: "" });
         setActiveTab("find");
-        // Trigger GPS match reload if coordinates are active
         if (coords) {
           fetchNearbyCenters(coords.latitude, coords.longitude);
+        } else {
+          // reload state capital list if active
+          handleStateChange(selectedState || "TN");
         }
       }, 1500);
 
@@ -452,394 +615,326 @@ export default function NearbyCentersPage() {
     }
   };
 
+  // Determine center coordinates of mock radar map grid
+  const mapCenterLat = coords ? coords.latitude : (centers.length > 0 ? centers[0].latitude : 13.0827);
+  const mapCenterLng = coords ? coords.longitude : (centers.length > 0 ? centers[0].longitude : 80.2707);
+
+  const previewCenter = (formLat && formLng) ? {
+    center_id: "preview",
+    name: formName || "New Center Location",
+    type: formType,
+    latitude: parseFloat(formLat),
+    longitude: parseFloat(formLng),
+    address: formAddress || "Preview Location Address",
+    state: formState
+  } : null;
+
   return (
-    <div style={{ minHeight: "100vh", maxWidth: 480, margin: "0 auto", background: "#f9fafb", fontFamily: "Inter, sans-serif", paddingBottom: 100 }}>
-      {/* Header Banner */}
-      <div style={{ background: "linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)", padding: "24px 20px", color: "#fff" }}>
-        <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>📍 {d.title}</h1>
-        <p style={{ fontSize: 13, color: "#e0e7ff", margin: "6px 0 0", lineHeight: 1.4 }}>{d.subtitle}</p>
-      </div>
-
-      {/* Tabs Selector */}
-      <div style={{ display: "flex", background: "#fff", borderBottom: "1px solid #f3f4f6", padding: "0 10px" }}>
-        <button
-          onClick={() => { setActiveTab("find"); setFormMsg({ text: "", type: "" }); }}
-          style={{
-            flex: 1,
-            padding: "16px 0",
-            background: "none",
-            border: "none",
-            borderBottom: activeTab === "find" ? "3px solid #2563eb" : "3px solid transparent",
-            color: activeTab === "find" ? "#2563eb" : "#6b7280",
-            fontWeight: 600,
-            fontSize: 14,
-            cursor: "pointer",
-            transition: "all 0.2s"
-          }}
-        >
-          🔍 {d.tabFind}
-        </button>
-        <button
-          onClick={() => { setActiveTab("add"); setStatusMsg(""); }}
-          style={{
-            flex: 1,
-            padding: "16px 0",
-            background: "none",
-            border: "none",
-            borderBottom: activeTab === "add" ? "3px solid #2563eb" : "3px solid transparent",
-            color: activeTab === "add" ? "#2563eb" : "#6b7280",
-            fontWeight: 600,
-            fontSize: 14,
-            cursor: "pointer",
-            transition: "all 0.2s"
-          }}
-        >
-          ➕ {d.tabAdd}
-        </button>
-      </div>
-
-      {/* Tab 1: Find Centers Content */}
-      {activeTab === "find" && (
-        <>
-          {/* Geolocation trigger card */}
-          <div style={{ padding: "16px 16px 0" }}>
-            <div
-              style={{
-                background: "#fff",
-                border: "1px solid #e5e7eb",
-                borderRadius: 20,
-                padding: 20,
-                boxShadow: "0 10px 25px rgba(0,0,0,0.02)",
-                textAlign: "center",
-                display: "flex",
-                flexDirection: "column",
-                gap: 12
-              }}
-            >
-              <button
-                onClick={requestGPSLocation}
-                disabled={loading}
-                style={{
-                  background: "linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: 14,
-                  padding: "14px 20px",
-                  fontSize: 15,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  boxShadow: "0 8px 20px rgba(124,58,237,0.2)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 8,
-                  opacity: loading ? 0.6 : 1,
-                  transition: "transform 0.1s"
-                }}
-              >
-                🧭 {loading ? "Locating..." : d.useLocation}
-              </button>
-
-              {statusMsg && (
-                <p style={{ fontSize: 13, color: "#ef4444", margin: "4px 0 0", fontWeight: 500 }}>
-                  ⚠️ {statusMsg}
-                </p>
-              )}
-
-              {coords && (
-                <p style={{ fontSize: 12, color: "#10b981", margin: 0, fontWeight: 500 }}>
-                  📍 GPS Coordinates Locked: {coords.latitude.toFixed(4)}, {coords.longitude.toFixed(4)}
-                </p>
-              )}
-
-              <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "8px 0" }}>
-                <hr style={{ flex: 1, border: "none", borderTop: "1px solid #f3f4f6" }} />
-                <span style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600 }}>OR</span>
-                <hr style={{ flex: 1, border: "none", borderTop: "1px solid #f3f4f6" }} />
-              </div>
-
-              {/* Manual state fallback */}
-              <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#4b5563", marginBottom: 6, textAlign: "left" }}>
-                  {d.manualSelect}
-                </label>
-                <select
-                  value={selectedState}
-                  onChange={(e) => handleStateChange(e.target.value)}
-                  style={{
-                    width: "100%",
-                    padding: "12px 16px",
-                    borderRadius: 12,
-                    border: "1px solid #e5e7eb",
-                    fontSize: 14,
-                    background: "#fff",
-                    outline: "none"
-                  }}
-                >
-                  <option value="">-- Choose State --</option>
-                  {STATES.map(st => (
-                    <option key={st.code} value={st.code}>{st.name}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
+    <AppLayout activeTab="/nearby">
+      <div className="w-full max-w-md mx-auto md:max-w-none md:mx-0 h-full flex flex-col md:flex-row gap-6 md:h-[calc(100vh-4rem)]">
+        
+        {/* Left Column: Form and Centers list */}
+        <div className="flex-1 flex flex-col min-w-0 bg-[#f9fafb] md:bg-white md:border md:border-gray-200 md:rounded-3xl md:shadow-sm overflow-hidden h-full">
+          
+          {/* Banner */}
+          <div className="bg-gradient-to-br from-blue-900 to-indigo-950 px-6 py-5 text-white flex-shrink-0 md:rounded-t-3xl shadow-sm">
+            <h1 className="text-lg font-bold m-0 flex items-center gap-2">📍 {d.title}</h1>
+            <p className="text-xs text-blue-200/90 mt-1 m-0 leading-relaxed">{d.subtitle}</p>
           </div>
 
-          {/* Centers listings */}
-          <div style={{ padding: "20px 16px 0" }}>
-            {loading && [1, 2, 3].map(i => <CenterSkeleton key={i} />)}
-
-            {!loading && centers.length > 0 && (
-              <div>
-                {centers.map(center => (
-                  <CenterCard key={center.center_id} center={center} dict={d} />
-                ))}
-              </div>
-            )}
-
-            {!loading && centers.length === 0 && !statusMsg && (
-              <div style={{ background: "#fff", border: "1px solid #f3f4f6", borderRadius: 16, padding: 32, textAlign: "center" }}>
-                <p style={{ fontSize: 40, margin: "0 0 10px" }}>🧭</p>
-                <p style={{ fontSize: 13, color: "#6b7280", margin: 0, lineHeight: 1.5 }}>
-                  Tap the location button or select your state to find nearby CSC and Post Office assistance centers.
-                </p>
-              </div>
-            )}
-          </div>
-        </>
-      )}
-
-      {/* Tab 2: Add Center Form */}
-      {activeTab === "add" && (
-        <div style={{ padding: "16px 16px 40px" }}>
-          <form
-            onSubmit={handleAddCenter}
-            style={{
-              background: "#fff",
-              border: "1px solid #e5e7eb",
-              borderRadius: 20,
-              padding: 20,
-              boxShadow: "0 10px 25px rgba(0,0,0,0.02)",
-              display: "flex",
-              flexDirection: "column",
-              gap: 14
-            }}
-          >
-            {formMsg.text && (
-              <div
-                style={{
-                  background: formMsg.type === "success" ? "#f0fdf4" : "#fef2f2",
-                  border: `1px solid ${formMsg.type === "success" ? "#bbf7d0" : "#fca5a5"}`,
-                  borderRadius: 12,
-                  padding: "12px 16px",
-                  color: formMsg.type === "success" ? "#166534" : "#991b1b",
-                  fontSize: 14,
-                  fontWeight: 500
-                }}
-              >
-                {formMsg.type === "success" ? "✅" : "⚠️"} {formMsg.text}
-              </div>
-            )}
-
-            <div>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 6 }}>
-                {d.centerName} *
-              </label>
-              <input
-                type="text"
-                required
-                value={formName}
-                onChange={(e) => setFormName(e.target.value)}
-                placeholder="e.g. George Town Sub Post Office"
-                style={{ width: "100%", padding: "12px 16px", borderRadius: 12, border: "1px solid #e5e7eb", fontSize: 14, boxSizing: "border-box" }}
-              />
-            </div>
-
-            <div>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 6 }}>
-                {d.centerType} *
-              </label>
-              <div style={{ display: "flex", gap: 10 }}>
-                <button
-                  type="button"
-                  onClick={() => setFormType("csc")}
-                  style={{
-                    flex: 1,
-                    padding: "12px 10px",
-                    borderRadius: 12,
-                    border: `1px solid ${formType === "csc" ? "#2563eb" : "#e5e7eb"}`,
-                    background: formType === "csc" ? "#eff6ff" : "#fff",
-                    color: formType === "csc" ? "#1d4ed8" : "#374151",
-                    fontSize: 14,
-                    fontWeight: 500,
-                    cursor: "pointer"
-                  }}
-                >
-                  💻 {d.csc}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setFormType("post_office")}
-                  style={{
-                    flex: 1,
-                    padding: "12px 10px",
-                    borderRadius: 12,
-                    border: `1px solid ${formType === "post_office" ? "#2563eb" : "#e5e7eb"}`,
-                    background: formType === "post_office" ? "#eff6ff" : "#fff",
-                    color: formType === "post_office" ? "#1d4ed8" : "#374151",
-                    fontSize: 14,
-                    fontWeight: 500,
-                    cursor: "pointer"
-                  }}
-                >
-                  📮 {d.postOffice}
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 6 }}>
-                {d.address} *
-              </label>
-              <textarea
-                required
-                rows={2}
-                value={formAddress}
-                onChange={(e) => setFormAddress(e.target.value)}
-                placeholder="Complete street address details..."
-                style={{ width: "100%", padding: "12px 16px", borderRadius: 12, border: "1px solid #e5e7eb", fontSize: 14, boxSizing: "border-box", fontFamily: "inherit", resize: "none" }}
-              />
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-              <div>
-                <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 6 }}>
-                  {d.state} *
-                </label>
-                <select
-                  value={formState}
-                  onChange={(e) => setFormState(e.target.value)}
-                  style={{ width: "100%", padding: "12px 16px", borderRadius: 12, border: "1px solid #e5e7eb", fontSize: 14, background: "#fff", height: 45 }}
-                >
-                  {STATES.map(s => (
-                    <option key={s.code} value={s.code}>{s.name}</option>
-                  ))}
-                </select>
-              </div>
-              <div style={{ display: "flex", alignItems: "flex-end" }}>
-                <button
-                  type="button"
-                  onClick={fillGPSInForm}
-                  style={{
-                    width: "100%",
-                    height: 45,
-                    background: "#f3f4f6",
-                    border: "1px solid #e5e7eb",
-                    borderRadius: 12,
-                    fontSize: 13,
-                    color: "#374151",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 6
-                  }}
-                >
-                  🎯 {d.fillGps}
-                </button>
-              </div>
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-              <div>
-                <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 6 }}>
-                  {d.latitude} *
-                </label>
-                <input
-                  type="number"
-                  step="0.000001"
-                  required
-                  value={formLat}
-                  onChange={(e) => setFormLat(e.target.value)}
-                  placeholder="e.g. 13.0899"
-                  style={{ width: "100%", padding: "12px 16px", borderRadius: 12, border: "1px solid #e5e7eb", fontSize: 14, boxSizing: "border-box" }}
-                />
-              </div>
-              <div>
-                <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 6 }}>
-                  {d.longitude} *
-                </label>
-                <input
-                  type="number"
-                  step="0.000001"
-                  required
-                  value={formLng}
-                  onChange={(e) => setFormLng(e.target.value)}
-                  placeholder="e.g. 80.2872"
-                  style={{ width: "100%", padding: "12px 16px", borderRadius: 12, border: "1px solid #e5e7eb", fontSize: 14, boxSizing: "border-box" }}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 6 }}>
-                {d.phoneNum}
-              </label>
-              <input
-                type="text"
-                value={formPhone}
-                onChange={(e) => setFormPhone(e.target.value)}
-                placeholder="e.g. 044-25220031"
-                style={{ width: "100%", padding: "12px 16px", borderRadius: 12, border: "1px solid #e5e7eb", fontSize: 14, boxSizing: "border-box" }}
-              />
-            </div>
-
-            <div>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 6 }}>
-                {d.hoursVal}
-              </label>
-              <input
-                type="text"
-                value={formHours}
-                onChange={(e) => setFormHours(e.target.value)}
-                placeholder="e.g. 9:00 AM - 5:00 PM"
-                style={{ width: "100%", padding: "12px 16px", borderRadius: 12, border: "1px solid #e5e7eb", fontSize: 14, boxSizing: "border-box" }}
-              />
-            </div>
-
+          {/* Tabs Selector */}
+          <div className="flex bg-white border-b border-gray-100 px-3 flex-shrink-0">
             <button
-              type="submit"
-              style={{
-                background: "linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)",
-                color: "#fff",
-                border: "none",
-                borderRadius: 14,
-                padding: "14px 20px",
-                fontSize: 15,
-                fontWeight: 600,
-                cursor: "pointer",
-                boxShadow: "0 8px 20px rgba(37,99,235,0.15)",
-                marginTop: 8,
-                transition: "transform 0.1s"
-              }}
+              onClick={() => { setActiveTab("find"); setFormMsg({ text: "", type: "" }); }}
+              className={`flex-1 py-4 bg-transparent border-0 border-b-2 font-semibold text-xs transition-colors duration-200 cursor-pointer ${
+                activeTab === "find" 
+                  ? "border-blue-600 text-blue-600" 
+                  : "border-transparent text-gray-500 hover:text-gray-900"
+              }`}
             >
-              🚀 {d.submitBtn}
+              🔍 {d.tabFind}
             </button>
-          </form>
+            <button
+              onClick={() => { setActiveTab("add"); setStatusMsg(""); }}
+              className={`flex-1 py-4 bg-transparent border-0 border-b-2 font-semibold text-xs transition-colors duration-200 cursor-pointer ${
+                activeTab === "add" 
+                  ? "border-blue-600 text-blue-600" 
+                  : "border-transparent text-gray-500 hover:text-gray-900"
+              }`}
+            >
+              ➕ {d.tabAdd}
+            </button>
+          </div>
+
+          {/* Form Content Scroll Box */}
+          <div className="flex-1 overflow-y-auto px-5 pb-24 md:pb-6 pt-4 custom-scrollbar bg-gray-50/20">
+            
+            {/* Tab 1: Find Centers */}
+            {activeTab === "find" && (
+              <div className="space-y-4">
+                
+                {/* Geolocation Lock box */}
+                <div className="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm space-y-4">
+                  <button
+                    onClick={requestGPSLocation}
+                    disabled={loading}
+                    className="w-full bg-blue-900 text-white border-0 rounded-xl py-3 text-xs font-bold cursor-pointer transition-transform duration-100 active:scale-95 shadow-sm disabled:opacity-60 flex items-center justify-center gap-2"
+                  >
+                    🧭 {loading ? "Locating..." : d.useLocation}
+                  </button>
+
+                  {statusMsg && (
+                    <p className="text-xs font-semibold text-red-600 text-center m-0">
+                      ⚠️ {statusMsg}
+                    </p>
+                  )}
+
+                  {coords && (
+                    <p className="text-xs text-emerald-600 font-semibold text-center m-0">
+                      ✅ GPS Connected: {coords.latitude.toFixed(4)}, {coords.longitude.toFixed(4)}
+                    </p>
+                  )}
+
+                  <div className="flex items-center gap-3 py-1">
+                    <hr className="flex-1 border-0 border-t border-gray-100" />
+                    <span className="text-[10px] text-gray-400 font-bold uppercase">OR</span>
+                    <hr className="flex-1 border-0 border-t border-gray-100" />
+                  </div>
+
+                  {/* State Select Fallback */}
+                  <div className="space-y-1.5">
+                    <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                      {d.manualSelect}
+                    </label>
+                    <select
+                      value={selectedState}
+                      onChange={(e) => handleStateChange(e.target.value)}
+                      className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-sm bg-white outline-none focus:border-blue-500"
+                    >
+                      <option value="">-- Choose State --</option>
+                      {STATES.map(st => (
+                        <option key={st.code} value={st.code}>{st.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Centers Listings */}
+                <div className="space-y-3 pt-2">
+                  {loading && [1, 2, 3].map(i => <CenterSkeleton key={i} />)}
+
+                  {!loading && centers.length > 0 && (
+                    <div className="space-y-3">
+                      {centers.map(center => (
+                        <CenterCard 
+                          key={center.center_id} 
+                          center={center} 
+                          dict={d} 
+                          isActive={selectedCenterId === center.center_id}
+                          onSelect={() => setSelectedCenterId(center.center_id)}
+                        />
+                      ))}
+                    </div>
+                  )}
+
+                  {!loading && centers.length === 0 && !statusMsg && (
+                    <div className="bg-white border border-gray-100 rounded-2xl p-8 text-center shadow-sm">
+                      <p className="text-4xl m-0 mb-3">🧭</p>
+                      <p className="text-xs text-gray-500 m-0 leading-relaxed">
+                        Query your geolocation or choose a manual state to load nearby common service centres (CSC) and Post Offices.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+              </div>
+            )}
+
+            {/* Tab 2: Add Center Form */}
+            {activeTab === "add" && (
+              <form onSubmit={handleAddCenter} className="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm space-y-4">
+                
+                {formMsg.text && (
+                  <div className={`border rounded-xl p-3.5 text-xs font-semibold flex items-center gap-2 ${
+                    formMsg.type === "success" 
+                      ? "bg-emerald-50 text-emerald-800 border-emerald-100" 
+                      : "bg-red-50 text-red-800 border-red-100"
+                  }`}>
+                    <span>{formMsg.type === "success" ? "✅" : "⚠️"}</span>
+                    <span>{formMsg.text}</span>
+                  </div>
+                )}
+
+                <div className="space-y-1">
+                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                    {d.centerName} *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formName}
+                    onChange={(e) => setFormName(e.target.value)}
+                    placeholder="e.g. George Town Sub Post Office"
+                    className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-sm outline-none box-border focus:border-blue-500"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                    {d.centerType} *
+                  </label>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setFormType("csc")}
+                      className={`flex-1 py-2.5 rounded-xl border font-bold text-xs cursor-pointer transition-colors ${
+                        formType === "csc" 
+                          ? "border-blue-600 bg-blue-50 text-blue-700" 
+                          : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+                      }`}
+                    >
+                      💻 {d.csc}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFormType("post_office")}
+                      className={`flex-1 py-2.5 rounded-xl border font-bold text-xs cursor-pointer transition-colors ${
+                        formType === "post_office" 
+                          ? "border-blue-600 bg-blue-50 text-blue-700" 
+                          : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+                      }`}
+                    >
+                      📮 {d.postOffice}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                    {d.address} *
+                  </label>
+                  <textarea
+                    required
+                    rows={2}
+                    value={formAddress}
+                    onChange={(e) => setFormAddress(e.target.value)}
+                    placeholder="Complete street address details..."
+                    className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-sm outline-none resize-none box-border focus:border-blue-500 font-sans leading-relaxed"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3.5">
+                  <div className="space-y-1">
+                    <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                      {d.state} *
+                    </label>
+                    <select
+                      value={formState}
+                      onChange={(e) => setFormState(e.target.value)}
+                      className="w-full py-2.5 px-3 rounded-xl border border-gray-200 text-sm bg-white outline-none focus:border-blue-500 h-[42px]"
+                    >
+                      {STATES.map(s => (
+                        <option key={s.code} value={s.code}>{s.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex items-end">
+                    <button
+                      type="button"
+                      onClick={fillGPSInForm}
+                      className="w-full h-[42px] bg-gray-100 border border-gray-200 rounded-xl text-[11px] text-gray-700 font-bold cursor-pointer transition-colors hover:bg-gray-200 flex items-center justify-center gap-1.5"
+                    >
+                      🎯 {d.fillGps}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3.5">
+                  <div className="space-y-1">
+                    <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                      {d.latitude} *
+                    </label>
+                    <input
+                      type="number"
+                      step="0.000001"
+                      required
+                      value={formLat}
+                      onChange={(e) => setFormLat(e.target.value)}
+                      placeholder="e.g. 13.0899"
+                      className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-sm outline-none box-border focus:border-blue-500"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                      {d.longitude} *
+                    </label>
+                    <input
+                      type="number"
+                      step="0.000001"
+                      required
+                      value={formLng}
+                      onChange={(e) => setFormLng(e.target.value)}
+                      placeholder="e.g. 80.2872"
+                      className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-sm outline-none box-border focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                    {d.phoneNum}
+                  </label>
+                  <input
+                    type="text"
+                    value={formPhone}
+                    onChange={(e) => setFormPhone(e.target.value)}
+                    placeholder="e.g. 044-25220031"
+                    className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-sm outline-none box-border focus:border-blue-500"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                    {d.hoursVal}
+                  </label>
+                  <input
+                    type="text"
+                    value={formHours}
+                    onChange={(e) => setFormHours(e.target.value)}
+                    placeholder="e.g. 9:00 AM - 5:00 PM"
+                    className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-sm outline-none box-border focus:border-blue-500"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-emerald-600 text-white border-0 rounded-xl py-3 text-xs font-bold cursor-pointer transition-transform duration-100 active:scale-[0.99] shadow-sm hover:bg-emerald-700"
+                >
+                  🚀 {d.submitBtn}
+                </button>
+              </form>
+            )}
+
+          </div>
         </div>
-      )}
 
-      <ChatBot language={language} />
-      <BottomNav />
-
-      {/* Entrance fade animations stylesheet */}
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(8px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
-    </div>
+        {/* Right Column: Desktop Mock Map */}
+        <div className="hidden md:flex flex-1 bg-white border border-gray-200 rounded-3xl shadow-sm p-4 overflow-hidden h-full">
+          <MockMap 
+            centers={centers}
+            userCoords={coords}
+            centerLat={mapCenterLat}
+            centerLng={mapCenterLng}
+            selectedCenterId={selectedCenterId}
+            onSelectCenter={(center) => setSelectedCenterId(center.center_id)}
+            previewCenter={previewCenter}
+          />
+        </div>
+      </div>
+      
+      <div className="md:hidden">
+        <ChatBot language={language} />
+      </div>
+    </AppLayout>
   );
 }

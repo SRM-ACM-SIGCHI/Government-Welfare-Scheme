@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import AppLayout from "../../../components/AppLayout";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -42,17 +43,37 @@ export default function SchemeDetailPage({ params }) {
   const [scheme,  setScheme]  = useState(null);
   const [loading, setLoading] = useState(true);
   const [error,   setError]   = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [eligibilityCheck, setEligibilityCheck] = useState(null);
 
   useEffect(() => {
+    const raw = localStorage.getItem("user_profile");
+    if (raw) setProfile(JSON.parse(raw));
+
     if (!id) return;
-    fetchScheme();
+    fetchSchemeAndCheck();
   }, [id]);
 
-  const fetchScheme = async () => {
+  const fetchSchemeAndCheck = async () => {
     try {
+      // 1. Fetch details
       const res = await fetch(`${API_URL}/schemes/${id}`);
       if (!res.ok) throw new Error("Scheme not found");
-      setScheme(await res.json());
+      const data = await res.json();
+      setScheme(data);
+
+      // 2. Fetch eligibility logs if user profile exists
+      const raw = localStorage.getItem("user_profile");
+      if (raw) {
+        const checkRes = await fetch(`${API_URL}/schemes/check/${id}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: raw
+        });
+        if (checkRes.ok) {
+          setEligibilityCheck(await checkRes.json());
+        }
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -61,19 +82,30 @@ export default function SchemeDetailPage({ params }) {
   };
 
   if (loading) return (
-    <div style={{ maxWidth: 480, margin: "0 auto", padding: 24, fontFamily: "Inter, sans-serif" }}>
-      {[80, 200, 120, 160].map((w, i) => (
-        <div key={i} style={{ height: i === 1 ? 28 : 16, width: `${w}px`, background: "#f3f4f6", borderRadius: 6, marginBottom: 16 }} />
-      ))}
-    </div>
+    <AppLayout activeTab="/schemes">
+      <div className="w-full max-w-xl mx-auto p-6 space-y-4 animate-pulse pt-10">
+        <div className="h-4 bg-gray-200 rounded w-1/4" />
+        <div className="h-8 bg-gray-200 rounded w-full" />
+        <div className="h-6 bg-gray-200 rounded w-3/4" />
+        <div className="h-24 bg-gray-200 rounded-xl w-full" />
+        <div className="h-40 bg-gray-200 rounded-xl w-full" />
+      </div>
+    </AppLayout>
   );
 
-  if (error) return (
-    <div style={{ maxWidth: 480, margin: "0 auto", padding: 24, textAlign: "center", fontFamily: "Inter, sans-serif" }}>
-      <p style={{ fontSize: 40 }}>😕</p>
-      <p style={{ fontSize: 16, fontWeight: 600 }}>Scheme not found</p>
-      <button onClick={() => router.back()} style={{ background: "#2563eb", color: "#fff", border: "none", borderRadius: 10, padding: "10px 20px", fontSize: 14, cursor: "pointer", marginTop: 12 }}>Go back</button>
-    </div>
+  if (error || !scheme) return (
+    <AppLayout activeTab="/schemes">
+      <div className="w-full max-w-xl mx-auto p-6 text-center pt-16">
+        <p className="text-5xl m-0 mb-4">😕</p>
+        <h2 className="text-base font-bold text-gray-800 m-0 mb-4">Scheme details not found</h2>
+        <button 
+          onClick={() => router.back()} 
+          className="bg-blue-900 text-white border-0 rounded-xl px-5 py-3 text-xs font-bold cursor-pointer shadow-sm hover:bg-blue-800"
+        >
+          Go back
+        </button>
+      </div>
+    </AppLayout>
   );
 
   const bt = BENEFIT_COLORS[scheme.benefit_type] || BENEFIT_COLORS.other;
@@ -87,108 +119,165 @@ export default function SchemeDetailPage({ params }) {
   };
 
   return (
-    <div style={{ minHeight: "100vh", maxWidth: 480, margin: "0 auto", background: "#f9fafb", fontFamily: "Inter, sans-serif", paddingBottom: 100 }}>
-
-      {/* Header */}
-      <div style={{ background: "#fff", padding: "20px 20px 24px", borderBottom: "1px solid #f3f4f6" }}>
-        <button onClick={() => router.back()} style={{ background: "none", border: "none", color: "#6b7280", fontSize: 14, cursor: "pointer", padding: 0, marginBottom: 16 }}>
-          ← Back
-        </button>
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 8 }}>
-          <h1 style={{ fontSize: 20, fontWeight: 700, color: "#111827", margin: 0, lineHeight: 1.4, flex: 1 }}>{scheme.name}</h1>
-          <span style={{ background: bt.bg, color: bt.color, fontSize: 11, fontWeight: 600, padding: "4px 10px", borderRadius: 20, whiteSpace: "nowrap", flexShrink: 0 }}>{bt.label}</span>
-        </div>
-        <p style={{ fontSize: 14, color: "#6b7280", margin: "0 0 16px" }}>{scheme.ministry}</p>
-        {formatAmount() && (
-          <div style={{ background: "#eff6ff", borderRadius: 12, padding: "12px 16px", display: "inline-flex", alignItems: "baseline", gap: 8 }}>
-            <span style={{ fontSize: 24, fontWeight: 700, color: "#1d4ed8" }}>{formatAmount()}</span>
-            <span style={{ fontSize: 13, color: "#3b82f6" }}>benefit</span>
-          </div>
-        )}
-      </div>
-
-      <div style={{ padding: "16px 16px 0" }}>
-
-        {/* Verified badge */}
-        {scheme.verified_at && (
-          <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10, padding: "10px 14px", marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
-            <span>✅</span>
-            <span style={{ fontSize: 13, color: "#166534" }}>Verified — last checked {scheme.verified_at}</span>
-          </div>
-        )}
-
-        {/* Deadline */}
-        {scheme.application_deadline && (
-          <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, padding: "10px 14px", marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
-            <span>⏰</span>
-            <span style={{ fontSize: 13, color: "#991b1b" }}>Deadline: {scheme.application_deadline}</span>
-          </div>
-        )}
-
-        {/* myscheme.gov.in link */}
-        <div style={{ background: "#fff", border: "1px solid #f3f4f6", borderRadius: 16, padding: 20, marginBottom: 12 }}>
-          <p style={{ fontSize: 14, fontWeight: 600, color: "#111827", margin: "0 0 4px" }}>Find more details</p>
-          <p style={{ fontSize: 13, color: "#6b7280", margin: "0 0 14px" }}>Search this scheme on the official government portal</p>
-          <a
-            href={`https://www.myscheme.gov.in/search?q=${encodeURIComponent(scheme.name)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, width: "100%", background: "#1a56db", color: "#fff", borderRadius: 12, padding: "12px 20px", fontSize: 14, fontWeight: 600, textDecoration: "none", boxSizing: "border-box" }}
+    <AppLayout activeTab="/schemes">
+      <div className="w-full max-w-xl mx-auto pb-24 md:pb-6 bg-white md:border md:border-gray-200 md:rounded-3xl md:shadow-sm overflow-hidden">
+        
+        {/* Header */}
+        <div className="border-b border-gray-100 p-6 bg-white">
+          <button 
+            onClick={() => router.back()} 
+            className="bg-transparent border-0 text-gray-500 text-xs font-semibold cursor-pointer p-0 mb-4"
           >
-            🏛️ Search on myscheme.gov.in ↗
-          </a>
-        </div>
-
-        {/* Eligibility criteria */}
-        <div style={{ background: "#fff", border: "1px solid #f3f4f6", borderRadius: 16, padding: "4px 20px", marginBottom: 12 }}>
-          <h2 style={{ fontSize: 15, fontWeight: 600, color: "#111827", margin: "16px 0 4px" }}>Eligibility criteria</h2>
-          {[
-            ["States",     scheme.applicable_states ? scheme.applicable_states.join(", ") : "All India"],
-            ["Gender",     scheme.gender ? scheme.gender.charAt(0).toUpperCase() + scheme.gender.slice(1) : "All"],
-            ["Categories", scheme.caste_categories ? scheme.caste_categories.join(", ") : "All categories"],
-            ["Age",        scheme.min_age && scheme.max_age ? `${scheme.min_age} – ${scheme.max_age} years` : scheme.min_age ? `${scheme.min_age}+ years` : scheme.max_age ? `Up to ${scheme.max_age} years` : "No restriction"],
-            ["Max income", scheme.max_income ? `Rs.${scheme.max_income.toLocaleString("en-IN")}/year` : "No limit"],
-            ["Occupation", scheme.occupation_types ? scheme.occupation_types.join(", ").replace(/_/g, " ") : "Any"],
-          ].map(([label, value]) => (
-            <div key={label} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "12px 0", borderBottom: "1px solid #f9fafb" }}>
-              <span style={{ fontSize: 13, color: "#6b7280", flexShrink: 0, width: 110 }}>{label}</span>
-              <span style={{ fontSize: 14, fontWeight: 500, color: "#111827", textAlign: "right" }}>{value}</span>
+            ← Back
+          </button>
+          <div className="flex justify-between items-start gap-4 mb-2">
+            <h1 className="text-lg font-bold text-gray-900 leading-snug m-0">{scheme.name}</h1>
+            <span 
+              className="text-[10px] font-bold px-2.5 py-0.5 rounded-full whitespace-nowrap"
+              style={{ backgroundColor: bt.bg, color: bt.color }}
+            >
+              {bt.label}
+            </span>
+          </div>
+          <p className="text-xs text-gray-500 m-0 mb-4">{scheme.ministry}</p>
+          
+          {formatAmount() && (
+            <div className="bg-blue-50/50 rounded-xl px-4 py-2.5 inline-flex items-baseline gap-1.5 border border-blue-100/30">
+              <span className="text-xl font-bold text-blue-900">{formatAmount()}</span>
+              <span className="text-xs text-blue-500 font-medium">benefit</span>
             </div>
-          ))}
+          )}
         </div>
 
-        {/* Documents */}
-        {scheme.documents_required && scheme.documents_required.length > 0 && (
-          <div style={{ background: "#fff", border: "1px solid #f3f4f6", borderRadius: 16, padding: "16px 20px", marginBottom: 12 }}>
-            <h2 style={{ fontSize: 15, fontWeight: 600, color: "#111827", margin: "0 0 12px" }}>Documents needed</h2>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {scheme.documents_required.map((doc) => (
-                <div key={doc} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <span style={{ fontSize: 16 }}>📄</span>
-                  <span style={{ fontSize: 14, color: "#374151" }}>{DOC_LABELS[doc] || doc.replace(/_/g, " ")}</span>
+        {/* Content Pane */}
+        <div className="p-6 space-y-5 bg-gray-50/10">
+
+          {/* Real-time eligibility evaluation check log */}
+          {eligibilityCheck && (
+            <div className={`border rounded-xl p-4 flex flex-col gap-2.5 shadow-sm transition-all duration-300 ${
+              eligibilityCheck.eligible 
+                ? "bg-emerald-50/70 border-emerald-100 text-emerald-800" 
+                : "bg-red-50/70 border-red-100 text-red-800"
+            }`}>
+              <div className="flex items-center gap-2 font-bold text-sm">
+                <span>{eligibilityCheck.eligible ? "✅ Eligible" : "⚠️ Profile Mismatch"}</span>
+              </div>
+              {eligibilityCheck.reasons && eligibilityCheck.reasons.length > 0 ? (
+                <div className="text-xs space-y-1 pl-1 opacity-90 leading-relaxed">
+                  <span className="font-semibold block mb-1">Checking constraints logs:</span>
+                  {eligibilityCheck.reasons.map((reason, i) => (
+                    <div key={i} className="flex items-start gap-1.5">
+                      <span>•</span>
+                      <span>{reason}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <p className="text-xs pl-1 opacity-90 m-0">Your profile matches all criteria perfectly for this welfare scheme.</p>
+              )}
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Apply button */}
-        {scheme.application_url && (
-          <div style={{ background: "#fff", border: "1px solid #f3f4f6", borderRadius: 16, padding: 20, marginBottom: 12 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-              <span style={{ fontSize: 14, color: "#6b7280" }}>Official application link</span>
-              <span style={{ fontSize: 11, background: "#f0fdf4", color: "#166534", padding: "2px 8px", borderRadius: 20, fontWeight: 600 }}>✓ Verified</span>
-            </div>
-            <a href={scheme.application_url} target="_blank" rel="noopener noreferrer"
-              style={{ display: "block", width: "100%", background: "#2563eb", color: "#fff", borderRadius: 14, padding: "14px 20px", fontSize: 15, fontWeight: 600, textAlign: "center", textDecoration: "none", boxSizing: "border-box" }}>
-              Apply Now — Official Site ↗
-            </a>
-            <p style={{ fontSize: 12, color: "#9ca3af", textAlign: "center", margin: "8px 0 0" }}>
-              You will be taken to the official government website
-            </p>
+          <div className="grid grid-cols-2 gap-3">
+            {/* Verified badge */}
+            {scheme.verified_at && (
+              <div className="bg-white border border-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
+                <span className="text-lg">🛡️</span>
+                <div>
+                  <span className="text-[10px] text-gray-400 block font-semibold uppercase">Verified On</span>
+                  <span className="text-xs font-semibold text-gray-700">{scheme.verified_at}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Deadline */}
+            {scheme.application_deadline ? (
+              <div className="bg-white border border-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
+                <span className="text-lg">📅</span>
+                <div>
+                  <span className="text-[10px] text-gray-400 block font-semibold uppercase">Apply By</span>
+                  <span className="text-xs font-semibold text-red-600">{scheme.application_deadline}</span>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-white border border-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
+                <span className="text-lg">📅</span>
+                <div>
+                  <span className="text-[10px] text-gray-400 block font-semibold uppercase">Deadline</span>
+                  <span className="text-xs font-semibold text-emerald-600">Open (Rolling)</span>
+                </div>
+              </div>
+            )}
           </div>
-        )}
+
+          {/* myscheme.gov.in portal lookup */}
+          <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+            <h3 className="text-sm font-semibold text-gray-900 mb-1">Verify on myScheme portal</h3>
+            <p className="text-xs text-gray-500 mb-4 leading-relaxed">
+              Cross check benefit calculations and details on the central national welfare database.
+            </p>
+            <a
+              href={`https://www.myscheme.gov.in/search?q=${encodeURIComponent(scheme.name)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full bg-blue-900 text-white rounded-xl py-3 text-xs font-bold text-center no-underline shadow-sm transition-transform duration-100 hover:bg-blue-800 active:scale-[0.99]"
+            >
+              🏛️ Search myScheme.gov.in ↗
+            </a>
+          </div>
+
+          {/* Eligibility criteria parameters */}
+          <div className="bg-white border border-gray-100 rounded-2xl px-5 py-1.5 shadow-sm">
+            <h2 className="text-sm font-semibold text-gray-950 mt-4 mb-2">Eligibility Checklist</h2>
+            {[
+              ["States",     scheme.applicable_states ? scheme.applicable_states.join(", ") : "All India"],
+              ["Gender",     scheme.gender ? scheme.gender.charAt(0).toUpperCase() + scheme.gender.slice(1) : "All"],
+              ["Categories", scheme.caste_categories ? scheme.caste_categories.join(", ") : "All categories"],
+              ["Age Bounds", scheme.min_age && scheme.max_age ? `${scheme.min_age} – ${scheme.max_age} years` : scheme.min_age ? `${scheme.min_age}+ years` : scheme.max_age ? `Up to ${scheme.max_age} years` : "No restrictions"],
+              ["Max Income", scheme.max_income ? `Rs.${scheme.max_income.toLocaleString("en-IN")}/year` : "No limit"],
+              ["Occupation", scheme.occupation_types ? scheme.occupation_types.join(", ").replace(/_/g, " ") : "Any occupation"],
+            ].map(([label, value]) => (
+              <div key={label} className="flex justify-between items-start py-3 border-b border-gray-50 last:border-b-0">
+                <span className="text-xs text-gray-400 font-semibold">{label}</span>
+                <span className="text-xs font-semibold text-gray-800 text-right">{value}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Documents */}
+          {scheme.documents_required && scheme.documents_required.length > 0 && (
+            <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+              <h2 className="text-sm font-semibold text-gray-950 mb-3">Required Documents</h2>
+              <div className="space-y-2.5">
+                {scheme.documents_required.map((doc) => (
+                  <div key={doc} className="flex items-center gap-2.5">
+                    <span className="text-gray-400 text-base">📄</span>
+                    <span className="text-xs text-gray-600 font-medium">{DOC_LABELS[doc] || doc.replace(/_/g, " ")}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Apply button */}
+          {scheme.application_url && (
+            <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-xs text-gray-400 font-semibold">Official application URL</span>
+                <span className="text-[9px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded font-bold">✓ Verified Link</span>
+              </div>
+              <a
+                href={scheme.application_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full bg-emerald-600 text-white rounded-xl py-3 text-xs font-bold text-center no-underline shadow-sm transition-transform duration-100 hover:bg-emerald-700 active:scale-[0.99]"
+              >
+                Apply Now — Official Site ↗
+              </a>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </AppLayout>
   );
 }

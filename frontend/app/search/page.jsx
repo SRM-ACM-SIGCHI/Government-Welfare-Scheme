@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import AppLayout from "../../components/AppLayout";
 import ChatBot from "../../components/ChatBot";
-import BottomNav from "../../components/Bottomnav";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -61,13 +61,13 @@ const BENEFIT_COLORS = {
 
 function SkeletonCard() {
   return (
-    <div style={{ background: "#fff", border: "1px solid #f3f4f6", borderRadius: 16, padding: 20, marginBottom: 12 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
-        <div style={{ height: 20, width: "65%", background: "#f3f4f6", borderRadius: 6 }} />
-        <div style={{ height: 20, width: "20%", background: "#f3f4f6", borderRadius: 20 }} />
+    <div className="bg-white border border-gray-100 rounded-2xl p-5 mb-3 animate-pulse">
+      <div className="flex justify-between mb-3">
+        <div className="h-5 w-3/5 bg-gray-100 rounded-md" />
+        <div className="h-5 w-1/5 bg-gray-100 rounded-full" />
       </div>
-      <div style={{ height: 14, width: "40%", background: "#f3f4f6", borderRadius: 6, marginBottom: 16 }} />
-      <div style={{ height: 36, background: "#f3f4f6", borderRadius: 10 }} />
+      <div className="h-3.5 w-2/5 bg-gray-100 rounded-md mb-4" />
+      <div className="h-9 bg-gray-100 rounded-lg" />
     </div>
   );
 }
@@ -85,49 +85,36 @@ function SchemeCard({ scheme, onClick, matchLabel }) {
   };
 
   return (
-    <div onClick={onClick}
-      style={{
-        background: "#fff",
-        border: "1px solid #f3f4f6",
-        borderRadius: 16,
-        padding: 20,
-        marginBottom: 12,
-        cursor: "pointer",
-        transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-        animation: "fadeIn 0.4s ease-out"
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "translateY(-2px)";
-        e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.04)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "translateY(0)";
-        e.currentTarget.style.boxShadow = "none";
-      }}
+    <div
+      onClick={onClick}
+      className="bg-white border border-gray-100 rounded-2xl p-5 mb-3 cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5"
     >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6, gap: 8 }}>
-        <h3 style={{ fontSize: 15, fontWeight: 600, color: "#111827", margin: 0, flex: 1, lineHeight: 1.4 }}>{scheme.name}</h3>
-        <span style={{ background: bt.bg, color: bt.color, fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 20, whiteSpace: "nowrap" }}>{bt.label}</span>
+      <div className="flex justify-between items-start mb-2 gap-2">
+        <h3 className="text-[15px] font-semibold text-gray-900 leading-snug flex-1">
+          {scheme.name}
+        </h3>
+        <span
+          className="text-[10px] font-bold px-2.5 py-0.5 rounded-full whitespace-nowrap"
+          style={{ backgroundColor: bt.bg, color: bt.color }}
+        >
+          {bt.label}
+        </span>
       </div>
-      <p style={{ fontSize: 13, color: "#6b7280", margin: "0 0 14px" }}>{scheme.ministry}</p>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        {formatAmount()
-          ? <span style={{ fontSize: 16, fontWeight: 700, color: "#2563eb" }}>{formatAmount()}</span>
-          : <span style={{ fontSize: 13, color: "#9ca3af" }}>Amount varies</span>}
+      <p className="text-xs text-gray-500 mb-3.5">{scheme.ministry}</p>
+      <div className="flex items-center justify-between">
+        {formatAmount() ? (
+          <span className="text-[15px] font-bold text-blue-700">{formatAmount()}</span>
+        ) : (
+          <span className="text-xs text-gray-400">Amount varies</span>
+        )}
           
-        {/* Semantic similarity score badge */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{
-            fontSize: 12,
-            color: matchPercentage >= 80 ? "#16a34a" : (matchPercentage >= 60 ? "#d97706" : "#4b5563"),
-            background: matchPercentage >= 80 ? "#f0fdf4" : (matchPercentage >= 60 ? "#fef3c7" : "#f3f4f6"),
-            padding: "3px 8px",
-            borderRadius: 8,
-            fontWeight: 600
-          }}>
+        <div className="flex items-center gap-2">
+          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
+            matchPercentage >= 80 ? "bg-emerald-50 text-emerald-700" : (matchPercentage >= 60 ? "bg-amber-50 text-amber-700" : "bg-gray-100 text-gray-600")
+          }`}>
             🎯 {matchPercentage}% {matchLabel}
           </span>
-          <span style={{ color: "#9ca3af", fontSize: 18 }}>›</span>
+          <span className="text-gray-400 text-lg">›</span>
         </div>
       </div>
     </div>
@@ -144,7 +131,6 @@ export default function SemanticSearchPage() {
   const [searched, setSearched] = useState(false);
 
   useEffect(() => {
-    // Read user's chosen language from local storage
     const savedLang = localStorage.getItem("language") || "en";
     setLanguage(savedLang);
   }, []);
@@ -172,117 +158,93 @@ export default function SemanticSearchPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", maxWidth: 480, margin: "0 auto", background: "#f9fafb", fontFamily: "Inter, sans-serif", paddingBottom: 120 }}>
-      {/* Header Banner */}
-      <div style={{ background: "linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)", padding: "24px 20px", color: "#fff", position: "relative" }}>
-        <button onClick={() => router.push("/schemes")}
-          style={{ background: "none", border: "none", color: "#e0e7ff", fontSize: 14, cursor: "pointer", padding: 0, marginBottom: 12, display: "block" }}>
-          {t.back}
-        </button>
-        <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>🧠 {t.title}</h1>
-        <p style={{ fontSize: 13, color: "#e0e7ff", margin: "6px 0 0", lineHeight: 1.4 }}>{t.subtitle}</p>
-      </div>
+    <AppLayout activeTab="/search">
+      <div className="w-full max-w-md mx-auto md:max-w-none md:mx-0 h-full flex flex-col md:flex-row gap-6 md:h-[calc(100vh-4rem)]">
+        
+        {/* Left Panel: Desktop Persistent Chatbot Counselor */}
+        <div className="hidden md:block flex-1 h-full min-w-0">
+          <ChatBot language={language} isInline={true} />
+        </div>
 
-      {/* Semantic Search Glassmorphic Card */}
-      <div style={{ padding: "16px 16px 0" }}>
-        <form onSubmit={handleSearch}
-          style={{
-            background: "#fff",
-            border: "1px solid #e5e7eb",
-            borderRadius: 20,
-            padding: 20,
-            boxShadow: "0 10px 25px rgba(0,0,0,0.03)",
-            display: "flex",
-            flexDirection: "column",
-            gap: 12
-          }}
-        >
-          <textarea
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder={t.placeholder}
-            rows={3}
-            style={{
-              width: "100%",
-              boxSizing: "border-box",
-              border: "1px solid #e5e7eb",
-              borderRadius: 14,
-              padding: "14px 16px",
-              fontSize: 14,
-              lineHeight: 1.5,
-              outline: "none",
-              resize: "none",
-              fontFamily: "Inter, sans-serif"
-            }}
-          />
-          <p style={{ fontSize: 11, color: "#9ca3af", margin: 0, fontStyle: "italic" }}>
-            💡 {t.hint}
-          </p>
-          <button
-            type="submit"
-            disabled={loading || !query.trim()}
-            style={{
-              background: "linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)",
-              color: "#fff",
-              border: "none",
-              borderRadius: 14,
-              padding: 14,
-              fontSize: 15,
-              fontWeight: 600,
-              cursor: "pointer",
-              opacity: loading || !query.trim() ? 0.6 : 1,
-              transition: "transform 0.1s"
-            }}
-          >
-            {loading ? t.searching : t.btnSearch}
-          </button>
-        </form>
-      </div>
-
-      {/* Results Container */}
-      <div style={{ padding: "20px 16px 0" }}>
-        {searched && !loading && (
-          <h2 style={{ fontSize: 15, fontWeight: 700, color: "#374151", margin: "0 0 12px" }}>
-            {t.results}
-          </h2>
-        )}
-
-        {loading && [1, 2, 3].map((i) => <SkeletonCard key={i} />)}
-
-        {error && (
-          <div style={{ background: "#fff", border: "1px solid #fee2e2", borderRadius: 16, padding: 20, textAlign: "center" }}>
-            <p style={{ fontSize: 14, color: "#ef4444", margin: 0, fontWeight: 500 }}>{error}</p>
+        {/* Right Panel: Search Console */}
+        <div className="flex-1 flex flex-col bg-[#f9fafb] md:bg-white md:border md:border-gray-200 md:rounded-3xl md:shadow-sm overflow-hidden h-full">
+          
+          {/* Header Banner */}
+          <div className="bg-gradient-to-br from-blue-900 to-indigo-950 px-6 py-5 text-white flex-shrink-0 md:rounded-t-3xl shadow-sm">
+            <button 
+              onClick={() => router.push("/schemes")}
+              className="bg-transparent border-0 text-blue-200 text-xs font-semibold cursor-pointer p-0 mb-2.5 block hover:text-white"
+            >
+              {t.back}
+            </button>
+            <h1 className="text-lg font-bold m-0 flex items-center gap-2">🧠 {t.title}</h1>
+            <p className="text-xs text-blue-200/90 mt-1 m-0 leading-relaxed">{t.subtitle}</p>
           </div>
-        )}
 
-        {!loading && searched && results.length === 0 && !error && (
-          <div style={{ background: "#fff", border: "1px solid #f3f4f6", borderRadius: 16, padding: 32, textAlign: "center" }}>
-            <p style={{ fontSize: 40, margin: "0 0 10px" }}>🕵️‍♂️</p>
-            <p style={{ fontSize: 14, color: "#6b7280", margin: 0 }}>{t.noResults}</p>
+          {/* Search box controls */}
+          <div className="p-5 border-b border-gray-50 bg-white flex-shrink-0">
+            <form onSubmit={handleSearch} className="flex flex-col gap-3">
+              <textarea
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t.placeholder}
+                rows={3}
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none resize-none box-border focus:border-blue-500 font-sans leading-relaxed"
+              />
+              <div className="flex justify-between items-center">
+                <span className="text-[11px] text-gray-400 font-medium italic">
+                  💡 {t.hint}
+                </span>
+                <button
+                  type="submit"
+                  disabled={loading || !query.trim()}
+                  className="bg-blue-900 text-white border-0 rounded-xl px-5 py-2.5 text-xs font-bold cursor-pointer transition-transform duration-100 active:scale-95 shadow-sm disabled:opacity-50 whitespace-nowrap"
+                >
+                  {loading ? t.searching : t.btnSearch}
+                </button>
+              </div>
+            </form>
           </div>
-        )}
 
-        {!loading && results.map((scheme) => (
-          <SchemeCard
-            key={scheme.scheme_id}
-            scheme={scheme}
-            matchLabel={t.match}
-            onClick={() => router.push(`/schemes/${scheme.scheme_id}`)}
-          />
-        ))}
+          {/* Results container */}
+          <div className="flex-1 overflow-y-auto px-5 pb-24 md:pb-6 pt-4 custom-scrollbar bg-gray-50/20">
+            {searched && !loading && (
+              <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3.5 m-0">
+                {t.results}
+              </h2>
+            )}
+
+            {loading && [1, 2, 3].map((i) => <SkeletonCard key={i} />)}
+
+            {error && (
+              <div className="bg-white border border-red-100 rounded-2xl p-5 text-center shadow-sm">
+                <p className="text-xs font-semibold text-red-600 m-0">{error}</p>
+              </div>
+            )}
+
+            {!loading && searched && results.length === 0 && !error && (
+              <div className="bg-white border border-gray-100 rounded-2xl p-8 text-center shadow-sm">
+                <p className="text-3xl m-0 mb-2">🕵️‍♂️</p>
+                <p className="text-xs text-gray-500 m-0 leading-relaxed">{t.noResults}</p>
+              </div>
+            )}
+
+            {!loading && results.map((scheme) => (
+              <SchemeCard
+                key={scheme.scheme_id}
+                scheme={scheme}
+                matchLabel={t.match}
+                onClick={() => router.push(`/schemes/${scheme.scheme_id}`)}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* RAG assistant chatbot */}
-      <ChatBot language={language} />
-      <BottomNav />
-
-      {/* Entrance fade animations stylesheet */}
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
-    </div>
+      {/* Floating chatbot bubble for mobile only */}
+      <div className="md:hidden">
+        <ChatBot language={language} isInline={false} />
+      </div>
+    </AppLayout>
   );
 }

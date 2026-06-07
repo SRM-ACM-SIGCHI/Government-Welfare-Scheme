@@ -7,7 +7,7 @@ import ChatBot from "../components/ChatBot";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 const LANGS = [
-  { code: "en", label: "English", tagline: "Find government schemes you are eligible for", cta: "Get Started — Free", ctaSchemes: "See My Schemes", ctaProfile: "Update My Profile", speak: "Speak to find schemes", speakHint: "Tap mic and speak your details" },
+  { code: "en", label: "English", tagline: "Find government welfare schemes you are eligible for", cta: "Get Started — Free", ctaSchemes: "See My Schemes", ctaProfile: "Update My Profile", speak: "Speak to find schemes", speakHint: "Tap mic and speak your details" },
   { code: "ta", label: "தமிழ்",   tagline: "நீங்கள் தகுதியான திட்டங்களை கண்டறியுங்கள்", cta: "தொடங்குங்கள் — இலவசம்", ctaSchemes: "என் திட்டங்களை பாருங்கள்", ctaProfile: "விவரங்களை மாற்றுங்கள்", speak: "பேசி திட்டங்கள் கண்டறியுங்கள்", speakHint: "மைக்கை தட்டி பேசுங்கள்" },
   { code: "hi", label: "हिंदी",   tagline: "अपने लिए योग्य सरकारी योजनाएं खोजें", cta: "शुरू करें — मुफ़्त", ctaSchemes: "मेरी योजनाएं देखें", ctaProfile: "प्रोफाइल अपडेट करें", speak: "बोलकर योजनाएं खोजें", speakHint: "माइक दबाएं और बोलें" },
 ];
@@ -31,10 +31,10 @@ const KEYWORD_MAP = {
   "farmer": "farmer", "விவசாயி": "farmer", "கிசான்": "farmer", "किसान": "farmer",
   "student": "student", "மாணவர்": "student", "छात्र": "student",
   "labour": "unorganised_worker", "daily wage": "unorganised_worker",
-  "கூலி": "unorganised_worker", "மजदूर": "unorganised_worker", "मजदूर": "unorganised_worker",
+  "கூலி": "unorganised_worker", "மஜதூர்": "unorganised_worker", "मजदूर": "unorganised_worker",
   "self employed": "self_employed", "சுயதொழில்": "self_employed", "व्यवसाय": "self_employed",
   "unemployed": "unemployed", "வேலை இல்லை": "unemployed", "बेरोजगार": "unemployed",
-  "salaried": "salaried", "job": "salaried", "நौகரி": "salaried", "नौकरी": "salaried",
+  "salaried": "salaried", "job": "salaried", "நௌகரி": "salaried", "नौकरी": "salaried",
 };
 
 const INCOME_KEYWORDS = {
@@ -146,125 +146,164 @@ export default function HomePage() {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", maxWidth: 480, margin: "0 auto", background: "#fff", padding: "40px 24px 32px", fontFamily: "Inter, sans-serif" }}>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-0 md:p-6 box-border font-sans">
+      <div className="w-full max-w-xl bg-white min-h-screen md:min-h-0 md:rounded-3xl md:shadow-md border-0 md:border border-gray-200/80 flex flex-col justify-between overflow-hidden p-6 md:p-8 box-border">
+        
+        {/* Core Content */}
+        <div className="flex-1 flex flex-col justify-center items-center text-center gap-6 py-6">
+          
+          <div className="w-16 h-16 rounded-2xl bg-blue-900 flex items-center justify-center text-4xl shadow-md">
+            🏛️
+          </div>
 
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", gap: 20 }}>
+          <div>
+            <h1 className="text-3xl font-extrabold text-gray-900 m-0 tracking-tight leading-tight">Welfare Schemes</h1>
+            <p className="text-sm text-gray-500 m-0 mt-2 leading-relaxed max-w-sm mx-auto">{t.tagline}</p>
+          </div>
 
-        <div style={{ width: 80, height: 80, borderRadius: 20, background: "#2563eb", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 36 }}>🏛️</div>
+          {/* Language selector chips */}
+          <div className="flex gap-2">
+            {LANGS.map((l) => (
+              <button 
+                key={l.code} 
+                onClick={() => { setLang(l.code); localStorage.setItem("language", l.code); }}
+                className={`px-4 py-2 rounded-full border-0 text-xs font-semibold cursor-pointer transition-all duration-150 ${
+                  lang === l.code 
+                    ? "bg-blue-900 text-white shadow-sm" 
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                {l.label}
+              </button>
+            ))}
+          </div>
 
-        <div>
-          <h1 style={{ fontSize: 32, fontWeight: 700, margin: "0 0 8px", color: "#111827" }}>Welfare Schemes</h1>
-          <p style={{ color: "#6b7280", fontSize: 16, margin: 0, lineHeight: 1.6 }}>{t.tagline}</p>
-        </div>
+          {/* Safety Verification Trust Box */}
+          <div className="w-full bg-emerald-50 border border-emerald-100 rounded-2xl p-5 text-left box-border">
+            <p className="text-xs font-bold text-emerald-800 m-0 mb-2.5 flex items-center gap-1.5">
+              <span>🛡️</span> Safe, Verified & Private
+            </p>
+            <ul className="text-xs text-emerald-700 m-0 p-0 list-none space-y-1.5 font-semibold">
+              <li className="flex items-start gap-2">
+                <span>•</span>
+                <span>We never ask for Aadhaar number or bank account credentials.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span>•</span>
+                <span>All application links navigate directly to official government portals.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span>•</span>
+                <span>Your profile data remains encrypted locally on your phone.</span>
+              </li>
+            </ul>
+          </div>
 
-        {/* Language switcher */}
-        <div style={{ display: "flex", gap: 8 }}>
-          {LANGS.map((l) => (
-            <button key={l.code} onClick={() => { setLang(l.code); localStorage.setItem("language", l.code); }}
-              style={{ padding: "8px 16px", borderRadius: 20, border: "none", cursor: "pointer", fontSize: 14, fontWeight: 500, background: lang === l.code ? "#2563eb" : "#f3f4f6", color: lang === l.code ? "#fff" : "#374151" }}>
-              {l.label}
+          {/* Voice Search Radar Panel */}
+          <div className="w-full bg-purple-50/50 border border-purple-100/60 rounded-3xl p-5 box-border">
+            <p className="text-xs font-bold text-purple-900 m-0 mb-1 flex items-center justify-center gap-1.5">
+              <span>🎤</span> {t.speak}
+            </p>
+            <p className="text-[11px] text-purple-700 m-0 mb-4 font-semibold">{t.speakHint}</p>
+
+            {/* Pulsing Voice Mic Button */}
+            <button
+              onClick={listening ? stopVoice : startVoice}
+              className={`w-16 h-16 rounded-full border-0 cursor-pointer flex items-center justify-center text-2xl mx-auto mb-3 shadow-md transition-all duration-300 active:scale-95 ${
+                listening 
+                  ? "bg-red-600 text-white animate-pulse ring-8 ring-red-100" 
+                  : "bg-purple-600 text-white hover:bg-purple-700 shadow-purple-200"
+              }`}
+            >
+              {listening ? "⏹" : "🎤"}
             </button>
-          ))}
-        </div>
 
-        {/* Trust box */}
-        <div style={{ width: "100%", background: "#f0fdf4", border: "1px solid #dcfce7", borderRadius: 16, padding: "16px 20px", textAlign: "left" }}>
-          <p style={{ color: "#166534", fontSize: 14, fontWeight: 600, margin: "0 0 8px" }}>✅ Safe & Verified</p>
-          <ul style={{ color: "#15803d", fontSize: 14, margin: 0, paddingLeft: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 4 }}>
-            <li>• We never ask for Aadhaar or bank details</li>
-            <li>• All links go to official government sites</li>
-            <li>• Your data stays on your phone</li>
-          </ul>
-        </div>
+            {listening && (
+              <div className="flex items-center justify-center gap-1.5 mb-2">
+                <span className="text-[10px] text-red-600 font-bold uppercase tracking-wider">Listening Input...</span>
+              </div>
+            )}
 
-        {/* Voice search section */}
-        <div style={{ width: "100%", background: "#faf5ff", border: "1px solid #e9d5ff", borderRadius: 20, padding: 20 }}>
-          <p style={{ fontSize: 15, fontWeight: 600, color: "#6d28d9", margin: "0 0 4px" }}>🎤 {t.speak}</p>
-          <p style={{ fontSize: 13, color: "#7c3aed", margin: "0 0 16px" }}>{t.speakHint}</p>
+            {transcript && (
+              <div className="bg-white rounded-xl p-3 mb-2 border border-purple-100 text-left">
+                <p className="text-xs text-gray-700 m-0 font-medium italic">"{transcript}"</p>
+              </div>
+            )}
 
-          {/* Mic button */}
-          <button
-            onClick={listening ? stopVoice : startVoice}
-            style={{ width: 72, height: 72, borderRadius: "50%", border: "none", cursor: "pointer", background: listening ? "#dc2626" : "#7c3aed", color: "#fff", fontSize: 28, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px", boxShadow: listening ? "0 0 0 8px rgba(220,38,38,0.2)" : "0 4px 16px rgba(124,58,237,0.3)", transition: "all 0.2s" }}>
-            {listening ? "⏹" : "🎤"}
-          </button>
+            {searching && (
+              <p className="text-xs text-purple-800 font-bold animate-pulse m-0">Matching schemes in database...</p>
+            )}
 
-          {listening && (
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginBottom: 8 }}>
-              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#dc2626", animation: "pulse 1s infinite" }} />
-              <span style={{ fontSize: 13, color: "#dc2626", fontWeight: 500 }}>Listening...</span>
-            </div>
-          )}
+            {voiceError && (
+              <p className="text-xs text-red-600 font-bold m-0">{voiceError}</p>
+            )}
 
-          {transcript && (
-            <div style={{ background: "#fff", borderRadius: 10, padding: "10px 14px", marginBottom: 8, border: "1px solid #e9d5ff" }}>
-              <p style={{ fontSize: 13, color: "#374151", margin: 0, fontStyle: "italic" }}>"{transcript}"</p>
-            </div>
-          )}
-
-          {searching && (
-            <p style={{ fontSize: 13, color: "#7c3aed", textAlign: "center", margin: 0 }}>Finding schemes...</p>
-          )}
-
-          {voiceError && (
-            <p style={{ fontSize: 13, color: "#dc2626", textAlign: "center", margin: 0 }}>{voiceError}</p>
-          )}
-
-          {/* Voice results */}
-          {voiceResults && !searching && (
-            <div style={{ marginTop: 12 }}>
-              <p style={{ fontSize: 12, color: "#6b7280", margin: "0 0 8px" }}>
-                Found {voiceResults.schemes.length} scheme{voiceResults.schemes.length !== 1 ? "s" : ""} for {voiceResults.profile.state} · {voiceResults.profile.caste_category} · {voiceResults.profile.occupation_type.replace(/_/g, " ")}
-              </p>
-              {voiceResults.schemes.slice(0, 3).map((s) => (
-                <div key={s.scheme_id}
-                  onClick={() => router.push(`/schemes/${s.scheme_id}`)}
-                  style={{ background: "#fff", border: "1px solid #e9d5ff", borderRadius: 12, padding: "10px 14px", marginBottom: 6, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: 13, fontWeight: 500, color: "#111827", flex: 1, paddingRight: 8 }}>{s.name}</span>
-                  <span style={{ fontSize: 11, color: "#7c3aed", whiteSpace: "nowrap" }}>›</span>
+            {/* Voice query matching list */}
+            {voiceResults && !searching && (
+              <div className="mt-4 border-t border-purple-100/50 pt-4 text-left">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2.5">
+                  Suggested Matches ({voiceResults.schemes.length})
+                </p>
+                <div className="space-y-2">
+                  {voiceResults.schemes.slice(0, 3).map((s) => (
+                    <div 
+                      key={s.scheme_id}
+                      onClick={() => router.push(`/schemes/${s.scheme_id}`)}
+                      className="bg-white border border-purple-100/40 rounded-xl p-3.5 cursor-pointer flex justify-between items-center transition-all hover:border-purple-300"
+                    >
+                      <span className="text-xs font-semibold text-gray-800 flex-1 pr-2 truncate">{s.name}</span>
+                      <span className="text-purple-600 text-sm">›</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-              {voiceResults.schemes.length > 3 && (
-                <button
-                  onClick={() => {
-                    localStorage.setItem("user_profile", JSON.stringify(voiceResults.profile));
-                    router.push("/schemes");
-                  }}
-                  style={{ width: "100%", background: "#7c3aed", color: "#fff", border: "none", borderRadius: 10, padding: "10px 16px", fontSize: 13, fontWeight: 500, cursor: "pointer", marginTop: 4 }}>
-                  See all {voiceResults.schemes.length} schemes →
-                </button>
-              )}
-            </div>
-          )}
+                {voiceResults.schemes.length > 3 && (
+                  <button
+                    onClick={() => {
+                      localStorage.setItem("user_profile", JSON.stringify(voiceResults.profile));
+                      router.push("/schemes");
+                    }}
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white border-0 rounded-xl py-2.5 px-4 text-xs font-bold cursor-pointer mt-3 transition-colors shadow-sm"
+                  >
+                    See all {voiceResults.schemes.length} schemes →
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* CTA buttons */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 24 }}>
-        {hasProfile ? (
-          <>
-            <button onClick={() => router.push("/schemes")}
-              style={{ width: "100%", background: "#2563eb", color: "#fff", border: "none", borderRadius: 16, padding: 16, fontSize: 16, fontWeight: 600, cursor: "pointer" }}>
-              {t.ctaSchemes}
+        {/* CTA buttons */}
+        <div className="flex flex-col gap-3 mt-4 border-t border-gray-50 pt-6">
+          {hasProfile ? (
+            <>
+              <button 
+                onClick={() => router.push("/schemes")}
+                className="w-full bg-blue-900 text-white border-0 rounded-xl py-4 text-sm font-bold cursor-pointer transition-transform duration-100 active:scale-98 shadow-md hover:bg-blue-800"
+              >
+                {t.ctaSchemes}
+              </button>
+              <button 
+                onClick={() => router.push("/profile")}
+                className="w-full bg-white text-gray-700 border border-gray-200 rounded-xl py-4 text-sm font-semibold cursor-pointer transition-colors hover:bg-gray-50"
+              >
+                {t.ctaProfile}
+              </button>
+            </>
+          ) : (
+            <button 
+              onClick={() => router.push("/onboarding")}
+              className="w-full bg-blue-900 text-white border-0 rounded-xl py-4 text-sm font-bold cursor-pointer transition-transform duration-100 active:scale-98 shadow-md hover:bg-blue-800"
+            >
+              {t.cta}
             </button>
-            <button onClick={() => router.push("/profile")}
-              style={{ width: "100%", background: "#fff", color: "#374151", border: "1px solid #e5e7eb", borderRadius: 16, padding: 16, fontSize: 16, fontWeight: 500, cursor: "pointer" }}>
-              {t.ctaProfile}
-            </button>
-          </>
-        ) : (
-          <button onClick={() => router.push("/onboarding")}
-            style={{ width: "100%", background: "#2563eb", color: "#fff", border: "none", borderRadius: 16, padding: 16, fontSize: 16, fontWeight: 600, cursor: "pointer" }}>
-            {t.cta}
-          </button>
-        )}
-        <p style={{ textAlign: "center", color: "#9ca3af", fontSize: 12, margin: 0 }}>Takes less than 1 minute • No sign up required</p>
-      </div>
+          )}
+          <p className="text-center text-[10px] text-gray-400 font-semibold m-0 mt-1">
+            Takes less than 1 minute • No signup or accounts required
+          </p>
+        </div>
 
+      </div>
       <ChatBot language={lang} />
-      <style>{`
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-      `}</style>
     </div>
   );
 }

@@ -80,139 +80,194 @@ export default function OnboardingPage() {
 
   const s = STEPS[step - 1];
 
+  const btn = (active, onClick, children) => (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`px-3 py-3 rounded-xl border text-xs font-bold transition-all duration-150 cursor-pointer ${
+        active 
+          ? "border-blue-600 bg-blue-900 text-white shadow-sm" 
+          : "border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
+      }`}
+    >
+      {children}
+    </button>
+  );
+
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", maxWidth: 480, margin: "0 auto", background: "#fff" }}>
-
-      {/* Progress bar */}
-      <div style={{ height: 4, background: "#f3f4f6" }}>
-        <div style={{ height: 4, background: "#2563eb", width: `${((step - 1) / 3) * 100}%`, transition: "width 0.4s" }} />
-      </div>
-
-      {/* Header */}
-      <div style={{ padding: "24px 24px 12px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
-          {step > 1
-            ? <button onClick={() => setStep((s) => s - 1)} style={{ color: "#9ca3af", background: "none", border: "none", cursor: "pointer", fontSize: 14 }}>← Back</button>
-            : <span />}
-          <span style={{ color: "#9ca3af", fontSize: 14 }}>{step} of 4</span>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-0 md:p-6 box-border">
+      <div className="w-full max-w-xl bg-white min-h-screen md:min-h-0 md:rounded-3xl md:shadow-md border-0 md:border border-gray-200/80 flex flex-col overflow-hidden">
+        
+        {/* Progress bar */}
+        <div className="h-1 bg-gray-100 flex-shrink-0">
+          <div className="h-1 bg-blue-600 transition-all duration-300" style={{ width: `${((step - 1) / 3) * 100}%` }} />
         </div>
-        <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px" }}>{s.title}</h1>
-        <p style={{ color: "#6b7280", fontSize: 14, margin: 0 }}>{s.subtitle}</p>
-      </div>
 
-      {/* Content */}
-      <div style={{ flex: 1, padding: "8px 24px 24px" }}>
-
-        {step === 1 && (
-          <div>
-            <label style={{ display: "block", fontSize: 14, fontWeight: 500, marginBottom: 8 }}>Select your state</label>
-            <select value={profile.state} onChange={(e) => update("state", e.target.value)}
-              style={{ width: "100%", padding: "12px 16px", borderRadius: 12, border: "1px solid #e5e7eb", fontSize: 16, background: "#fff" }}>
-              <option value="">— Choose state —</option>
-              {STATES.map(([code, name]) => <option key={code} value={code}>{name}</option>)}
-            </select>
-            {errors.state && <p style={{ color: "#ef4444", fontSize: 13, marginTop: 4 }}>{errors.state}</p>}
+        {/* Header */}
+        <div className="p-6 pb-3 flex-shrink-0">
+          <div className="flex justify-between items-center mb-4">
+            {step > 1 ? (
+              <button 
+                onClick={() => setStep((s) => s - 1)}
+                className="text-gray-400 bg-transparent border-0 text-xs font-semibold cursor-pointer p-0"
+              >
+                ← Back
+              </button>
+            ) : (
+              <span />
+            )}
+            <span className="text-gray-400 text-xs font-bold uppercase tracking-wider">{step} of 4</span>
           </div>
-        )}
+          <h1 className="text-lg font-bold text-gray-900 m-0 leading-tight">{s.title}</h1>
+          <p className="text-xs text-gray-500 m-0 mt-1 leading-relaxed">{s.subtitle}</p>
+        </div>
 
-        {step === 2 && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-            <div>
-              <label style={{ display: "block", fontSize: 14, fontWeight: 500, marginBottom: 8 }}>Gender</label>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
-                {["male", "female", "other"].map((g) => (
-                  <button key={g} onClick={() => update("gender", g)}
-                    style={{ padding: "12px 8px", borderRadius: 12, border: `1px solid ${profile.gender === g ? "#2563eb" : "#e5e7eb"}`, background: profile.gender === g ? "#2563eb" : "#fff", color: profile.gender === g ? "#fff" : "#374151", fontSize: 14, fontWeight: 500, cursor: "pointer", textTransform: "capitalize" }}>
-                    {g}
-                  </button>
-                ))}
-              </div>
-              {errors.gender && <p style={{ color: "#ef4444", fontSize: 13, marginTop: 4 }}>{errors.gender}</p>}
+        {/* Content Box */}
+        <div className="flex-1 p-6 pt-2">
+
+          {step === 1 && (
+            <div className="space-y-2.5">
+              <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">Select your state</label>
+              <select 
+                value={profile.state} 
+                onChange={(e) => update("state", e.target.value)}
+                className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-sm bg-white outline-none focus:border-blue-500"
+              >
+                <option value="">— Choose state —</option>
+                {STATES.map(([code, name]) => <option key={code} value={code}>{name}</option>)}
+              </select>
+              {errors.state && <p className="text-xs text-red-600 font-medium m-0 mt-1">{errors.state}</p>}
             </div>
+          )}
 
-            <div>
-              <label style={{ display: "block", fontSize: 14, fontWeight: 500, marginBottom: 8 }}>Category</label>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
-                {["SC", "ST", "OBC", "EWS", "GEN"].map((c) => (
-                  <button key={c} onClick={() => update("caste_category", c)}
-                    style={{ padding: "12px 8px", borderRadius: 12, border: `1px solid ${profile.caste_category === c ? "#2563eb" : "#e5e7eb"}`, background: profile.caste_category === c ? "#2563eb" : "#fff", color: profile.caste_category === c ? "#fff" : "#374151", fontSize: 14, fontWeight: 500, cursor: "pointer" }}>
-                    {c}
-                  </button>
-                ))}
-              </div>
-              {errors.caste_category && <p style={{ color: "#ef4444", fontSize: 13, marginTop: 4 }}>{errors.caste_category}</p>}
-            </div>
-
-            <div>
-              <label style={{ display: "block", fontSize: 14, fontWeight: 500, marginBottom: 8 }}>Your age</label>
-              <input type="number" value={profile.age} onChange={(e) => update("age", e.target.value)}
-                placeholder="e.g. 28" min="1" max="120"
-                style={{ width: "100%", padding: "12px 16px", borderRadius: 12, border: "1px solid #e5e7eb", fontSize: 16, boxSizing: "border-box" }} />
-              {errors.age && <p style={{ color: "#ef4444", fontSize: 13, marginTop: 4 }}>{errors.age}</p>}
-            </div>
-          </div>
-        )}
-
-        {step === 3 && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-            <div>
-              <label style={{ display: "block", fontSize: 14, fontWeight: 500, marginBottom: 8 }}>Annual household income</label>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {INCOME_RANGES.map((r) => (
-                  <button key={r.value} onClick={() => update("income_annual", r.value)}
-                    style={{ textAlign: "left", padding: "12px 16px", borderRadius: 12, border: `1px solid ${profile.income_annual === r.value ? "#2563eb" : "#e5e7eb"}`, background: profile.income_annual === r.value ? "#eff6ff" : "#fff", color: profile.income_annual === r.value ? "#1d4ed8" : "#374151", fontSize: 14, cursor: "pointer", fontWeight: profile.income_annual === r.value ? 500 : 400 }}>
-                    {r.label}
-                  </button>
-                ))}
-              </div>
-              {errors.income_annual && <p style={{ color: "#ef4444", fontSize: 13, marginTop: 4 }}>{errors.income_annual}</p>}
-            </div>
-
-            <div>
-              <label style={{ display: "block", fontSize: 14, fontWeight: 500, marginBottom: 8 }}>Occupation</label>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {OCCUPATIONS.map((o) => (
-                  <button key={o.value} onClick={() => update("occupation_type", o.value)}
-                    style={{ textAlign: "left", padding: "12px 16px", borderRadius: 12, border: `1px solid ${profile.occupation_type === o.value ? "#2563eb" : "#e5e7eb"}`, background: profile.occupation_type === o.value ? "#eff6ff" : "#fff", color: profile.occupation_type === o.value ? "#1d4ed8" : "#374151", fontSize: 14, cursor: "pointer", fontWeight: profile.occupation_type === o.value ? 500 : 400 }}>
-                    {o.label}
-                  </button>
-                ))}
-              </div>
-              {errors.occupation_type && <p style={{ color: "#ef4444", fontSize: 13, marginTop: 4 }}>{errors.occupation_type}</p>}
-            </div>
-          </div>
-        )}
-
-        {step === 4 && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <div style={{ background: "#fff", border: "1px solid #f3f4f6", borderRadius: 16, padding: "8px 20px" }}>
-              {[
-                { label: "State",      value: STATES.find(([c]) => c === profile.state)?.[1] },
-                { label: "Gender",     value: profile.gender },
-                { label: "Category",   value: profile.caste_category },
-                { label: "Age",        value: `${profile.age} years` },
-                { label: "Income",     value: INCOME_RANGES.find((r) => r.value === profile.income_annual)?.label },
-                { label: "Occupation", value: OCCUPATIONS.find((o) => o.value === profile.occupation_type)?.label },
-              ].map(({ label, value }) => (
-                <div key={label} style={{ display: "flex", justifyContent: "space-between", padding: "12px 0", borderBottom: "1px solid #f9fafb" }}>
-                  <span style={{ color: "#6b7280", fontSize: 14 }}>{label}</span>
-                  <span style={{ fontSize: 14, fontWeight: 500, textTransform: "capitalize" }}>{value}</span>
+          {step === 2 && (
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">Gender</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {["male", "female", "other"].map((g) => (
+                    btn(profile.gender === g, () => update("gender", g), g)
+                  ))}
                 </div>
-              ))}
-            </div>
-            <div style={{ background: "#f0fdf4", border: "1px solid #dcfce7", borderRadius: 16, padding: "12px 16px" }}>
-              <p style={{ color: "#166534", fontSize: 14, margin: 0 }}>✅ Your profile is saved only on your phone. We never upload it.</p>
-            </div>
-          </div>
-        )}
-      </div>
+                {errors.gender && <p className="text-xs text-red-600 font-medium m-0 mt-1">{errors.gender}</p>}
+              </div>
 
-      {/* CTA */}
-      <div style={{ padding: "16px 24px 32px" }}>
-        {step < 4
-          ? <button onClick={next} style={{ width: "100%", background: "#2563eb", color: "#fff", border: "none", borderRadius: 16, padding: "16px", fontSize: 16, fontWeight: 600, cursor: "pointer" }}>Continue →</button>
-          : <button onClick={submit} style={{ width: "100%", background: "#2563eb", color: "#fff", border: "none", borderRadius: 16, padding: "16px", fontSize: 16, fontWeight: 600, cursor: "pointer" }}>Find My Schemes 🎯</button>
-        }
+              <div className="space-y-2">
+                <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">Category</label>
+                <div className="grid grid-cols-5 gap-1.5">
+                  {["SC", "ST", "OBC", "EWS", "GEN"].map((c) => (
+                    btn(profile.caste_category === c, () => update("caste_category", c), c)
+                  ))}
+                </div>
+                {errors.caste_category && <p className="text-xs text-red-600 font-medium m-0 mt-1">{errors.caste_category}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">Your age</label>
+                <input 
+                  type="number" 
+                  value={profile.age} 
+                  onChange={(e) => update("age", e.target.value)}
+                  placeholder="e.g. 28" 
+                  min="1" 
+                  max="120"
+                  className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-sm outline-none focus:border-blue-500 box-border" 
+                />
+                {errors.age && <p className="text-xs text-red-600 font-medium m-0 mt-1">{errors.age}</p>}
+              </div>
+            </div>
+          )}
+
+          {step === 3 && (
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">Annual household income</label>
+                <div className="flex flex-col gap-2">
+                  {INCOME_RANGES.map((r) => (
+                    <button 
+                      key={r.value} 
+                      type="button"
+                      onClick={() => update("income_annual", r.value)}
+                      className={`text-left px-4 py-3 rounded-xl border transition-colors cursor-pointer text-xs font-semibold ${
+                        profile.income_annual === r.value 
+                          ? "border-blue-600 bg-blue-50/50 text-blue-700" 
+                          : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+                      }`}
+                    >
+                      {r.label}
+                    </button>
+                  ))}
+                </div>
+                {errors.income_annual && <p className="text-xs text-red-600 font-medium m-0 mt-1">{errors.income_annual}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">Occupation</label>
+                <div className="flex flex-col gap-2">
+                  {OCCUPATIONS.map((o) => (
+                    <button 
+                      key={o.value} 
+                      type="button"
+                      onClick={() => update("occupation_type", o.value)}
+                      className={`text-left px-4 py-3 rounded-xl border transition-colors cursor-pointer text-xs font-semibold ${
+                        profile.occupation_type === o.value 
+                          ? "border-blue-600 bg-blue-50/50 text-blue-700" 
+                          : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+                      }`}
+                    >
+                      {o.label}
+                    </button>
+                  ))}
+                </div>
+                {errors.occupation_type && <p className="text-xs text-red-600 font-medium m-0 mt-1">{errors.occupation_type}</p>}
+              </div>
+            </div>
+          )}
+
+          {step === 4 && (
+            <div className="space-y-4">
+              <div className="border border-gray-100 rounded-2xl px-5 py-1 bg-gray-50/10">
+                {[
+                  { label: "State",      value: STATES.find(([c]) => c === profile.state)?.[1] },
+                  { label: "Gender",     value: profile.gender },
+                  { label: "Category",   value: profile.caste_category },
+                  { label: "Age",        value: `${profile.age} years` },
+                  { label: "Income",     value: INCOME_RANGES.find((r) => r.value === profile.income_annual)?.label },
+                  { label: "Occupation", value: OCCUPATIONS.find((o) => o.value === profile.occupation_type)?.label },
+                ].map(({ label, value }) => (
+                  <div key={label} className="flex justify-between items-center py-3 border-b border-gray-50 last:border-b-0">
+                    <span className="text-xs text-gray-400 font-semibold">{label}</span>
+                    <span className="text-xs font-semibold text-gray-800 capitalize">{value}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3.5">
+                <p className="color-[#166534] text-xs font-medium m-0 leading-relaxed">
+                  ✅ Your welfare profile is saved locally in your browser. We respect your privacy and never upload it.
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Action Button */}
+        <div className="p-6 pt-3 flex-shrink-0 border-t border-gray-50">
+          {step < 4 ? (
+            <button 
+              onClick={next} 
+              className="w-full bg-blue-900 text-white border-0 rounded-xl py-3.5 text-xs font-bold cursor-pointer shadow-sm hover:bg-blue-800 transition-colors"
+            >
+              Continue →
+            </button>
+          ) : (
+            <button 
+              onClick={submit} 
+              className="w-full bg-blue-900 text-white border-0 rounded-xl py-3.5 text-xs font-bold cursor-pointer shadow-sm hover:bg-blue-800 transition-colors"
+            >
+              Find My Schemes 🎯
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
