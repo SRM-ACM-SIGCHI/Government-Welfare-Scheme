@@ -41,6 +41,7 @@ export default function ProfilePage() {
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({});
   const [saved, setSaved] = useState(false);
+  const [language, setLanguage] = useState("en");
 
   useEffect(() => {
     const raw = localStorage.getItem("user_profile");
@@ -48,6 +49,9 @@ export default function ProfilePage() {
     const p = JSON.parse(raw);
     setProfile(p);
     setForm(p);
+
+    const savedLang = localStorage.getItem("language") || "en";
+    setLanguage(savedLang);
   }, []);
 
   const update = (key, value) => setForm((f) => ({ ...f, [key]: value }));
