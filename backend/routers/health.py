@@ -6,8 +6,15 @@ router = APIRouter()
 
 @router.get("/health")
 async def health_check():
+    pool = get_pool()
+    if pool is None:
+        return {
+            "status": "ok",
+            "database": "offline",
+            "mode": "fallback",
+        }
+
     try:
-        pool = get_pool()
         async with pool.acquire() as conn:
             await conn.fetchval("SELECT 1")
         db_status = "connected"
@@ -17,4 +24,5 @@ async def health_check():
     return {
         "status": "ok",
         "database": db_status,
+        "mode": "database" if db_status == "connected" else "degraded",
     }
