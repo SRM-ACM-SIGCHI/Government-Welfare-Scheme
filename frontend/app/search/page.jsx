@@ -13,19 +13,19 @@ const DICT = {
     subtitle: "Search by intent or situation instead of exact keywords",
     placeholder: "e.g. financial aid for poor SC female student to study...",
     btnSearch: "Search Schemes",
-    searching: "Embedding query & matching schemes...",
-    hint: "Try typing your gender, state, occupation, and what help you need.",
-    match: "Similarity Match",
-    results: "Schemes found by intent match:",
+    searching: "Matching intent in database...",
+    hint: "Try typing your state, caste category, gender, and the assistance you need.",
+    match: "Match Score",
+    results: "Schemes matched by intent:",
     noResults: "No schemes matched your search intent. Try describing your situation differently.",
-    back: "← Back to Feed"
+    back: "← Back to matched schemes"
   },
   ta: {
     title: "AI கருத்தியல் தேடல்",
     subtitle: "விசைச்சொற்களுக்குப் பதிலாக உங்கள் தேவை அல்லது சூழலை வைத்து தேடுங்கள்",
     placeholder: "எ.கா. ஏழை ஆதிதிராவிடர் பெண் மாணவர் படிக்க கல்வி உதவித்தொகை...",
     btnSearch: "திட்டங்களை தேடு",
-    searching: "தேடலை பகுப்பாய்வு செய்து பொருத்துகிறது...",
+    searching: "தேடலைப் பொருத்துகிறது...",
     hint: "உங்கள் பாலினம், மாநிலம், தொழில் மற்றும் தேவையான உதவியை விவரித்து எழுதவும்.",
     match: "பொருத்தமான அளவு",
     results: "உங்கள் சூழலுக்குப் பொருந்தும் திட்டங்கள்:",
@@ -37,9 +37,9 @@ const DICT = {
     subtitle: "सटीक कीवर्ड के बजाय अपनी आवश्यकता या स्थिति के आधार पर खोजें",
     placeholder: "उदा. गरीब एससी महिला छात्र को पढ़ाई के लिए वित्तीय सहायता...",
     btnSearch: "योजनाएं खोजें",
-    searching: "क्वेरी का विश्लेषण और योजनाओं का मिलान...",
+    searching: "योजनाओं का मिलान हो रहा है...",
     hint: "अपना लिंग, राज्य, पेशा और आपको क्या मदद चाहिए, यह विस्तार से लिखें।",
-    match: "समानता प्रतिशत",
+    match: "समानता स्कोर",
     results: "आपकी स्थिति से मेल खाने वाली योजनाएं:",
     noResults: "आपकी खोज स्थिति से मेल खाने वाली कोई योजना नहीं मिली। कृपया भिन्न तरीके से लिखें।",
     back: "← वापस जाएँ"
@@ -47,27 +47,27 @@ const DICT = {
 };
 
 const BENEFIT_COLORS = {
-  cash_transfer:  { bg: "#eff6ff", color: "#1d4ed8", label: "Cash Transfer" },
-  scholarship:    { bg: "#f0fdf4", color: "#15803d", label: "Scholarship" },
-  subsidy:        { bg: "#fefce8", color: "#854d0e", label: "Subsidy" },
-  insurance:      { bg: "#f5f3ff", color: "#6d28d9", label: "Insurance" },
-  housing:        { bg: "#fff7ed", color: "#9a3412", label: "Housing" },
-  employment:     { bg: "#f0fdf4", color: "#166534", label: "Employment" },
-  healthcare:     { bg: "#fdf2f8", color: "#9d174d", label: "Healthcare" },
-  food_subsidy:   { bg: "#fff7ed", color: "#c2410c", label: "Food Subsidy" },
-  savings_scheme: { bg: "#eff6ff", color: "#1e40af", label: "Savings" },
-  other:          { bg: "#f9fafb", color: "#374151", label: "Scheme" }
+  cash_transfer:  { bg: "bg-blue-50/70 text-blue-700 border-blue-100", label: "Cash Transfer" },
+  scholarship:    { bg: "bg-emerald-50/70 text-emerald-700 border-emerald-100", label: "Scholarship" },
+  subsidy:        { bg: "bg-amber-50/70 text-amber-800 border-amber-100", label: "Subsidy" },
+  insurance:      { bg: "bg-purple-50/70 text-purple-700 border-purple-100", label: "Insurance" },
+  housing:        { bg: "bg-orange-50/70 text-orange-700 border-orange-100", label: "Housing" },
+  employment:     { bg: "bg-teal-50/70 text-teal-700 border-teal-100", label: "Employment" },
+  healthcare:     { bg: "bg-rose-50/70 text-rose-700 border-rose-100", label: "Healthcare" },
+  food_subsidy:   { bg: "bg-orange-50/70 text-orange-800 border-orange-100", label: "Food Subsidy" },
+  savings_scheme: { bg: "bg-indigo-50/70 text-indigo-700 border-indigo-100", label: "Savings" },
+  other:          { bg: "bg-slate-50 text-slate-700 border-slate-100", label: "Scheme" }
 };
 
 function SkeletonCard() {
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl p-5 mb-3 animate-pulse">
-      <div className="flex justify-between mb-3">
-        <div className="h-5 w-3/5 bg-gray-100 rounded-md" />
-        <div className="h-5 w-1/5 bg-gray-100 rounded-full" />
+    <div className="bg-white border border-slate-100 rounded-3xl p-5 mb-3.5 animate-pulse shadow-sm">
+      <div className="flex justify-between items-start mb-3">
+        <div className="h-5 w-3/5 bg-slate-100 rounded-lg" />
+        <div className="h-5 w-1/5 bg-slate-100 rounded-full" />
       </div>
-      <div className="h-3.5 w-2/5 bg-gray-100 rounded-md mb-4" />
-      <div className="h-9 bg-gray-100 rounded-lg" />
+      <div className="h-3.5 w-2/5 bg-slate-100 rounded-md mb-4" />
+      <div className="h-9 bg-slate-100 rounded-2xl w-full" />
     </div>
   );
 }
@@ -87,34 +87,37 @@ function SchemeCard({ scheme, onClick, matchLabel }) {
   return (
     <div
       onClick={onClick}
-      className="bg-white border border-gray-100 rounded-2xl p-5 mb-3 cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5"
+      className="bg-white border border-slate-200 rounded-3xl p-5 mb-3.5 cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 select-none"
     >
-      <div className="flex justify-between items-start mb-2 gap-2">
-        <h3 className="text-[15px] font-semibold text-gray-900 leading-snug flex-1">
+      <div className="flex justify-between items-start mb-3 gap-3">
+        <h3 className="text-sm font-bold text-slate-900 leading-snug flex-1 pr-1">
           {scheme.name}
         </h3>
-        <span
-          className="text-[10px] font-bold px-2.5 py-0.5 rounded-full whitespace-nowrap"
-          style={{ backgroundColor: bt.bg, color: bt.color }}
-        >
+        <span className={`text-[9px] font-extrabold px-2.5 py-0.5 rounded-full border whitespace-nowrap uppercase tracking-wider ${bt.bg}`}>
           {bt.label}
         </span>
       </div>
-      <p className="text-xs text-gray-500 mb-3.5">{scheme.ministry}</p>
-      <div className="flex items-center justify-between">
+      
+      <p className="text-[11px] text-slate-400 font-semibold mb-4 leading-normal">
+        {scheme.ministry}
+      </p>
+      
+      <div className="flex items-center justify-between border-t border-slate-50 pt-3">
         {formatAmount() ? (
-          <span className="text-[15px] font-bold text-blue-700">{formatAmount()}</span>
+          <span className="text-sm font-extrabold text-indigo-900">{formatAmount()}</span>
         ) : (
-          <span className="text-xs text-gray-400">Amount varies</span>
+          <span className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Amount Varies</span>
         )}
           
         <div className="flex items-center gap-2">
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
-            matchPercentage >= 80 ? "bg-emerald-50 text-emerald-700" : (matchPercentage >= 60 ? "bg-amber-50 text-amber-700" : "bg-gray-100 text-gray-600")
+          <span className={`text-[9px] font-extrabold px-2 py-0.5 rounded-md border ${
+            matchPercentage >= 80 
+              ? "bg-emerald-50 text-emerald-700 border-emerald-100/60" 
+              : (matchPercentage >= 60 ? "bg-amber-50 text-amber-800 border-amber-100/60" : "bg-slate-50 text-slate-600 border-slate-100")
           }`}>
             🎯 {matchPercentage}% {matchLabel}
           </span>
-          <span className="text-gray-400 text-lg">›</span>
+          <span className="text-slate-300 text-base font-bold">›</span>
         </div>
       </div>
     </div>
@@ -167,38 +170,38 @@ export default function SemanticSearchPage() {
         </div>
 
         {/* Right Panel: Search Console */}
-        <div className="flex-1 flex flex-col bg-[#f9fafb] md:bg-white md:border md:border-gray-200 md:rounded-3xl md:shadow-sm overflow-hidden h-full">
+        <div className="flex-1 flex flex-col bg-slate-50 md:bg-white md:border md:border-slate-200 md:rounded-3xl md:shadow-sm overflow-hidden h-full">
           
           {/* Header Banner */}
-          <div className="bg-gradient-to-br from-blue-900 to-indigo-950 px-6 py-5 text-white flex-shrink-0 md:rounded-t-3xl shadow-sm">
+          <div className="bg-gradient-to-br from-indigo-900 to-blue-900 px-6 py-5 text-white flex-shrink-0 md:rounded-t-3xl shadow-sm">
             <button 
               onClick={() => router.push("/schemes")}
-              className="bg-transparent border-0 text-blue-200 text-xs font-semibold cursor-pointer p-0 mb-2.5 block hover:text-white"
+              className="bg-transparent border-0 text-indigo-200 hover:text-white text-xs font-bold cursor-pointer p-0 mb-3.5 block transition-colors"
             >
               {t.back}
             </button>
-            <h1 className="text-lg font-bold m-0 flex items-center gap-2">🧠 {t.title}</h1>
-            <p className="text-xs text-blue-200/90 mt-1 m-0 leading-relaxed">{t.subtitle}</p>
+            <h1 className="text-lg font-extrabold m-0 flex items-center gap-2">🧠 {t.title}</h1>
+            <p className="text-xs text-indigo-200/90 mt-1 m-0 leading-relaxed font-medium">{t.subtitle}</p>
           </div>
 
           {/* Search box controls */}
-          <div className="p-5 border-b border-gray-50 bg-white flex-shrink-0">
-            <form onSubmit={handleSearch} className="flex flex-col gap-3">
+          <div className="p-5 border-b border-slate-100 bg-white flex-shrink-0">
+            <form onSubmit={handleSearch} className="flex flex-col gap-3.5">
               <textarea
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={t.placeholder}
                 rows={3}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none resize-none box-border focus:border-blue-500 font-sans leading-relaxed"
+                className="w-full border border-slate-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 rounded-2xl px-4 py-3 text-xs outline-none resize-none box-border font-sans font-semibold text-slate-700 leading-relaxed placeholder-slate-400 transition-all shadow-sm"
               />
-              <div className="flex justify-between items-center">
-                <span className="text-[11px] text-gray-400 font-medium italic">
+              <div className="flex justify-between items-center gap-3">
+                <span className="text-[10px] text-slate-400 font-bold italic leading-normal flex-1 max-w-[70%]">
                   💡 {t.hint}
                 </span>
                 <button
                   type="submit"
                   disabled={loading || !query.trim()}
-                  className="bg-blue-900 text-white border-0 rounded-xl px-5 py-2.5 text-xs font-bold cursor-pointer transition-transform duration-100 active:scale-95 shadow-sm disabled:opacity-50 whitespace-nowrap"
+                  className="bg-indigo-900 hover:bg-indigo-800 text-white border-0 rounded-2xl px-5 py-3 text-xs font-bold cursor-pointer transition-transform duration-100 active:scale-95 shadow-sm disabled:opacity-50 whitespace-nowrap"
                 >
                   {loading ? t.searching : t.btnSearch}
                 </button>
@@ -207,9 +210,9 @@ export default function SemanticSearchPage() {
           </div>
 
           {/* Results container */}
-          <div className="flex-1 overflow-y-auto px-5 pb-24 md:pb-6 pt-4 custom-scrollbar bg-gray-50/20">
+          <div className="flex-1 overflow-y-auto px-5 pb-24 md:pb-6 pt-5 custom-scrollbar bg-slate-50/30">
             {searched && !loading && (
-              <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3.5 m-0">
+              <h2 className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-3.5 m-0">
                 {t.results}
               </h2>
             )}
@@ -217,15 +220,15 @@ export default function SemanticSearchPage() {
             {loading && [1, 2, 3].map((i) => <SkeletonCard key={i} />)}
 
             {error && (
-              <div className="bg-white border border-red-100 rounded-2xl p-5 text-center shadow-sm">
-                <p className="text-xs font-semibold text-red-600 m-0">{error}</p>
+              <div className="bg-white border border-red-100 rounded-3xl p-5 text-center shadow-sm">
+                <p className="text-xs font-bold text-red-600 m-0 leading-normal">{error}</p>
               </div>
             )}
 
             {!loading && searched && results.length === 0 && !error && (
-              <div className="bg-white border border-gray-100 rounded-2xl p-8 text-center shadow-sm">
-                <p className="text-3xl m-0 mb-2">🕵️‍♂️</p>
-                <p className="text-xs text-gray-500 m-0 leading-relaxed">{t.noResults}</p>
+              <div className="bg-white border border-slate-200 rounded-3xl p-8 text-center shadow-sm select-none">
+                <p className="text-4xl m-0 mb-3">🕵️‍♂️</p>
+                <p className="text-xs text-slate-500 font-bold m-0 leading-relaxed max-w-xs mx-auto">{t.noResults}</p>
               </div>
             )}
 

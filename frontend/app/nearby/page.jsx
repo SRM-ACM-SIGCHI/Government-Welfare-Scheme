@@ -2,10 +2,21 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import AppLayout from "../../components/AppLayout";
 import ChatBot from "../../components/ChatBot";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+// Dynamically import Leaflet MapComponent with SSR disabled to prevent Next.js window compilation errors
+const MapComponent = dynamic(() => import("../../components/MapComponent"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full min-h-[450px] bg-slate-100 rounded-3xl flex items-center justify-center text-slate-400 font-extrabold border border-slate-200 shadow-inner select-none">
+      ⚡ Loading Interactive Map...
+    </div>
+  ),
+});
 
 const STATES = [
   { code: "TN", name: "Tamil Nadu" },
@@ -17,7 +28,7 @@ const STATES = [
 
 const DICT = {
   en: {
-    title: "Nearby Assistance",
+    title: "Nearby Assistance Centers",
     subtitle: "Find post offices and CSCs near you to help submit scheme applications",
     useLocation: "Find Centers Near Me",
     gpsDenied: "Location permission denied. Please select a state manually.",
@@ -116,14 +127,14 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
 
 function CenterSkeleton() {
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl p-5 mb-3 animate-pulse">
-      <div className="flex justify-between mb-3">
-        <div className="h-5 w-3/5 bg-gray-100 rounded-md" />
-        <div className="h-5 w-1/4 bg-gray-100 rounded-full" />
+    <div className="bg-white border border-slate-100 rounded-3xl p-5 mb-3.5 animate-pulse shadow-sm">
+      <div className="flex justify-between items-start mb-3">
+        <div className="h-5 w-3/5 bg-slate-100 rounded-md" />
+        <div className="h-5 w-1/4 bg-slate-100 rounded-full" />
       </div>
-      <div className="h-3.5 w-11/12 bg-gray-100 rounded-md mb-3" />
-      <div className="h-3.5 w-2/5 bg-gray-100 rounded-md mb-4" />
-      <div className="h-9 bg-gray-100 rounded-lg" />
+      <div className="h-3 w-11/12 bg-slate-100 rounded-md mb-3" />
+      <div className="h-3 w-2/5 bg-slate-100 rounded-md mb-4" />
+      <div className="h-9 bg-slate-100 rounded-2xl w-full" />
     </div>
   );
 }
@@ -135,38 +146,38 @@ function CenterCard({ center, dict, isActive, onSelect }) {
   return (
     <div
       onClick={onSelect}
-      className={`bg-white border rounded-2xl p-5 mb-3 cursor-pointer shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 ${
-        isActive ? "border-blue-600 ring-2 ring-blue-50" : "border-gray-100"
+      className={`bg-white border rounded-3xl p-5 mb-3.5 cursor-pointer shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 select-none ${
+        isActive ? "border-indigo-600 ring-2 ring-indigo-50" : "border-slate-200"
       }`}
     >
-      <div className="flex justify-between items-start mb-2 gap-2">
-        <h3 className="text-[15px] font-semibold text-gray-900 leading-snug flex-1">
+      <div className="flex justify-between items-start mb-2.5 gap-3">
+        <h3 className="text-sm font-bold text-slate-900 leading-snug flex-1">
           {center.name}
         </h3>
         <span
-          className={`text-[9px] font-bold px-2.5 py-0.5 rounded-full whitespace-nowrap ${
-            isCsc ? "bg-blue-50 text-blue-700" : "bg-pink-50 text-pink-700"
+          className={`text-[9px] font-extrabold px-2.5 py-0.5 rounded-full border whitespace-nowrap uppercase tracking-wider ${
+            isCsc ? "bg-blue-50/70 text-blue-700 border-blue-100" : "bg-pink-50/70 text-pink-700 border-pink-100"
           }`}
         >
           {isCsc ? dict.csc : dict.postOffice}
         </span>
       </div>
 
-      <p className="text-xs text-gray-600 mb-2.5 leading-relaxed">
+      <p className="text-xs text-slate-500 mb-3.5 leading-relaxed">
         📍 {center.address}
       </p>
 
-      <div className="flex flex-col gap-1.5 mb-4 border-t border-gray-50 pt-2.5">
+      <div className="flex flex-col gap-2 mb-4 border-t border-slate-50 pt-3.5">
         {center.working_hours && (
-          <div className="flex justify-between text-[11px] text-gray-500">
+          <div className="flex justify-between text-[11px] text-slate-400 font-semibold">
             <span>🕒 {dict.hours}</span>
-            <span className="font-medium text-gray-700">{center.working_hours}</span>
+            <span className="font-bold text-slate-700">{center.working_hours}</span>
           </div>
         )}
         {center.phone_number && (
-          <div className="flex justify-between text-[11px] text-gray-500">
+          <div className="flex justify-between text-[11px] text-slate-400 font-semibold">
             <span>📞 {dict.phone}</span>
-            <a href={`tel:${center.phone_number}`} className="font-medium text-blue-600 no-underline" onClick={e => e.stopPropagation()}>
+            <a href={`tel:${center.phone_number}`} className="font-bold text-indigo-600 hover:text-indigo-900 no-underline transition-colors" onClick={e => e.stopPropagation()}>
               {center.phone_number}
             </a>
           </div>
@@ -175,11 +186,11 @@ function CenterCard({ center, dict, isActive, onSelect }) {
 
       <div className="flex justify-between items-center">
         {center.distance !== undefined ? (
-          <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md">
+          <span className="text-[11px] font-extrabold text-emerald-700 bg-emerald-50/80 px-2.5 py-1 rounded-md border border-emerald-100/40">
             🚀 {center.distance} {dict.kmAway}
           </span>
         ) : (
-          <span className="text-[11px] text-gray-400">{center.state}</span>
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{center.state}</span>
         )}
 
         <a
@@ -187,207 +198,10 @@ function CenterCard({ center, dict, isActive, onSelect }) {
           target="_blank"
           rel="noopener noreferrer"
           onClick={e => e.stopPropagation()}
-          className="bg-blue-900 text-white no-underline text-xs font-bold px-4 py-2 rounded-xl inline-flex items-center gap-1.5 transition-transform duration-100 active:scale-95 shadow-sm"
+          className="bg-indigo-900 hover:bg-indigo-800 text-white no-underline text-xs font-bold px-4 py-2.5 rounded-2xl inline-flex items-center gap-1.5 transition-transform duration-100 active:scale-95 shadow-sm"
         >
           🗺️ {dict.getDirections}
         </a>
-      </div>
-    </div>
-  );
-}
-
-function MockMap({ centers, userCoords, centerLat, centerLng, selectedCenterId, onSelectCenter, previewCenter }) {
-  let range = 0.08; 
-  const activeCenters = previewCenter ? [...centers, previewCenter] : centers;
-  
-  if (activeCenters.length > 0) {
-    let maxDelta = 0.01;
-    activeCenters.forEach(c => {
-      const dLat = Math.abs(c.latitude - centerLat);
-      const dLng = Math.abs(c.longitude - centerLng);
-      if (dLat > maxDelta) maxDelta = dLat;
-      if (dLng > maxDelta) maxDelta = dLng;
-    });
-    range = Math.max(0.04, maxDelta * 2.2);
-  }
-
-  const getSvgCoords = (lat, lng) => {
-    const pctX = 50 + ((lng - centerLng) / range) * 50;
-    const pctY = 50 - ((lat - centerLat) / range) * 50;
-    return { x: pctX, y: pctY };
-  };
-
-  const [hoveredCenter, setHoveredCenter] = useState(null);
-
-  return (
-    <div className="relative w-full h-full bg-slate-50 rounded-3xl overflow-hidden shadow-inner border border-gray-200/80 min-h-[450px]">
-      
-      {/* SVG Canvas */}
-      <svg className="w-full h-full" viewBox="0 0 400 400" preserveAspectRatio="none">
-        
-        {/* Background Grid Patterns */}
-        <defs>
-          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" strokeWidth="1" />
-          </pattern>
-          <pattern id="dotGrid" width="20" height="20" patternUnits="userSpaceOnUse">
-            <circle cx="2" cy="2" r="1" fill="#cbd5e1" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#dotGrid)" />
-        <rect width="100%" height="100%" fill="url(#grid)" opacity="0.4" />
-
-        {/* Concentric Range Rings */}
-        <circle cx="200" cy="200" r="55" fill="none" stroke="#3b82f6" strokeWidth="1" strokeDasharray="3,4" opacity="0.25" />
-        <circle cx="200" cy="200" r="110" fill="none" stroke="#3b82f6" strokeWidth="1" strokeDasharray="3,4" opacity="0.2" />
-        <circle cx="200" cy="200" r="165" fill="none" stroke="#3b82f6" strokeWidth="1" strokeDasharray="3,4" opacity="0.15" />
-
-        {/* Mock Streets/Roads */}
-        <path d="M 0,200 Q 150,185 200,200 T 400,200" fill="none" stroke="#e2e8f0" strokeWidth="6" opacity="0.8" />
-        <path d="M 200,0 Q 215,150 200,200 T 200,400" fill="none" stroke="#e2e8f0" strokeWidth="6" opacity="0.8" />
-        <path d="M 40,40 L 360,360" fill="none" stroke="#e2e8f0" strokeWidth="3" opacity="0.4" />
-        <path d="M 40,360 L 360,40" fill="none" stroke="#e2e8f0" strokeWidth="3" opacity="0.4" />
-
-        {/* Legend Radar Title */}
-        <text x="16" y="28" fill="#94a3b8" fontSize="9" fontWeight="bold" letterSpacing="1.2">COORDINATE MONITOR</text>
-
-        {/* User GPS Location Beacon */}
-        {userCoords && (() => {
-          const { x, y } = getSvgCoords(userCoords.latitude, userCoords.longitude);
-          if (x >= 0 && x <= 100 && y >= 0 && y <= 100) {
-            return (
-              <g className="cursor-pointer">
-                {/* Pulsing Outer Ring */}
-                <circle cx={`${x}%`} cy={`${y}%`} r="18" fill="#10b981" opacity="0.2">
-                  <animate attributeName="r" values="8;24;8" dur="3s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" values="0.3;0;0.3" dur="3s" repeatCount="indefinite" />
-                </circle>
-                <circle cx={`${x}%`} cy={`${y}%`} r="10" fill="#10b981" opacity="0.3">
-                  <animate attributeName="r" values="4;14;4" dur="2s" repeatCount="indefinite" />
-                </circle>
-                {/* Core Beacon */}
-                <circle cx={`${x}%`} cy={`${y}%`} r="6" fill="#10b981" stroke="#fff" strokeWidth="2" />
-              </g>
-            );
-          }
-        })()}
-
-        {/* Center Markers */}
-        {centers.map(center => {
-          const { x, y } = getSvgCoords(center.latitude, center.longitude);
-          const isCsc = center.type === "csc";
-          const isHovered = hoveredCenter?.center_id === center.center_id;
-          const isSelected = selectedCenterId === center.center_id;
-
-          if (x < 0 || x > 100 || y < 0 || y > 100) return null;
-
-          return (
-            <g
-              key={center.center_id}
-              className="cursor-pointer"
-              onMouseEnter={() => setHoveredCenter(center)}
-              onMouseLeave={() => setHoveredCenter(null)}
-              onClick={() => onSelectCenter(center)}
-            >
-              {/* Highlight Circle */}
-              {(isHovered || isSelected) && (
-                <circle
-                  cx={`${x}%`}
-                  cy={`${y}%`}
-                  r={isSelected ? "18" : "14"}
-                  fill={isCsc ? "#3b82f6" : "#ec4899"}
-                  opacity="0.18"
-                />
-              )}
-
-              {/* Pin Base Pointer */}
-              <path
-                d={`M ${x}%,${y}% l -6,-12 a 7,7 0 1,1 12,0 z`}
-                fill={isCsc ? "#2563eb" : "#db2777"}
-                stroke="#fff"
-                strokeWidth="1.5"
-                transform="translate(0, -6)"
-              />
-              
-              {/* Emoji Icon inside Pin */}
-              <text
-                x={`${x}%`}
-                y={`${y}%`}
-                dy="-12"
-                textAnchor="middle"
-                fontSize="7"
-                fill="#fff"
-              >
-                {isCsc ? "💻" : "📮"}
-              </text>
-            </g>
-          );
-        })}
-
-        {/* Form Preview Center Marker */}
-        {previewCenter && (() => {
-          const { x, y } = getSvgCoords(previewCenter.latitude, previewCenter.longitude);
-          if (x >= 0 && x <= 100 && y >= 0 && y <= 100) {
-            return (
-              <g className="cursor-pointer">
-                <circle cx={`${x}%`} cy={`${y}%`} r="16" fill="#f59e0b" opacity="0.2">
-                  <animate attributeName="r" values="10;20;10" dur="2s" repeatCount="indefinite" />
-                </circle>
-                <path
-                  d={`M ${x}%,${y}% l -6,-12 a 7,7 0 1,1 12,0 z`}
-                  fill="#d97706"
-                  stroke="#fff"
-                  strokeWidth="1.5"
-                  transform="translate(0, -6)"
-                />
-                <text x={`${x}%`} y={`${y}%`} dy="-12" textAnchor="middle" fontSize="7" fill="#fff">⭐</text>
-              </g>
-            );
-          }
-        })()}
-      </svg>
-
-      {/* Floating Info Tooltip */}
-      {hoveredCenter && (() => {
-        const isCsc = hoveredCenter.type === "csc";
-        return (
-          <div className="absolute bottom-5 left-5 right-5 bg-white/95 backdrop-blur-md border border-gray-100 rounded-2xl p-4 shadow-xl flex flex-col gap-1 transition-all duration-300 animate-slide-up">
-            <div className="flex justify-between items-center">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-gray-400">
-                {isCsc ? "Common Service Centre" : "India Post Office"}
-              </span>
-              {hoveredCenter.distance !== undefined && (
-                <span className="text-[10px] font-bold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded">
-                  🚀 {hoveredCenter.distance} km away
-                </span>
-              )}
-            </div>
-            <h4 className="text-xs font-bold text-gray-900 m-0">{hoveredCenter.name}</h4>
-            <p className="text-[11px] text-gray-500 m-0 truncate">📍 {hoveredCenter.address}</p>
-          </div>
-        );
-      })()}
-      
-      {/* Legend Card Overlay */}
-      <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3.5 py-2.5 rounded-2xl border border-gray-200/60 shadow-sm flex flex-col gap-1.5 text-[9px] font-bold text-gray-600">
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block border border-white" />
-          <span>Your Location</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block border border-white" />
-          <span>E-Sevai / CSC Center</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-pink-500 inline-block border border-white" />
-          <span>Post Office</span>
-        </div>
-        {previewCenter && (
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block border border-white" />
-            <span>Form Preview</span>
-          </div>
-        )}
       </div>
     </div>
   );
@@ -484,7 +298,7 @@ export default function NearbyCentersPage() {
 
       setCenters(backendResults.slice(0, 5));
     } catch (err) {
-      setStatusMsg("Failed to connect to location services. Using offline fallback.");
+      setStatusMsg("Failed to connect to online location services. Using offline fallback.");
       calculateOfflineCenters(lat, lng);
     } finally {
       setLoading(false);
@@ -615,7 +429,7 @@ export default function NearbyCentersPage() {
     }
   };
 
-  // Determine center coordinates of mock radar map grid
+  // Determine center coordinates of Leaflet map container
   const mapCenterLat = coords ? coords.latitude : (centers.length > 0 ? centers[0].latitude : 13.0827);
   const mapCenterLng = coords ? coords.longitude : (centers.length > 0 ? centers[0].longitude : 80.2707);
 
@@ -631,35 +445,35 @@ export default function NearbyCentersPage() {
 
   return (
     <AppLayout activeTab="/nearby">
-      <div className="w-full max-w-md mx-auto md:max-w-none md:mx-0 h-full flex flex-col md:flex-row gap-6 md:h-[calc(100vh-4rem)]">
+      <div className="w-full max-w-md mx-auto md:max-w-none md:mx-0 h-full flex flex-col md:flex-row gap-6 md:h-[calc(100vh-4rem)] box-border">
         
         {/* Left Column: Form and Centers list */}
-        <div className="flex-1 flex flex-col min-w-0 bg-[#f9fafb] md:bg-white md:border md:border-gray-200 md:rounded-3xl md:shadow-sm overflow-hidden h-full">
+        <div className="flex-1 flex flex-col min-w-0 bg-slate-50 md:bg-white md:border md:border-slate-200 md:rounded-3xl md:shadow-sm overflow-hidden h-full">
           
           {/* Banner */}
-          <div className="bg-gradient-to-br from-blue-900 to-indigo-950 px-6 py-5 text-white flex-shrink-0 md:rounded-t-3xl shadow-sm">
-            <h1 className="text-lg font-bold m-0 flex items-center gap-2">📍 {d.title}</h1>
-            <p className="text-xs text-blue-200/90 mt-1 m-0 leading-relaxed">{d.subtitle}</p>
+          <div className="bg-gradient-to-br from-indigo-900 to-blue-900 px-6 py-5 text-white flex-shrink-0 md:rounded-t-3xl shadow-sm">
+            <h1 className="text-base font-extrabold m-0 flex items-center gap-2">📍 {d.title}</h1>
+            <p className="text-[11px] text-indigo-200/90 mt-1.5 m-0 leading-relaxed font-semibold">{d.subtitle}</p>
           </div>
 
           {/* Tabs Selector */}
-          <div className="flex bg-white border-b border-gray-100 px-3 flex-shrink-0">
+          <div className="flex bg-white border-b border-slate-100 px-3 flex-shrink-0 select-none">
             <button
               onClick={() => { setActiveTab("find"); setFormMsg({ text: "", type: "" }); }}
-              className={`flex-1 py-4 bg-transparent border-0 border-b-2 font-semibold text-xs transition-colors duration-200 cursor-pointer ${
+              className={`flex-1 py-4 bg-transparent border-0 border-b-2 font-bold text-xs transition-all duration-200 cursor-pointer ${
                 activeTab === "find" 
-                  ? "border-blue-600 text-blue-600" 
-                  : "border-transparent text-gray-500 hover:text-gray-900"
+                  ? "border-indigo-600 text-indigo-900" 
+                  : "border-transparent text-slate-400 hover:text-slate-900"
               }`}
             >
               🔍 {d.tabFind}
             </button>
             <button
               onClick={() => { setActiveTab("add"); setStatusMsg(""); }}
-              className={`flex-1 py-4 bg-transparent border-0 border-b-2 font-semibold text-xs transition-colors duration-200 cursor-pointer ${
+              className={`flex-1 py-4 bg-transparent border-0 border-b-2 font-bold text-xs transition-all duration-200 cursor-pointer ${
                 activeTab === "add" 
-                  ? "border-blue-600 text-blue-600" 
-                  : "border-transparent text-gray-500 hover:text-gray-900"
+                  ? "border-indigo-600 text-indigo-900" 
+                  : "border-transparent text-slate-400 hover:text-slate-900"
               }`}
             >
               ➕ {d.tabAdd}
@@ -667,49 +481,49 @@ export default function NearbyCentersPage() {
           </div>
 
           {/* Form Content Scroll Box */}
-          <div className="flex-1 overflow-y-auto px-5 pb-24 md:pb-6 pt-4 custom-scrollbar bg-gray-50/20">
+          <div className="flex-1 overflow-y-auto px-5 pb-24 md:pb-6 pt-4.5 custom-scrollbar bg-slate-50/30">
             
             {/* Tab 1: Find Centers */}
             {activeTab === "find" && (
-              <div className="space-y-4">
+              <div className="space-y-4 animate-[fadeIn_0.2s_ease-out]">
                 
                 {/* Geolocation Lock box */}
-                <div className="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm space-y-4">
+                <div className="bg-white border border-slate-200/80 rounded-3xl p-5 shadow-sm space-y-4">
                   <button
                     onClick={requestGPSLocation}
                     disabled={loading}
-                    className="w-full bg-blue-900 text-white border-0 rounded-xl py-3 text-xs font-bold cursor-pointer transition-transform duration-100 active:scale-95 shadow-sm disabled:opacity-60 flex items-center justify-center gap-2"
+                    className="w-full bg-indigo-900 hover:bg-indigo-800 text-white border-none rounded-2xl py-3 text-xs font-bold cursor-pointer transition-all duration-200 active:scale-98 shadow-sm disabled:opacity-60 flex items-center justify-center gap-2"
                   >
                     🧭 {loading ? "Locating..." : d.useLocation}
                   </button>
 
                   {statusMsg && (
-                    <p className="text-xs font-semibold text-red-600 text-center m-0">
+                    <p className="text-xs font-bold text-red-600 text-center m-0 leading-normal">
                       ⚠️ {statusMsg}
                     </p>
                   )}
 
                   {coords && (
-                    <p className="text-xs text-emerald-600 font-semibold text-center m-0">
+                    <p className="text-xs text-emerald-600 font-bold text-center m-0">
                       ✅ GPS Connected: {coords.latitude.toFixed(4)}, {coords.longitude.toFixed(4)}
                     </p>
                   )}
 
-                  <div className="flex items-center gap-3 py-1">
-                    <hr className="flex-1 border-0 border-t border-gray-100" />
-                    <span className="text-[10px] text-gray-400 font-bold uppercase">OR</span>
-                    <hr className="flex-1 border-0 border-t border-gray-100" />
+                  <div className="flex items-center gap-3 py-1 select-none">
+                    <hr className="flex-1 border-0 border-t border-slate-100" />
+                    <span className="text-[9px] text-slate-400 font-extrabold uppercase tracking-widest">OR</span>
+                    <hr className="flex-1 border-0 border-t border-slate-100" />
                   </div>
 
                   {/* State Select Fallback */}
-                  <div className="space-y-1.5">
-                    <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                  <div className="space-y-2">
+                    <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
                       {d.manualSelect}
                     </label>
                     <select
                       value={selectedState}
                       onChange={(e) => handleStateChange(e.target.value)}
-                      className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-sm bg-white outline-none focus:border-blue-500"
+                      className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 bg-white outline-none focus:border-indigo-600 cursor-pointer"
                     >
                       <option value="">-- Choose State --</option>
                       {STATES.map(st => (
@@ -719,8 +533,21 @@ export default function NearbyCentersPage() {
                   </div>
                 </div>
 
+                {/* Mobile Leaflet Map View: Renders interactively under coordinates picker */}
+                <div className="md:hidden w-full h-64 flex-shrink-0 rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm relative z-10">
+                  <MapComponent 
+                    centers={centers}
+                    userCoords={coords}
+                    centerLat={mapCenterLat}
+                    centerLng={mapCenterLng}
+                    selectedCenterId={selectedCenterId}
+                    onSelectCenter={(center) => setSelectedCenterId(center.center_id)}
+                    previewCenter={previewCenter}
+                  />
+                </div>
+
                 {/* Centers Listings */}
-                <div className="space-y-3 pt-2">
+                <div className="space-y-3 pt-1">
                   {loading && [1, 2, 3].map(i => <CenterSkeleton key={i} />)}
 
                   {!loading && centers.length > 0 && (
@@ -738,10 +565,10 @@ export default function NearbyCentersPage() {
                   )}
 
                   {!loading && centers.length === 0 && !statusMsg && (
-                    <div className="bg-white border border-gray-100 rounded-2xl p-8 text-center shadow-sm">
+                    <div className="bg-white border border-slate-200 rounded-3xl p-8 text-center shadow-sm select-none">
                       <p className="text-4xl m-0 mb-3">🧭</p>
-                      <p className="text-xs text-gray-500 m-0 leading-relaxed">
-                        Query your geolocation or choose a manual state to load nearby common service centres (CSC) and Post Offices.
+                      <p className="text-xs text-slate-400 leading-relaxed font-semibold m-0 max-w-[240px] mx-auto">
+                        Connect your GPS coordinates or select a manual state fallback to discover nearby Post Offices and Common Service Centres.
                       </p>
                     </div>
                   )}
@@ -752,10 +579,10 @@ export default function NearbyCentersPage() {
 
             {/* Tab 2: Add Center Form */}
             {activeTab === "add" && (
-              <form onSubmit={handleAddCenter} className="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm space-y-4">
+              <form onSubmit={handleAddCenter} className="bg-white border border-slate-200/80 rounded-3xl p-5 shadow-sm space-y-4 animate-[fadeIn_0.2s_ease-out]">
                 
                 {formMsg.text && (
-                  <div className={`border rounded-xl p-3.5 text-xs font-semibold flex items-center gap-2 ${
+                  <div className={`border rounded-2xl p-4 text-xs font-bold flex items-center gap-2 ${
                     formMsg.type === "success" 
                       ? "bg-emerald-50 text-emerald-800 border-emerald-100" 
                       : "bg-red-50 text-red-800 border-red-100"
@@ -765,8 +592,8 @@ export default function NearbyCentersPage() {
                   </div>
                 )}
 
-                <div className="space-y-1">
-                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                <div className="space-y-1.5">
+                  <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
                     {d.centerName} *
                   </label>
                   <input
@@ -775,22 +602,22 @@ export default function NearbyCentersPage() {
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
                     placeholder="e.g. George Town Sub Post Office"
-                    className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-sm outline-none box-border focus:border-blue-500"
+                    className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 outline-none focus:border-indigo-600 box-border shadow-sm placeholder-slate-400"
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                <div className="space-y-2">
+                  <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
                     {d.centerType} *
                   </label>
                   <div className="flex gap-2">
                     <button
                       type="button"
                       onClick={() => setFormType("csc")}
-                      className={`flex-1 py-2.5 rounded-xl border font-bold text-xs cursor-pointer transition-colors ${
+                      className={`flex-1 py-3 rounded-2xl border font-bold text-xs cursor-pointer transition-colors active:scale-[0.99] ${
                         formType === "csc" 
-                          ? "border-blue-600 bg-blue-50 text-blue-700" 
-                          : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+                          ? "border-indigo-900 bg-indigo-50/50 text-indigo-900" 
+                          : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-800"
                       }`}
                     >
                       💻 {d.csc}
@@ -798,10 +625,10 @@ export default function NearbyCentersPage() {
                     <button
                       type="button"
                       onClick={() => setFormType("post_office")}
-                      className={`flex-1 py-2.5 rounded-xl border font-bold text-xs cursor-pointer transition-colors ${
+                      className={`flex-1 py-3 rounded-2xl border font-bold text-xs cursor-pointer transition-colors active:scale-[0.99] ${
                         formType === "post_office" 
-                          ? "border-blue-600 bg-blue-50 text-blue-700" 
-                          : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+                          ? "border-indigo-900 bg-indigo-50/50 text-indigo-900" 
+                          : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-800"
                       }`}
                     >
                       📮 {d.postOffice}
@@ -809,8 +636,8 @@ export default function NearbyCentersPage() {
                   </div>
                 </div>
 
-                <div className="space-y-1">
-                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                <div className="space-y-1.5">
+                  <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
                     {d.address} *
                   </label>
                   <textarea
@@ -819,19 +646,19 @@ export default function NearbyCentersPage() {
                     value={formAddress}
                     onChange={(e) => setFormAddress(e.target.value)}
                     placeholder="Complete street address details..."
-                    className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-sm outline-none resize-none box-border focus:border-blue-500 font-sans leading-relaxed"
+                    className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 outline-none resize-none box-border focus:border-indigo-600 font-sans leading-relaxed shadow-sm placeholder-slate-400"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3.5">
-                  <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                  <div className="space-y-1.5">
+                    <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
                       {d.state} *
                     </label>
                     <select
                       value={formState}
                       onChange={(e) => setFormState(e.target.value)}
-                      className="w-full py-2.5 px-3 rounded-xl border border-gray-200 text-sm bg-white outline-none focus:border-blue-500 h-[42px]"
+                      className="w-full py-3 px-3 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 bg-white outline-none focus:border-indigo-600 h-[45px] cursor-pointer"
                     >
                       {STATES.map(s => (
                         <option key={s.code} value={s.code}>{s.name}</option>
@@ -842,7 +669,7 @@ export default function NearbyCentersPage() {
                     <button
                       type="button"
                       onClick={fillGPSInForm}
-                      className="w-full h-[42px] bg-gray-100 border border-gray-200 rounded-xl text-[11px] text-gray-700 font-bold cursor-pointer transition-colors hover:bg-gray-200 flex items-center justify-center gap-1.5"
+                      className="w-full h-[45px] bg-slate-100 border border-slate-200 rounded-2xl text-[10px] text-slate-700 font-extrabold cursor-pointer transition-colors hover:bg-slate-200 flex items-center justify-center gap-1.5 active:scale-98 uppercase tracking-wider"
                     >
                       🎯 {d.fillGps}
                     </button>
@@ -850,8 +677,8 @@ export default function NearbyCentersPage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-3.5">
-                  <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                  <div className="space-y-1.5">
+                    <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
                       {d.latitude} *
                     </label>
                     <input
@@ -861,11 +688,11 @@ export default function NearbyCentersPage() {
                       value={formLat}
                       onChange={(e) => setFormLat(e.target.value)}
                       placeholder="e.g. 13.0899"
-                      className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-sm outline-none box-border focus:border-blue-500"
+                      className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 outline-none box-border focus:border-indigo-600 shadow-sm placeholder-slate-400"
                     />
                   </div>
-                  <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                  <div className="space-y-1.5">
+                    <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
                       {d.longitude} *
                     </label>
                     <input
@@ -875,13 +702,13 @@ export default function NearbyCentersPage() {
                       value={formLng}
                       onChange={(e) => setFormLng(e.target.value)}
                       placeholder="e.g. 80.2872"
-                      className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-sm outline-none box-border focus:border-blue-500"
+                      className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 outline-none box-border focus:border-indigo-600 shadow-sm placeholder-slate-400"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-1">
-                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                <div className="space-y-1.5">
+                  <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
                     {d.phoneNum}
                   </label>
                   <input
@@ -889,12 +716,12 @@ export default function NearbyCentersPage() {
                     value={formPhone}
                     onChange={(e) => setFormPhone(e.target.value)}
                     placeholder="e.g. 044-25220031"
-                    className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-sm outline-none box-border focus:border-blue-500"
+                    className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 outline-none box-border focus:border-indigo-600 shadow-sm placeholder-slate-400"
                   />
                 </div>
 
-                <div className="space-y-1">
-                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                <div className="space-y-1.5">
+                  <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
                     {d.hoursVal}
                   </label>
                   <input
@@ -902,13 +729,13 @@ export default function NearbyCentersPage() {
                     value={formHours}
                     onChange={(e) => setFormHours(e.target.value)}
                     placeholder="e.g. 9:00 AM - 5:00 PM"
-                    className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-sm outline-none box-border focus:border-blue-500"
+                    className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 outline-none box-border focus:border-indigo-600 shadow-sm placeholder-slate-400"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-emerald-600 text-white border-0 rounded-xl py-3 text-xs font-bold cursor-pointer transition-transform duration-100 active:scale-[0.99] shadow-sm hover:bg-emerald-700"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white border-0 rounded-2xl py-3.5 text-xs font-bold cursor-pointer transition-transform duration-100 active:scale-[0.99] shadow-sm"
                 >
                   🚀 {d.submitBtn}
                 </button>
@@ -918,9 +745,9 @@ export default function NearbyCentersPage() {
           </div>
         </div>
 
-        {/* Right Column: Desktop Mock Map */}
-        <div className="hidden md:flex flex-1 bg-white border border-gray-200 rounded-3xl shadow-sm p-4 overflow-hidden h-full">
-          <MockMap 
+        {/* Right Column: Desktop Leaflet Map Pane */}
+        <div className="hidden md:flex flex-1 bg-white border border-slate-200 rounded-3xl shadow-sm p-4 overflow-hidden h-full relative">
+          <MapComponent 
             centers={centers}
             userCoords={coords}
             centerLat={mapCenterLat}

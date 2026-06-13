@@ -1,0 +1,614 @@
+{
+  "status": "Success",
+  "statusCode": 200,
+  "errorDescription": "",
+  "error": "{}",
+  "data": [
+    {
+      "en": {
+        "basicDetails": {
+          "tags": [
+            "Loan",
+            "Entrepreneur",
+            "Finance",
+            "Business"
+          ],
+          "schemeName": "Stand-Up India",
+          "schemeShortTitle": "SUPI",
+          "nodalMinistryName": {
+            "label": "Ministry Of Finance"
+          },
+          "schemeCloseDate": "2025-03-31"
+        },
+        "schemeContent": {
+          "schemeImageUrl": "  https://standupmitra.in/Images/standuplogo.gif    ",
+          "briefDescription": "A scheme by Ministry of Finance for financing SC/ST and  Women Entrepreneurs by facilitating bank loans for setting up a greenfield project  Enterprise in manufacturing, services, trading sector and activities allied to agriculture."
+        }
+      },
+      "hi": {
+        "basicDetails": {
+          "tags": [
+            "ऋण",
+            "उद्यमी",
+            "वित्त",
+            "कारोबार"
+          ],
+          "schemeName": "स्टैंड-अप इंडिया",
+          "schemeShortTitle": "SUPI",
+          "nodalMinistryName": {
+            "label": "Ministry Of Finance"
+          },
+          "schemeCloseDate": "2025-03-31"
+        },
+        "schemeContent": {
+          "briefDescription": "वित्त मंत्रालय द्वारा अनुसूचित जाति/अनुसूचित जनजाति और महिला उद्यमियों को वित्तपोषित करने के लिए विनिर्माण, सेवा, व्यापार क्षेत्र और कृषि से संबंधित गतिविधियों में एक ग्रीनफील्ड परियोजना उद्यम स्थापित करने के लिए बैंक ऋण की सुविधा प्रदान करने के लिए एक योजना।",
+          "schemeImageUrl": "  https://standupmitra.in/Images/standuplogo.gif    "
+        }
+      },
+      "slug": "sui",
+      "as": {
+        "basicDetails": {
+          "tags": [
+            "ঋণ",
+            "উদ্যোগী",
+            "বিত্ত",
+            "ব্যৱসায়"
+          ],
+          "schemeName": "ষ্টেণ্ড-আপ ইণ্ডিয়া",
+          "schemeShortTitle": "SUPI",
+          "nodalMinistryName": {
+            "label": "Ministry Of Finance"
+          },
+          "schemeCloseDate": "2025-03-31"
+        },
+        "schemeContent": {
+          "briefDescription": "উৎপাদন, সেৱা, বাণিজ্য খণ্ড আৰু কৃষি সম্পৰ্কীয় কাৰ্যকলাপৰ ক্ষেত্ৰত গ্ৰীণফিল্ড প্ৰকল্প উদ্যোগ স্থাপনৰ বাবে বেংক ঋণৰ সুবিধা প্ৰদান কৰি অনুসূচিত জাতি/জনজাতি আৰু মহিলা উদ্যোগীসকলক বিত্তীয় সাহায্য প্ৰদানৰ বাবে বিত্ত মন্ত্ৰালয়ৰ এক আঁচনি।",
+          "schemeImageUrl": "  https://standupmitra.in/Images/standuplogo.gif    "
+        }
+      },
+      "bn": {
+        "basicDetails": {
+          "tags": [
+            "ঋণ",
+            "উদ্যোক্তা",
+            "অর্থায়ন",
+            "ব্যবসা-বাণিজ্য"
+          ],
+          "schemeName": "স্ট্যান্ড-আপ ইন্ডিয়া",
+          "schemeShortTitle": "SUPI",
+          "nodalMinistryName": {
+            "label": "Ministry Of Finance"
+          },
+          "schemeCloseDate": "2025-03-31"
+        },
+        "schemeContent": {
+          "briefDescription": "এসসি/এসটি এবং মহিলা উদ্যোক্তাদের অর্থায়নের জন্য অর্থ মন্ত্রকের একটি প্রকল্প যা উৎপাদন, পরিষেবা, বাণিজ্য ক্ষেত্র এবং কৃষি সম্পর্কিত ক্রিয়াকলাপে একটি গ্রিনফিল্ড প্রকল্প উদ্যোগ স্থাপনের জন্য ব্যাঙ্ক ঋণের সুবিধার্থে।",
+          "schemeImageUrl": "  https://standupmitra.in/Images/standuplogo.gif    "
+        }
+      },
+      "gu": {
+        "basicDetails": {
+          "tags": [
+            "લોન",
+            "સાહસિકો",
+            "નાણાકીય બાબતો",
+            "વ્યવસાય"
+          ],
+          "schemeName": "સ્ટેન્ડ-અપ ઇન્ડિયા",
+          "schemeShortTitle": "SUPI",
+          "nodalMinistryName": {
+            "label": "Ministry Of Finance"
+          },
+          "schemeCloseDate": "2025-03-31"
+        },
+        "schemeContent": {
+          "briefDescription": "ઉત્પાદન, સેવાઓ, વેપાર ક્ષેત્ર અને કૃષિ સંબંધિત પ્રવૃત્તિઓમાં ગ્રીનફિલ્ડ પ્રોજેક્ટ એન્ટરપ્રાઇઝની સ્થાપના માટે બેંક લોનની સુવિધા આપીને અનુસૂચિત જાતિ/અનુસૂચિત જનજાતિ અને મહિલા ઉદ્યોગસાહસિકોને ધિરાણ આપવા માટે નાણાં મંત્રાલય દ્વારા એક યોજના.",
+          "schemeImageUrl": "  https://standupmitra.in/Images/standuplogo.gif    "
+        }
+      },
+      "kn": {
+        "basicDetails": {
+          "tags": [
+            "ಸಾಲ",
+            "ಉದ್ಯಮಿ",
+            "ಹಣಕಾಸು",
+            "ವ್ಯಾಪಾರ"
+          ],
+          "schemeName": "ಸ್ಟ್ಯಾಂಡ್-ಅಪ್ ಇಂಡಿಯಾ",
+          "schemeShortTitle": "SUPI",
+          "nodalMinistryName": {
+            "label": "Ministry Of Finance"
+          },
+          "schemeCloseDate": "2025-03-31"
+        },
+        "schemeContent": {
+          "briefDescription": "ಉತ್ಪಾದನೆ, ಸೇವೆಗಳು, ವ್ಯಾಪಾರ ವಲಯ ಮತ್ತು ಕೃಷಿಗೆ ಸಂಬಂಧಿಸಿದ ಚಟುವಟಿಕೆಗಳಲ್ಲಿ ಗ್ರೀನ್ಫೀಲ್ಡ್ ಪ್ರಾಜೆಕ್ಟ್ ಉದ್ಯಮವನ್ನು ಸ್ಥಾಪಿಸಲು ಬ್ಯಾಂಕ್ ಸಾಲವನ್ನು ಸುಗಮಗೊಳಿಸುವ ಮೂಲಕ ಎಸ್ಸಿ/ಎಸ್ಟಿ ಮತ್ತು ಮಹಿಳಾ ಉದ್ಯಮಿಗಳಿಗೆ ಹಣಕಾಸು ಒದಗಿಸಲು ಹಣಕಾಸು ಸಚಿವಾಲಯದ ಯೋಜನೆ.",
+          "schemeImageUrl": "  https://standupmitra.in/Images/standuplogo.gif    "
+        }
+      },
+      "ks": {
+        "basicDetails": {
+          "tags": [
+            "قرضہ۔",
+            "کارٕبٲرۍ۔",
+            "مالیات۔",
+            "کاربار۔"
+          ],
+          "schemeName": "کھڑا ہندوستان",
+          "schemeShortTitle": "SUPI",
+          "nodalMinistryName": {
+            "label": "Ministry Of Finance"
+          },
+          "schemeCloseDate": "2025-03-31"
+        },
+        "schemeContent": {
+          "briefDescription": "مینوفیکچرنگ، خدمات، تجٲرتی شعبہٕ تہٕ زراعتس سۭتۍ وابستہٕ سرگرمین منٛز گرین فیلڈ پروجیکٹ انٹرپرائز قٲیم کرنہٕ خٲطرٕ بینک لون آسان بنٲوتھ ایس سی/ایس ٹی تہٕ زنانہٕ کارٕبارین مٲلی اعانت فراہم کرنہٕ خٲطرٕ چھ وزارت خزانہ طرفہٕ اکھ سکیم۔",
+          "schemeImageUrl": "  https://standupmitra.in/Images/standuplogo.gif    "
+        }
+      },
+      "mai": {
+        "basicDetails": {
+          "tags": [
+            "ऋण",
+            "उद्यमी",
+            "वित्त",
+            "व्यापार"
+          ],
+          "schemeName": "स्टैंड-अप भारत",
+          "schemeShortTitle": "SUPI",
+          "nodalMinistryName": {
+            "label": "Ministry Of Finance"
+          },
+          "schemeCloseDate": "2025-03-31"
+        },
+        "schemeContent": {
+          "briefDescription": "वित्त मन्त्रालय द्वारा अनुसूचित जाति/जनजाति आ महिला उद्यमीकेँ वित्तपोषणक लेल एकटा योजना जे विनिर्माण, सेवा, व्यापारिक क्षेत्र आ कृषिसँ सम्बन्धित गतिविधिसभमे ग्रीनफील्ड परियोजना उद्यम स्थापित करबाक लेल बैंक ऋणक सुविधा प्रदान करय।",
+          "schemeImageUrl": "  https://standupmitra.in/Images/standuplogo.gif    "
+        }
+      },
+      "ml": {
+        "basicDetails": {
+          "tags": [
+            "വായ്പ",
+            "സംരംഭകൻ",
+            "ധനകാര്യം",
+            "ബിസിനസ്സ്"
+          ],
+          "schemeName": "സ്റ്റാൻഡ് അപ്പ് ഇന്ത്യ",
+          "schemeShortTitle": "SUPI",
+          "nodalMinistryName": {
+            "label": "Ministry Of Finance"
+          },
+          "schemeCloseDate": "2025-03-31"
+        },
+        "schemeContent": {
+          "briefDescription": "ഉൽപ്പാദനം, സേവനങ്ങൾ, വ്യാപാര മേഖല, കൃഷിയുമായി ബന്ധപ്പെട്ട പ്രവർത്തനങ്ങൾ എന്നിവയിൽ ഒരു ഗ്രീൻഫീൽഡ് പ്രോജക്ട് എന്റർപ്രൈസ് സ്ഥാപിക്കുന്നതിന് ബാങ്ക് വായ്പകൾ സുഗമമാക്കുന്നതിലൂടെ പട്ടികജാതി/പട്ടികവർഗ്ഗക്കാർക്കും വനിതാ സംരംഭകർക്കും ധനസഹായം നൽകുന്നതിനുള്ള ധനമന്ത്രാലയത്തിന്റെ ഒരു പദ്ധതി.",
+          "schemeImageUrl": "  https://standupmitra.in/Images/standuplogo.gif    "
+        }
+      },
+      "mr": {
+        "basicDetails": {
+          "tags": [
+            "कर्ज",
+            "उद्योजक",
+            "वित्त",
+            "व्यवसाय"
+          ],
+          "schemeName": "स्टँड-अप इंडिया",
+          "schemeShortTitle": "SUPI",
+          "nodalMinistryName": {
+            "label": "Ministry Of Finance"
+          },
+          "schemeCloseDate": "2025-03-31"
+        },
+        "schemeContent": {
+          "briefDescription": "उत्पादन, सेवा, व्यापार क्षेत्र आणि शेतीशी संबंधित उपक्रमांमध्ये ग्रीनफिल्ड प्रकल्प उद्यम स्थापन करण्यासाठी बँक कर्ज सुलभ करून अनुसूचित जाती/जमाती आणि महिला उद्योजकांना वित्तपुरवठा करण्यासाठी अर्थ मंत्रालयाने एक योजना आणली आहे.",
+          "schemeImageUrl": "  https://standupmitra.in/Images/standuplogo.gif    "
+        }
+      },
+      "or": {
+        "basicDetails": {
+          "tags": [
+            "ଋଣ",
+            "ଉଦ୍ୟୋଗୀ",
+            "ଅର୍ଥବ୍ୟବସ୍ଥା",
+            "ବ୍ୟବସାୟ"
+          ],
+          "schemeName": "ଷ୍ଟାଣ୍ଡ-ଅପ୍ ଇଣ୍ଡିଆ",
+          "schemeShortTitle": "SUPI",
+          "nodalMinistryName": {
+            "label": "Ministry Of Finance"
+          },
+          "schemeCloseDate": "2025-03-31"
+        },
+        "schemeContent": {
+          "briefDescription": "ଏସସି/ଏସଟି ଏବଂ ମହିଳା ଉଦ୍ୟୋଗୀମାନଙ୍କୁ ଆର୍ଥିକ ସହାୟତା ପ୍ରଦାନ କରିବା ପାଇଁ ଅର୍ଥ ମନ୍ତ୍ରଣାଳୟ ଦ୍ୱାରା ଏକ ଯୋଜନା, ଯେଉଁଥିରେ ଉତ୍ପାଦନ, ସେବା, ବାଣିଜ୍ୟ କ୍ଷେତ୍ର ଏବଂ କୃଷି ସମ୍ବନ୍ଧୀୟ କାର୍ଯ୍ୟକଳାପରେ ଏକ ଗ୍ରୀନଫିଲ୍ଡ ପ୍ରକଳ୍ପ ଉଦ୍ୟୋଗ ପ୍ରତିଷ୍ଠା ପାଇଁ ବ୍ୟାଙ୍କ ଋଣ ସୁବିଧା ଯୋଗାଇ ଦିଆଯିବ।",
+          "schemeImageUrl": "  https://standupmitra.in/Images/standuplogo.gif    "
+        }
+      },
+      "pa": {
+        "basicDetails": {
+          "tags": [
+            "ਕਰਜ਼ਾ",
+            "ਉਦਯੋਗਪਤੀ",
+            "ਵਿੱਤ",
+            "ਕਾਰੋਬਾਰ"
+          ],
+          "schemeName": "ਸਟੈਂਡ-ਅੱਪ ਇੰਡੀਆ",
+          "schemeShortTitle": "SUPI",
+          "nodalMinistryName": {
+            "label": "Ministry Of Finance"
+          },
+          "schemeCloseDate": "2025-03-31"
+        },
+        "schemeContent": {
+          "briefDescription": "ਨਿਰਮਾਣ, ਸੇਵਾਵਾਂ, ਵਪਾਰ ਖੇਤਰ ਅਤੇ ਖੇਤੀਬਾਡ਼ੀ ਨਾਲ ਸਬੰਧਤ ਗਤੀਵਿਧੀਆਂ ਵਿੱਚ ਇੱਕ ਗ੍ਰੀਨਫੀਲਡ ਪ੍ਰੋਜੈਕਟ ਉੱਦਮ ਸਥਾਪਤ ਕਰਨ ਲਈ ਬੈਂਕ ਕਰਜ਼ਿਆਂ ਦੀ ਸਹੂਲਤ ਦੇ ਕੇ ਐੱਸ. ਸੀ./ਐੱਸ. ਟੀ. ਅਤੇ ਮਹਿਲਾ ਉੱਦਮੀਆਂ ਨੂੰ ਵਿੱਤ ਪ੍ਰਦਾਨ ਕਰਨ ਲਈ ਵਿੱਤ ਮੰਤਰਾਲੇ ਦੁਆਰਾ ਇੱਕ ਯੋਜਨਾ।",
+          "schemeImageUrl": "  https://standupmitra.in/Images/standuplogo.gif    "
+        }
+      },
+      "ta": {
+        "basicDetails": {
+          "tags": [
+            "கடன்",
+            "தொழில் முனைவர்",
+            "நிதி",
+            "வணிகம்"
+          ],
+          "schemeName": "ஸ்டாண்ட்-அப் இந்தியா",
+          "schemeShortTitle": "SUPI",
+          "nodalMinistryName": {
+            "label": "Ministry Of Finance"
+          },
+          "schemeCloseDate": "2025-03-31"
+        },
+        "schemeContent": {
+          "briefDescription": "உற்பத்தி, சேவைகள், வர்த்தகத் துறை மற்றும் விவசாயத்துடன் தொடர்புடைய செயல்பாடுகளில் பசுமைத் திட்ட நிறுவனத்தை அமைக்க வங்கிக் கடன்களை எளிதாக்குவதன் மூலம் எஸ்சி/எஸ்டி மற்றும் பெண் தொழில்முனைவோருக்கு நிதியளிப்பதற்கான நிதி அமைச்சகத்தின் திட்டம்.",
+          "schemeImageUrl": "  https://standupmitra.in/Images/standuplogo.gif    "
+        }
+      },
+      "te": {
+        "basicDetails": {
+          "tags": [
+            "రుణం",
+            "వ్యాపారవేత్త",
+            "ఫైనాన్స్",
+            "వ్యాపారం"
+          ],
+          "schemeName": "స్టాండ్-అప్ ఇండియా",
+          "schemeShortTitle": "SUPI",
+          "nodalMinistryName": {
+            "label": "Ministry Of Finance"
+          },
+          "schemeCloseDate": "2025-03-31"
+        },
+        "schemeContent": {
+          "briefDescription": "తయారీ, సేవలు, వాణిజ్య రంగం మరియు వ్యవసాయానికి సంబంధించిన కార్యకలాపాలలో గ్రీన్ఫీల్డ్ ప్రాజెక్ట్ ఎంటర్ప్రైజ్ను ఏర్పాటు చేయడానికి బ్యాంకు రుణాలను సులభతరం చేయడం ద్వారా ఎస్సీ/ఎస్టీ మరియు మహిళా పారిశ్రామికవేత్తలకు ఆర్థిక సహాయం కోసం ఆర్థిక మంత్రిత్వ శాఖ రూపొందించిన పథకం.",
+          "schemeImageUrl": "  https://standupmitra.in/Images/standuplogo.gif    "
+        }
+      },
+      "ur": {
+        "basicDetails": {
+          "tags": [
+            "قرضہ",
+            "کاروباری شخصیت",
+            "مالیات",
+            "کاروبار"
+          ],
+          "schemeName": "اسٹینڈ اپ انڈیا",
+          "schemeShortTitle": "SUPI",
+          "nodalMinistryName": {
+            "label": "Ministry Of Finance"
+          },
+          "schemeCloseDate": "2025-03-31"
+        },
+        "schemeContent": {
+          "briefDescription": "مینوفیکچرنگ، خدمات، تجارتی شعبے اور زراعت سے وابستہ سرگرمیوں میں گرین فیلڈ پروجیکٹ انٹرپرائز کے قیام کے لیے بینک قرضوں میں سہولت فراہم کرکے ایس سی/ایس ٹی اور خواتین کاروباریوں کی مالی اعانت کے لیے وزارت خزانہ کی ایک اسکیم۔",
+          "schemeImageUrl": "  https://standupmitra.in/Images/standuplogo.gif    "
+        }
+      }
+    },
+    {
+      "en": {
+        "basicDetails": {
+          "tags": [
+            "Farmers",
+            "Income Support",
+            "Agricultural Inputs",
+            "Kisan",
+            "Agriculture"
+          ],
+          "schemeName": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+          "schemeShortTitle": "PM-KISAN",
+          "nodalMinistryName": {
+            "label": "Ministry Of Agriculture and Farmers Welfare"
+          }
+        },
+        "schemeContent": {
+          "schemeImageUrl": "",
+          "briefDescription": "With a view to provide income support to all landholding farmers’ families in the country, having cultivable land, the Central Government has implemented a Central Sector Scheme, namely, “Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)”. "
+        }
+      },
+      "hi": {
+        "basicDetails": {
+          "tags": [
+            "किसान",
+            "आय सहायता",
+            "कृषि निवेश",
+            "किसान",
+            "कृषि"
+          ],
+          "schemeName": "प्रधानमंत्री किसान सम्मान निधि (पीएम-किसान)",
+          "schemeShortTitle": "PM-KISAN",
+          "nodalMinistryName": {
+            "label": "Ministry Of Agriculture and Farmers Welfare"
+          }
+        },
+        "schemeContent": {
+          "briefDescription": "देश के सभी भूमि धारक किसान परिवारों को आय सहायता प्रदान करने के उद्देश्य से, जिनके पास खेती योग्य भूमि है, केंद्र सरकार ने \"प्रधानमंत्री किसान सम्मान निधि (पीएम-किसान)\" नामक एक केंद्रीय क्षेत्र योजना लागू की है।",
+          "schemeImageUrl": ""
+        }
+      },
+      "slug": "pm-kisan",
+      "as": {
+        "basicDetails": {
+          "tags": [
+            "কৃষক",
+            "আয় সমৰ্থন",
+            "কৃষিৰ ইনপুটসমূহ",
+            "কিষাণ",
+            "কৃষি"
+          ],
+          "schemeName": "প্ৰধানমন্ত্ৰী কিষাণ সন্মান নিধি (পিএম-কিষাণ)",
+          "schemeShortTitle": "PM-KISAN",
+          "nodalMinistryName": {
+            "label": "Ministry Of Agriculture and Farmers Welfare"
+          }
+        },
+        "schemeContent": {
+          "briefDescription": "দেশৰ খেতি কৰিব পৰা থকা সকলো অধিকাৰী কৃষক পৰিয়ালক উপাৰ্জন সমৰ্থন প্ৰদান কৰাৰ লক্ষ্যৰে কেন্দ্ৰীয় চৰকাৰে \"প্ৰধানমন্ত্ৰী কিষাণ সন্মান নিধি (পিএম-কিষাণ)\" নামৰ এক কেন্দ্ৰীয় খণ্ডৰ আঁচনি ৰূপায়ণ কৰিছে।",
+          "schemeImageUrl": ""
+        }
+      },
+      "bn": {
+        "basicDetails": {
+          "tags": [
+            "কৃষকরা",
+            "আয় সহায়তা",
+            "কৃষি উপকরণ",
+            "কিষাণ",
+            "কৃষি"
+          ],
+          "schemeName": "প্রধানমন্ত্রী কিষাণ সম্মান নিধি (পিএম-কিষাণ)",
+          "schemeShortTitle": "PM-KISAN",
+          "nodalMinistryName": {
+            "label": "Ministry Of Agriculture and Farmers Welfare"
+          }
+        },
+        "schemeContent": {
+          "briefDescription": "দেশের সমস্ত জমির মালিক কৃষক পরিবার, যাদের চাষযোগ্য জমি রয়েছে, তাদের আয় সহায়তা প্রদানের লক্ষ্যে কেন্দ্রীয় সরকার \"প্রধানমন্ত্রী কিষাণ সম্মান নিধি\" (পিএম-কিষাণ) নামে একটি কেন্দ্রীয় ক্ষেত্রের প্রকল্প বাস্তবায়ন করেছে।",
+          "schemeImageUrl": ""
+        }
+      },
+      "gu": {
+        "basicDetails": {
+          "tags": [
+            "ખેડૂતો",
+            "આવક સહાય",
+            "કૃષિ ઇનપુટ્સ",
+            "કિસાન",
+            "ખેતીવાડી"
+          ],
+          "schemeName": "પ્રધાનમંત્રી કિસાન સન્માન નિધિ (પીએમ-કિસાન)",
+          "schemeShortTitle": "PM-KISAN",
+          "nodalMinistryName": {
+            "label": "Ministry Of Agriculture and Farmers Welfare"
+          }
+        },
+        "schemeContent": {
+          "briefDescription": "દેશમાં ખેતી યોગ્ય જમીન ધરાવતા તમામ જમીન ધારક ખેડૂત પરિવારોને આવક સહાય પૂરી પાડવા માટે કેન્દ્ર સરકારે \"પ્રધાનમંત્રી કિસાન સન્માન નિધિ (પીએમ-કિસાન)\" નામની કેન્દ્રીય ક્ષેત્રની યોજના અમલમાં મૂકી છે.",
+          "schemeImageUrl": ""
+        }
+      },
+      "kn": {
+        "basicDetails": {
+          "tags": [
+            "ರೈತರು",
+            "ಆದಾಯ ಬೆಂಬಲ",
+            "ಕೃಷಿ ಒಳಹರಿವು",
+            "ಕಿಸಾನ್",
+            "ಕೃಷಿ"
+          ],
+          "schemeName": "ಪ್ರಧಾನ ಮಂತ್ರಿ ಕಿಸಾನ್ ಸಮ್ಮಾನ್ ನಿಧಿ (ಪಿಎಂ-ಕಿಸಾನ್)",
+          "schemeShortTitle": "PM-KISAN",
+          "nodalMinistryName": {
+            "label": "Ministry Of Agriculture and Farmers Welfare"
+          }
+        },
+        "schemeContent": {
+          "briefDescription": "ಕೃಷಿ ಯೋಗ್ಯ ಭೂಮಿಯನ್ನು ಹೊಂದಿರುವ ದೇಶದ ಎಲ್ಲಾ ಭೂ ಹಿಡುವಳಿ ರೈತರ ಕುಟುಂಬಗಳಿಗೆ ಆದಾಯ ಬೆಂಬಲವನ್ನು ಒದಗಿಸುವ ಉದ್ದೇಶದಿಂದ, ಕೇಂದ್ರ ಸರ್ಕಾರವು \"ಪ್ರಧಾನ ಮಂತ್ರಿ ಕಿಸಾನ್ ಸಮ್ಮಾನ್ ನಿಧಿ (ಪಿಎಂ-ಕಿಸಾನ್)\" ಎಂಬ ಕೇಂದ್ರ ವಲಯದ ಯೋಜನೆಯನ್ನು ಜಾರಿಗೆ ತಂದಿದೆ.",
+          "schemeImageUrl": ""
+        }
+      },
+      "ks": {
+        "basicDetails": {
+          "tags": [
+            "کاشتکار۔",
+            "آمدنی ہنز حمایت",
+            "زرعی ان پٹ",
+            "کسان۔",
+            "زراعت۔"
+          ],
+          "schemeName": "پردھان منتری کسان سمان ندھی (پی ایم-کسان)",
+          "schemeShortTitle": "PM-KISAN",
+          "nodalMinistryName": {
+            "label": "Ministry Of Agriculture and Farmers Welfare"
+          }
+        },
+        "schemeContent": {
+          "briefDescription": "مٗلکس منٛز تمام مٲلکن ہنٛدین کسانن ہنٛدین خاندانن آمدنی منٛز مدد فراہم کرنہٕ خٲطرٕ، یمن نش قابل کاشت زمین چھ، مرکزی حکومتن چھ اکھ مرکزی سیکٹرٕچ سکیم لاگو کٔرمٕژ، ییٚمیک ناو \"پردھان منتری کسان سمان ندھی (پی ایم-کسان)\" چھ۔",
+          "schemeImageUrl": ""
+        }
+      },
+      "mai": {
+        "basicDetails": {
+          "tags": [
+            "किसानसभ",
+            "आय सहायता",
+            "कृषि निवेश",
+            "किसान",
+            "कृषि"
+          ],
+          "schemeName": "प्रधानमंत्री किसान सम्मान निधि (पीएम-किसान)",
+          "schemeShortTitle": "PM-KISAN",
+          "nodalMinistryName": {
+            "label": "Ministry Of Agriculture and Farmers Welfare"
+          }
+        },
+        "schemeContent": {
+          "briefDescription": "देश मे खेती योग्य जमीन वला सभ जमीन धारक किसान परिवार केँ आय सहायता प्रदान करय के दृष्टि सँ केंद्र सरकार केंद्रीय क्षेत्र योजना, \"प्रधानमंत्री किसान सम्मान निधि (पीएम-किसान)\" लागू केलकै।",
+          "schemeImageUrl": ""
+        }
+      },
+      "ml": {
+        "basicDetails": {
+          "tags": [
+            "കർഷകർ",
+            "വരുമാന പിന്തുണ",
+            "കാർഷിക ഇൻപുട്ടുകൾ",
+            "കിസാൻ",
+            "കൃഷി"
+          ],
+          "schemeName": "പ്രധാൻ മന്ത്രി കിസാൻ സമ്മാൻ നിധി (പിഎം-കിസാൻ)",
+          "schemeShortTitle": "PM-KISAN",
+          "nodalMinistryName": {
+            "label": "Ministry Of Agriculture and Farmers Welfare"
+          }
+        },
+        "schemeContent": {
+          "briefDescription": "കൃഷിയോഗ്യമായ ഭൂമിയുള്ള രാജ്യത്തെ എല്ലാ ഭൂവുടമകളായ കർഷക കുടുംബങ്ങൾക്കും വരുമാന പിന്തുണ നൽകുക എന്ന ലക്ഷ്യത്തോടെ കേന്ദ്ര ഗവൺമെന്റ് \"പ്രധാൻ മന്ത്രി കിസാൻ സമ്മാൻ നിധി (പിഎം-കിസാൻ)\" എന്ന പേരിൽ ഒരു കേന്ദ്രമേഖല പദ്ധതി നടപ്പാക്കിയിട്ടുണ്ട്.",
+          "schemeImageUrl": ""
+        }
+      },
+      "mr": {
+        "basicDetails": {
+          "tags": [
+            "शेतकरी",
+            "उत्पन्नाचे पाठबळ",
+            "कृषी आदान",
+            "किसान",
+            "शेती"
+          ],
+          "schemeName": "प्रधानमंत्री किसान सन्मान निधी (पीएम-किसान)",
+          "schemeShortTitle": "PM-KISAN",
+          "nodalMinistryName": {
+            "label": "Ministry Of Agriculture and Farmers Welfare"
+          }
+        },
+        "schemeContent": {
+          "briefDescription": "देशातील सर्व जमीनधारक शेतकरी कुटुंबांना, ज्यांच्याकडे लागवडीयोग्य जमीन आहे, त्यांना उत्पन्न सहाय्य पुरविण्याच्या उद्देशाने केंद्र सरकारने 'प्रधानमंत्री किसान सन्मान निधी' (पीएम-किसान) ही केंद्रीय क्षेत्राची योजना राबवली आहे.",
+          "schemeImageUrl": ""
+        }
+      },
+      "or": {
+        "basicDetails": {
+          "tags": [
+            "ଚାଷୀ ମାନେ",
+            "ଆୟ ସହାୟତା",
+            "କୃଷି ନିବେଶ",
+            "କିସାନ୍",
+            "କୃଷି"
+          ],
+          "schemeName": "ପ୍ରଧାନମନ୍ତ୍ରୀ କିଷାନ ସମ୍ମାନ ନିଧି (ପିଏମ-କିଷାନ)",
+          "schemeShortTitle": "PM-KISAN",
+          "nodalMinistryName": {
+            "label": "Ministry Of Agriculture and Farmers Welfare"
+          }
+        },
+        "schemeContent": {
+          "briefDescription": "କୃଷି ଉପଯୋଗୀ ଜମି ଥିବା ଦେଶର ସମସ୍ତ ଜମିଧାରୀ କୃଷକ ପରିବାରକୁ ଆୟ ସହାୟତା ପ୍ରଦାନ କରିବା ଉଦ୍ଦେଶ୍ୟରେ କେନ୍ଦ୍ର ସରକାର \"ପ୍ରଧାନମନ୍ତ୍ରୀ କିଷାନ ସମ୍ମାନ ନିଧି (ପିଏମ-କିଷାନ)\" ନାମରେ ଏକ କେନ୍ଦ୍ରୀୟ କ୍ଷେତ୍ର ଯୋଜନା କାର୍ଯ୍ୟକାରୀ କରିଛନ୍ତି।",
+          "schemeImageUrl": ""
+        }
+      },
+      "pa": {
+        "basicDetails": {
+          "tags": [
+            "ਕਿਸਾਨ",
+            "ਆਮਦਨ ਸਹਾਇਤਾ",
+            "ਖੇਤੀਬਾਡ਼ੀ ਇਨਪੁਟਸ",
+            "ਕਿਸਾਨ",
+            "ਖੇਤੀਬਾਡ਼ੀ"
+          ],
+          "schemeName": "ਪ੍ਰਧਾਨ ਮੰਤਰੀ ਕਿਸਾਨ ਸਨਮਾਨ ਨਿਧੀ (ਪੀਐੱਮ-ਕਿਸਾਨ)",
+          "schemeShortTitle": "PM-KISAN",
+          "nodalMinistryName": {
+            "label": "Ministry Of Agriculture and Farmers Welfare"
+          }
+        },
+        "schemeContent": {
+          "briefDescription": "ਦੇਸ਼ ਵਿੱਚ ਖੇਤੀਬਾਡ਼ੀ ਯੋਗ ਜ਼ਮੀਨ ਵਾਲੇ ਸਾਰੇ ਜ਼ਮੀਨ ਧਾਰਕ ਕਿਸਾਨ ਪਰਿਵਾਰਾਂ ਨੂੰ ਆਮਦਨ ਸਹਾਇਤਾ ਪ੍ਰਦਾਨ ਕਰਨ ਦੇ ਉਦੇਸ਼ ਨਾਲ, ਕੇਂਦਰ ਸਰਕਾਰ ਨੇ ਇੱਕ ਕੇਂਦਰੀ ਖੇਤਰ ਦੀ ਯੋਜਨਾ, \"ਪ੍ਰਧਾਨ ਮੰਤਰੀ ਕਿਸਾਨ ਸਨਮਾਨ ਨਿਧੀ (ਪੀਐੱਮ-ਕਿਸਾਨ)\" ਲਾਗੂ ਕੀਤੀ ਹੈ।",
+          "schemeImageUrl": ""
+        }
+      },
+      "ta": {
+        "basicDetails": {
+          "tags": [
+            "விவசாயிகள்",
+            "வருமான ஆதரவு",
+            "விவசாய இடுபொருள்கள்",
+            "கிசான்",
+            "விவசாயம்"
+          ],
+          "schemeName": "பிரதான் மந்திரி கிசான் சம்மன் நிதி (பிஎம்-கிசான்)",
+          "schemeShortTitle": "PM-KISAN",
+          "nodalMinistryName": {
+            "label": "Ministry Of Agriculture and Farmers Welfare"
+          }
+        },
+        "schemeContent": {
+          "briefDescription": "நாட்டில் சாகுபடி செய்யக்கூடிய நிலம் கொண்ட அனைத்து நில உரிமையாளர்களின் குடும்பங்களுக்கும் வருமான ஆதரவை வழங்கும் நோக்கில், மத்திய அரசு \"பிரதான் மந்திரி கிசான் சம்மன் நிதி (பிஎம்-கிசான்)\" என்ற மத்திய துறை திட்டத்தை செயல்படுத்தியுள்ளது.",
+          "schemeImageUrl": ""
+        }
+      },
+      "te": {
+        "basicDetails": {
+          "tags": [
+            "రైతులు",
+            "ఆదాయ మద్దతు",
+            "వ్యవసాయ ఇన్పుట్లు",
+            "కిసాన్",
+            "వ్యవసాయం"
+          ],
+          "schemeName": "ప్రధాన మంత్రి కిసాన్ సమ్మాన్ నిధి (పీఎం-కిసాన్)",
+          "schemeShortTitle": "PM-KISAN",
+          "nodalMinistryName": {
+            "label": "Ministry Of Agriculture and Farmers Welfare"
+          }
+        },
+        "schemeContent": {
+          "briefDescription": "సాగు భూమి ఉన్న దేశంలోని అన్ని భూస్వాములైన రైతు కుటుంబాలకు ఆదాయ సహాయాన్ని అందించే ఉద్దేశ్యంతో, కేంద్ర ప్రభుత్వం \"ప్రధాన మంత్రి కిసాన్ సమ్మాన్ నిధి (పిఎం-కిసాన్)\" అనే కేంద్ర రంగ పథకాన్ని అమలు చేసింది.",
+          "schemeImageUrl": ""
+        }
+      },
+      "ur": {
+        "basicDetails": {
+          "tags": [
+            "کسان",
+            "آمدنی کی حمایت",
+            "زرعی ان پٹ",
+            "کسان",
+            "زراعت"
+          ],
+          "schemeName": "پردھان منتری کسان سمان ندھی (پی ایم-کسان)",
+          "schemeShortTitle": "PM-KISAN",
+          "nodalMinistryName": {
+            "label": "Ministry Of Agriculture and Farmers Welfare"
+          }
+        },
+        "schemeContent": {
+          "briefDescription": "ملک میں تمام زمیندار کسانوں کے خاندانوں کو آمدنی میں مدد فراہم کرنے کے لیے، جن کے پاس قابل کاشت زمین ہے، مرکزی حکومت نے ایک مرکزی سیکٹر اسکیم نافذ کی ہے، جس کا نام \"پردھان منتری کسان سمان ندھی (پی ایم-کسان)\" ہے۔",
+          "schemeImageUrl": ""
+        }
+      }
+    }
+  ]
+}

@@ -37,7 +37,7 @@ const DICT = {
   hi: {
     title: "AI योजना सहायक",
     subtitle: "पात्रता और नियमों के बारे में पूछें",
-    placeholder: "हिंदी, English, या தமிழ் में पूछें...",
+    placeholder: "हिंदी, English, या तमिल में पूछें...",
     safety: "सुरक्षित चैट: हम कभी भी आधार या बैंक विवरण नहीं मांगते हैं।",
     suggestions: [
       "क्या मैं PM-KISAN के लिए पात्र हूँ?",
@@ -161,139 +161,86 @@ export default function ChatBot({ language = "en", isInline = false }) {
 
   if (isInline) {
     return (
-      <div
-        className="flex flex-col h-full bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-sm"
-        style={{ height: "100%", width: "100%", display: "flex", flexDirection: "column", boxSizing: "border-box" }}
-      >
+      <div className="flex flex-col h-full w-full bg-white border border-slate-200/80 rounded-3xl overflow-hidden shadow-sm">
         {/* Header */}
-        <div
-          style={{
-            background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
-            padding: "20px 24px",
-            color: "#fff",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center"
-          }}
-        >
-          <div>
-            <h3 style={{ fontSize: 17, fontWeight: 700, margin: 0 }}>✨ {t.title}</h3>
-            <p style={{ fontSize: 11, color: "#e0e7ff", margin: "2px 0 0" }}>{t.subtitle}</p>
-          </div>
+        <div className="bg-gradient-to-br from-indigo-900 to-blue-900 px-6 py-5 text-white flex-shrink-0">
+          <h3 className="text-sm font-extrabold m-0 tracking-tight flex items-center gap-1.5">
+            ✨ {t.title}
+          </h3>
+          <p className="text-[11px] text-blue-200/90 m-0 mt-1 leading-normal font-medium">
+            {t.subtitle}
+          </p>
         </div>
 
         {/* Safety Reminder Banner */}
-        <div
-          style={{
-            background: "#f0fdf4",
-            borderBottom: "1px solid #dcfce7",
-            padding: "8px 20px",
-            display: "flex",
-            alignItems: "center",
-            gap: 8
-          }}
-        >
-          <span style={{ fontSize: 12 }}>🔒</span>
-          <span style={{ fontSize: 11, color: "#166534", fontWeight: 500 }}>{t.safety}</span>
+        <div className="bg-emerald-50 border-b border-emerald-100/60 px-5 py-2.5 flex items-center gap-2">
+          <span className="text-xs">🔒</span>
+          <span className="text-[10px] font-bold text-emerald-800 leading-normal">
+            {t.safety}
+          </span>
         </div>
 
         {/* Conversation Window */}
-        <div
-          style={{
-            flex: 1,
-            padding: "20px",
-            overflowY: "auto",
-            background: "#f9fafb",
-            display: "flex",
-            flexDirection: "column",
-            gap: 16
-          }}
-          className="custom-scrollbar"
-        >
+        <div className="flex-1 p-5 overflow-y-auto bg-slate-50/50 flex flex-col gap-4.5 custom-scrollbar">
           {messages.map((msg, idx) => (
             <div
               key={idx}
-              style={{
-                alignSelf: msg.role === "user" ? "flex-end" : "flex-start",
-                maxWidth: "85%",
-                display: "flex",
-                flexDirection: "column",
-                gap: 6
-              }}
+              className={`max-w-[85%] flex flex-col gap-1.5 ${
+                msg.role === "user" ? "self-end items-end" : "self-start items-start"
+              }`}
             >
               <div
-                style={{
-                  background: msg.role === "user" ? "#1e3a8a" : "#fff",
-                  color: msg.role === "user" ? "#fff" : "#1f2937",
-                  borderRadius: msg.role === "user" ? "18px 18px 2px 18px" : "18px 18px 18px 2px",
-                  padding: "12px 16px",
-                  fontSize: 14,
-                  lineHeight: 1.5,
-                  boxShadow: msg.role === "user" ? "0 4px 12px rgba(30,58,138,0.15)" : "0 4px 12px rgba(0,0,0,0.02)",
-                  whiteSpace: "pre-line",
-                  wordBreak: "break-word"
-                }}
+                className={`px-4 py-3 text-xs leading-relaxed shadow-sm transition-all duration-200 ${
+                  msg.role === "user"
+                    ? "bg-indigo-900 text-white rounded-2xl rounded-tr-sm"
+                    : "bg-white text-slate-700 border border-slate-100 rounded-2xl rounded-tl-sm"
+                } whitespace-pre-line word-break-words`}
               >
                 {msg.content}
               </div>
 
               {/* Related Schemes */}
               {msg.references && msg.references.length > 0 && (
-                <div style={{ marginTop: 4, display: "flex", flexDirection: "column", gap: 6 }}>
-                  <span style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600 }}>{t.referenced}</span>
-                  {msg.references.map((sid) => (
-                    <button
-                      key={sid}
-                      onClick={() => router.push(`/schemes/${sid}`)}
-                      style={{
-                        background: "#fff",
-                        border: "1px solid #e5e7eb",
-                        borderRadius: 10,
-                        padding: "8px 12px",
-                        fontSize: 12,
-                        fontWeight: 600,
-                        color: "#2563eb",
-                        textAlign: "left",
-                        cursor: "pointer",
-                        boxShadow: "0 2px 6px rgba(0,0,0,0.01)"
-                      }}
-                    >
-                      🏛️ {schemesMap[sid] || sid}
-                    </button>
-                  ))}
+                <div className="mt-1 flex flex-col gap-1.5 w-full">
+                  <span className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wide">
+                    {t.referenced}
+                  </span>
+                  <div className="flex flex-col gap-1.5 w-full">
+                    {msg.references.map((sid) => (
+                      <button
+                        key={sid}
+                        onClick={() => router.push(`/schemes/${sid}`)}
+                        className="w-full bg-white border border-slate-200 hover:border-indigo-600 hover:text-indigo-700 text-left px-3 py-2 rounded-xl text-[11px] font-bold text-indigo-600 cursor-pointer shadow-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+                      >
+                        🏛️ {schemesMap[sid] || sid.replace(/_/g, " ")} →
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
           ))}
 
           {loading && (
-            <div style={{ alignSelf: "flex-start", display: "flex", gap: 4, padding: "12px 16px", background: "#fff", borderRadius: "18px 18px 18px 2px", boxShadow: "0 4px 12px rgba(0,0,0,0.02)" }}>
-              <div className="dot" style={{ width: 6, height: 6, background: "#9ca3af", borderRadius: "50%", animation: "bounce 1.4s infinite ease-in-out both" }} />
-              <div className="dot" style={{ width: 6, height: 6, background: "#9ca3af", borderRadius: "50%", animation: "bounce 1.4s infinite ease-in-out both", animationDelay: "0.2s" }} />
-              <div className="dot" style={{ width: 6, height: 6, background: "#9ca3af", borderRadius: "50%", animation: "bounce 1.4s infinite ease-in-out both", animationDelay: "0.4s" }} />
+            <div className="self-start flex gap-1.5 px-4 py-3 bg-white border border-slate-100 rounded-2xl rounded-tl-sm shadow-sm items-center">
+              <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-[bounce_1.4s_infinite_ease-in-out_both]" />
+              <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-[bounce_1.4s_infinite_ease-in-out_both_0.2s]" />
+              <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-[bounce_1.4s_infinite_ease-in-out_both_0.4s]" />
             </div>
           )}
 
           {/* Quick Suggestions */}
           {!loading && messages.length <= 1 && (
-            <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 10 }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <div className="mt-2.5 flex flex-col gap-2">
+              <p className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider m-0 mb-1">
+                ⚡ Popular Suggestions
+              </p>
+              <div className="flex flex-col gap-2">
                 {t.suggestions.map((s, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleSend(s)}
-                    style={{
-                      textAlign: "left",
-                      background: "#fff",
-                      border: "1px solid #e5e7eb",
-                      borderRadius: 14,
-                      padding: "12px 16px",
-                      fontSize: 13,
-                      color: "#4b5563",
-                      cursor: "pointer",
-                      transition: "all 0.2s",
-                      fontWeight: 500
-                    }}
+                    className="text-left bg-white border border-slate-200 hover:border-indigo-600 hover:bg-indigo-50/10 px-4 py-3 rounded-2xl text-[11px] font-bold text-slate-600 hover:text-indigo-900 cursor-pointer transition-all duration-200 shadow-sm hover:-translate-y-0.5 active:translate-y-0"
                   >
                     💡 {s}
                   </button>
@@ -311,13 +258,7 @@ export default function ChatBot({ language = "en", isInline = false }) {
             e.preventDefault();
             handleSend();
           }}
-          style={{
-            background: "#fff",
-            borderTop: "1px solid #f3f4f6",
-            padding: "16px",
-            display: "flex",
-            gap: 8
-          }}
+          className="bg-white border-t border-slate-100 p-4 flex gap-2"
         >
           <input
             type="text"
@@ -325,40 +266,16 @@ export default function ChatBot({ language = "en", isInline = false }) {
             onChange={(e) => setInput(e.target.value)}
             placeholder={t.placeholder}
             disabled={loading}
-            style={{
-              flex: 1,
-              border: "1px solid #e5e7eb",
-              borderRadius: 14,
-              padding: "12px 16px",
-              fontSize: 14,
-              outline: "none",
-              boxSizing: "border-box"
-            }}
+            className="flex-1 border border-slate-200 focus:border-indigo-600 rounded-2xl px-4 py-3 text-xs outline-none box-border transition-colors placeholder-slate-400"
           />
           <button
             type="submit"
             disabled={loading || !input.trim()}
-            style={{
-              background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
-              color: "#fff",
-              border: "none",
-              borderRadius: 14,
-              padding: "0 20px",
-              fontSize: 15,
-              fontWeight: 600,
-              cursor: "pointer",
-              opacity: loading || !input.trim() ? 0.6 : 1
-            }}
+            className="bg-gradient-to-br from-indigo-900 to-blue-900 text-white border-none rounded-2xl px-5 text-xs font-bold cursor-pointer transition-all duration-200 disabled:opacity-50 shadow-sm active:scale-95 whitespace-nowrap"
           >
             Send
           </button>
         </form>
-        <style>{`
-          @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1.0); }
-          }
-        `}</style>
       </div>
     );
   }
@@ -368,175 +285,76 @@ export default function ChatBot({ language = "en", isInline = false }) {
       {/* Floating launcher button with pulsing rings */}
       <button
         onClick={() => setIsOpen(true)}
-        style={{
-          position: "fixed",
-          bottom: 24,
-          right: 24,
-          zIndex: 998,
-          width: 60,
-          height: 60,
-          borderRadius: "50%",
-          background: "linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)",
-          color: "#fff",
-          border: "none",
-          cursor: "pointer",
-          boxShadow: "0 8px 30px rgba(124, 58, 237, 0.4)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: 28,
-          transition: "transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-        }}
-        onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1) rotate(5deg)")}
-        onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1) rotate(0deg)")}
+        className="fixed bottom-6 right-6 z-[998] w-14 h-14 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 text-white border-none cursor-pointer shadow-lg shadow-indigo-600/30 flex items-center justify-center text-xl transition-all duration-300 hover:scale-105 active:scale-95 group"
       >
         💬
-        {/* Pulsing micro-animation element */}
-        <span
-          style={{
-            position: "absolute",
-            top: -2,
-            right: -2,
-            width: 14,
-            height: 14,
-            background: "#22c55e",
-            borderRadius: "50%",
-            border: "2px solid #fff",
-            boxShadow: "0 0 10px rgba(34, 197, 94, 0.8)"
-          }}
-        />
+        {/* Pulsing notification circle */}
+        <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
       </button>
 
       {/* RAG chat drawer / overlay */}
       {isOpen && (
         <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            background: "rgba(17, 24, 39, 0.4)",
-            backdropFilter: "blur(4px)",
-            zIndex: 999,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "flex-end"
-          }}
+          className="fixed inset-0 w-full h-full bg-slate-900/40 backdrop-blur-sm z-[999] flex justify-center items-end"
           onClick={() => setIsOpen(false)}
         >
           {/* Main Panel Content */}
           <div
-            style={{
-              width: "100%",
-              maxWidth: 480,
-              height: "85vh",
-              background: "rgba(255, 255, 255, 0.95)",
-              borderTopLeftRadius: 30,
-              borderTopRightRadius: 30,
-              boxShadow: "0 -10px 40px rgba(0,0,0,0.15)",
-              display: "flex",
-              flexDirection: "column",
-              overflow: "hidden",
-              animation: "slideUp 0.3s ease-out"
-            }}
+            className="w-full max-w-[480px] h-[85vh] bg-white rounded-t-[32px] shadow-2xl flex flex-col overflow-hidden animate-[slideUp_0.3s_cubic-bezier(0.16,1,0.3,1)]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div
-              style={{
-                background: "linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)",
-                padding: "20px 24px",
-                color: "#fff",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center"
-              }}
-            >
+            <div className="bg-gradient-to-br from-indigo-900 to-blue-900 px-6 py-5 text-white flex-shrink-0 flex justify-between items-center">
               <div>
-                <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>✨ {t.title}</h3>
-                <p style={{ fontSize: 12, color: "#e0e7ff", margin: "2px 0 0" }}>{t.subtitle}</p>
+                <h3 className="text-sm font-extrabold m-0 tracking-tight flex items-center gap-1.5">
+                  ✨ {t.title}
+                </h3>
+                <p className="text-[11px] text-blue-200/90 m-0 mt-1 leading-normal font-medium">
+                  {t.subtitle}
+                </p>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                style={{
-                  background: "rgba(255,255,255,0.2)",
-                  border: "none",
-                  width: 32,
-                  height: 32,
-                  borderRadius: "50%",
-                  color: "#fff",
-                  fontSize: 16,
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}
+                className="bg-white/10 hover:bg-white/20 border-none w-8 h-8 rounded-full text-white text-xs cursor-pointer flex items-center justify-center transition-colors"
               >
                 ✕
               </button>
             </div>
 
             {/* Safety Reminder Banner */}
-            <div
-              style={{
-                background: "#f0fdf4",
-                borderBottom: "1px solid #dcfce7",
-                padding: "8px 20px",
-                display: "flex",
-                alignItems: "center",
-                gap: 8
-              }}
-            >
-              <span style={{ fontSize: 12 }}>🔒</span>
-              <span style={{ fontSize: 11, color: "#166534", fontWeight: 500 }}>{t.safety}</span>
+            <div className="bg-emerald-50 border-b border-emerald-100/60 px-5 py-2.5 flex items-center gap-2">
+              <span className="text-xs">🔒</span>
+              <span className="text-[10px] font-bold text-emerald-800 leading-normal">
+                {t.safety}
+              </span>
             </div>
 
             {/* Conversation Window */}
-            <div
-              style={{
-                flex: 1,
-                padding: "20px 20px",
-                overflowY: "auto",
-                background: "#f9fafb",
-                display: "flex",
-                flexDirection: "column",
-                gap: 16
-              }}
-            >
+            <div className="flex-1 p-5 overflow-y-auto bg-slate-50/50 flex flex-col gap-4.5 custom-scrollbar">
               {messages.map((msg, idx) => (
                 <div
                   key={idx}
-                  style={{
-                    alignSelf: msg.role === "user" ? "flex-end" : "flex-start",
-                    maxWidth: "80%",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 6
-                  }}
+                  className={`max-w-[80%] flex flex-col gap-1.5 ${
+                    msg.role === "user" ? "self-end items-end" : "self-start items-start"
+                  }`}
                 >
                   <div
-                    style={{
-                      background: msg.role === "user" ? "#7c3aed" : "#fff",
-                      color: msg.role === "user" ? "#fff" : "#1f2937",
-                      borderRadius: msg.role === "user" ? "18px 18px 2px 18px" : "18px 18px 18px 2px",
-                      padding: "12px 16px",
-                      fontSize: 14,
-                      lineHeight: 1.5,
-                      boxShadow: msg.role === "user" ? "0 4px 10px rgba(124,58,237,0.2)" : "0 4px 10px rgba(0,0,0,0.03)",
-                      border: msg.role === "user" ? "none" : "1px solid #f3f4f6"
-                    }}
+                    className={`px-4 py-3 text-xs leading-relaxed shadow-sm transition-all duration-200 ${
+                      msg.role === "user"
+                        ? "bg-indigo-900 text-white rounded-2xl rounded-tr-sm"
+                        : "bg-white text-slate-700 border border-slate-100 rounded-2xl rounded-tl-sm"
+                    } whitespace-pre-line word-break-words`}
                   >
                     {msg.content}
                   </div>
 
                   {/* Refered Matching Scheme Pill Buttons */}
                   {msg.references && msg.references.length > 0 && (
-                    <div style={{ marginTop: 2, display: "flex", flexDirection: "column", gap: 6 }}>
-                      <p style={{ fontSize: 11, color: "#6b7280", margin: "2px 0 0", fontWeight: 500 }}>
+                    <div className="mt-1.5 flex flex-col gap-1.5 w-full">
+                      <p className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wide m-0">
                         {t.referenced}
                       </p>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                      <div className="flex flex-col gap-1.5 w-full">
                         {msg.references.map((sid) => (
                           <button
                             key={sid}
@@ -544,26 +362,7 @@ export default function ChatBot({ language = "en", isInline = false }) {
                               setIsOpen(false);
                               router.push(`/schemes/${sid}`);
                             }}
-                            style={{
-                              background: "#eff6ff",
-                              color: "#2563eb",
-                              border: "1px solid #bfdbfe",
-                              borderRadius: 10,
-                              padding: "6px 12px",
-                              fontSize: 12,
-                              fontWeight: 500,
-                              cursor: "pointer",
-                              textAlign: "left",
-                              transition: "all 0.2s"
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.background = "#2563eb";
-                              e.currentTarget.style.color = "#fff";
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.background = "#eff6ff";
-                              e.currentTarget.style.color = "#2563eb";
-                            }}
+                            className="w-full bg-white border border-slate-200 hover:border-indigo-600 hover:text-indigo-700 text-left px-3 py-2 rounded-xl text-[11px] font-bold text-indigo-600 cursor-pointer shadow-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
                           >
                             🏛️ {schemesMap[sid] || sid.replace(/_/g, " ")} →
                           </button>
@@ -576,56 +375,25 @@ export default function ChatBot({ language = "en", isInline = false }) {
 
               {/* Wave typing loading indicator */}
               {loading && (
-                <div
-                  style={{
-                    alignSelf: "flex-start",
-                    background: "#fff",
-                    borderRadius: "18px 18px 18px 2px",
-                    padding: "16px 20px",
-                    display: "flex",
-                    gap: 4,
-                    alignItems: "center",
-                    boxShadow: "0 4px 10px rgba(0,0,0,0.03)",
-                    border: "1px solid #f3f4f6"
-                  }}
-                >
-                  <div className="dot" style={{ width: 6, height: 6, background: "#9ca3af", borderRadius: "50%", animation: "bounce 1.4s infinite ease-in-out both" }} />
-                  <div className="dot" style={{ width: 6, height: 6, background: "#9ca3af", borderRadius: "50%", animation: "bounce 1.4s infinite ease-in-out both 0.2s" }} />
-                  <div className="dot" style={{ width: 6, height: 6, background: "#9ca3af", borderRadius: "50%", animation: "bounce 1.4s infinite ease-in-out both 0.4s" }} />
+                <div className="self-start flex gap-1.5 px-4 py-3 bg-white border border-slate-100 rounded-2xl rounded-tl-sm shadow-sm items-center">
+                  <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-[bounce_1.4s_infinite_ease-in-out_both]" />
+                  <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-[bounce_1.4s_infinite_ease-in-out_both_0.2s]" />
+                  <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-[bounce_1.4s_infinite_ease-in-out_both_0.4s]" />
                 </div>
               )}
 
               {/* Suggestions Panel for starting chat */}
               {messages.length === 1 && !loading && (
-                <div style={{ marginTop: 10 }}>
-                  <p style={{ fontSize: 12, color: "#9ca3af", fontWeight: 600, margin: "0 0 10px" }}>⚡ POPULAR SUGGESTIONS</p>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <div className="mt-2.5 flex flex-col gap-2">
+                  <p className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider m-0 mb-1">
+                    ⚡ Popular Suggestions
+                  </p>
+                  <div className="flex flex-col gap-2">
                     {t.suggestions.map((s, idx) => (
                       <button
                         key={idx}
                         onClick={() => handleSend(s)}
-                        style={{
-                          textAlign: "left",
-                          background: "#fff",
-                          border: "1px solid #e5e7eb",
-                          borderRadius: 14,
-                          padding: "12px 16px",
-                          fontSize: 13,
-                          color: "#4b5563",
-                          cursor: "pointer",
-                          transition: "all 0.2s",
-                          fontWeight: 500
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.borderColor = "#7c3aed";
-                          e.currentTarget.style.color = "#7c3aed";
-                          e.currentTarget.style.background = "#fdfaff";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.borderColor = "#e5e7eb";
-                          e.currentTarget.style.color = "#4b5563";
-                          e.currentTarget.style.background = "#fff";
-                        }}
+                        className="text-left bg-white border border-slate-200 hover:border-indigo-600 hover:bg-indigo-50/10 px-4 py-3 rounded-2xl text-[11px] font-bold text-slate-600 hover:text-indigo-900 cursor-pointer transition-all duration-200 shadow-sm hover:-translate-y-0.5 active:translate-y-0"
                       >
                         💡 {s}
                       </button>
@@ -643,13 +411,7 @@ export default function ChatBot({ language = "en", isInline = false }) {
                 e.preventDefault();
                 handleSend();
               }}
-              style={{
-                background: "#fff",
-                borderTop: "1px solid #f3f4f6",
-                padding: "16px 16px 32px",
-                display: "flex",
-                gap: 8
-              }}
+              className="bg-white border-t border-slate-100 p-4 pb-8 flex gap-2"
             >
               <input
                 type="text"
@@ -657,30 +419,12 @@ export default function ChatBot({ language = "en", isInline = false }) {
                 onChange={(e) => setInput(e.target.value)}
                 placeholder={t.placeholder}
                 disabled={loading}
-                style={{
-                  flex: 1,
-                  border: "1px solid #e5e7eb",
-                  borderRadius: 14,
-                  padding: "12px 16px",
-                  fontSize: 14,
-                  outline: "none",
-                  boxSizing: "border-box"
-                }}
+                className="flex-1 border border-slate-200 focus:border-indigo-600 rounded-2xl px-4 py-3 text-xs outline-none box-border transition-colors placeholder-slate-400"
               />
               <button
                 type="submit"
                 disabled={loading || !input.trim()}
-                style={{
-                  background: "linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: 14,
-                  padding: "0 20px",
-                  fontSize: 15,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  opacity: loading || !input.trim() ? 0.6 : 1
-                }}
+                className="bg-gradient-to-br from-indigo-900 to-blue-900 text-white border-none rounded-2xl px-5 text-xs font-bold cursor-pointer transition-all duration-200 disabled:opacity-50 shadow-sm active:scale-95 whitespace-nowrap"
               >
                 Send
               </button>
@@ -689,8 +433,8 @@ export default function ChatBot({ language = "en", isInline = false }) {
         </div>
       )}
 
-      {/* Embedded Animations Stylesheet */}
-      <style>{`
+      {/* Embedded Animations Stylesheet fallback classes */}
+      <style jsx global>{`
         @keyframes slideUp {
           from { transform: translateY(100%); }
           to { transform: translateY(0); }

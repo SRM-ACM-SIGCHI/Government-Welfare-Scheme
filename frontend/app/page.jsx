@@ -7,9 +7,9 @@ import ChatBot from "../components/ChatBot";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 const LANGS = [
-  { code: "en", label: "English", tagline: "Find government welfare schemes you are eligible for", cta: "Get Started — Free", ctaSchemes: "See My Schemes", ctaProfile: "Update My Profile", speak: "Speak to find schemes", speakHint: "Tap mic and speak your details" },
-  { code: "ta", label: "தமிழ்",   tagline: "நீங்கள் தகுதியான திட்டங்களை கண்டறியுங்கள்", cta: "தொடங்குங்கள் — இலவசம்", ctaSchemes: "என் திட்டங்களை பாருங்கள்", ctaProfile: "விவரங்களை மாற்றுங்கள்", speak: "பேசி திட்டங்கள் கண்டறியுங்கள்", speakHint: "மைக்கை தட்டி பேசுங்கள்" },
-  { code: "hi", label: "हिंदी",   tagline: "अपने लिए योग्य सरकारी योजनाएं खोजें", cta: "शुरू करें — मुफ़्त", ctaSchemes: "मेरी योजनाएं देखें", ctaProfile: "प्रोफाइल अपडेट करें", speak: "बोलकर योजनाएं खोजें", speakHint: "माइक दबाएं और बोलें" },
+  { code: "en", label: "English", tagline: "Discover government welfare schemes you are eligible for", cta: "Get Started — Free", ctaSchemes: "See My Schemes", ctaProfile: "Update My Profile", speak: "Speak to find schemes", speakHint: "Tap mic and tell us your age, state, and occupation" },
+  { code: "ta", label: "தமிழ்",   tagline: "நீங்கள் தகுதியான திட்டங்களை கண்டறியுங்கள்", cta: "தொடங்குங்கள் — இலவசம்", ctaSchemes: "என் திட்டங்களை பாருங்கள்", ctaProfile: "விவரங்களை மாற்றுங்கள்", speak: "பேசி திட்டங்கள் கண்டறியுங்கள்", speakHint: "மைக்கை தட்டி உங்கள் வயது, மாநிலம், மற்றும் தொழில் விவரங்களைக் கூறவும்" },
+  { code: "hi", label: "हिंदी",   tagline: "अपने लिए योग्य सरकारी योजनाएं खोजें", cta: "शुरू करें — मुफ़्त", ctaSchemes: "मेरी योजनाएं देखें", ctaProfile: "प्रोफाइल अपडेट करें", speak: "बोलकर योजनाएं खोजें", speakHint: "माइक दबाएं और अपनी उम्र, राज्य और पेशा बताएं" },
 ];
 
 const SPEECH_LANGS = { en: "en-IN", ta: "ta-IN", hi: "hi-IN" };
@@ -85,12 +85,12 @@ export default function HomePage() {
     if (savedLang) setLang(savedLang);
   }, []);
 
-  const t = LANGS.find((l) => l.code === lang);
+  const t = LANGS.find((l) => l.code === lang) || LANGS[0];
 
   const startVoice = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      setVoiceError("Voice not supported. Use Chrome browser.");
+      setVoiceError("Voice recognition is not supported in this browser. Please use Google Chrome.");
       return;
     }
     setVoiceError("");
@@ -115,7 +115,7 @@ export default function HomePage() {
 
     recognition.onerror = (e) => {
       setListening(false);
-      setVoiceError("Could not hear clearly. Please try again.");
+      setVoiceError("Could not hear clearly. Please try speaking again.");
     };
 
     recognitionRef.current = recognition;
@@ -139,38 +139,44 @@ export default function HomePage() {
       const data = await res.json();
       setVoiceResults({ schemes: data.schemes || [], profile });
     } catch {
-      setVoiceError("Could not connect to server.");
+      setVoiceError("Could not connect to matching services. Please try again.");
     } finally {
       setSearching(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-0 md:p-6 box-border font-sans">
-      <div className="w-full max-w-xl bg-white min-h-screen md:min-h-0 md:rounded-3xl md:shadow-md border-0 md:border border-gray-200/80 flex flex-col justify-between overflow-hidden p-6 md:p-8 box-border">
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 md:p-8 box-border font-sans antialiased text-slate-800">
+      <div className="w-full max-w-lg bg-white min-h-[90vh] md:min-h-0 md:rounded-3xl md:shadow-xl md:border border-slate-200/80 flex flex-col justify-between overflow-hidden p-6 md:p-8 box-border gap-8">
         
         {/* Core Content */}
-        <div className="flex-1 flex flex-col justify-center items-center text-center gap-6 py-6">
+        <div className="flex-1 flex flex-col justify-center items-center text-center gap-7 pt-4">
           
-          <div className="w-16 h-16 rounded-2xl bg-blue-900 flex items-center justify-center text-4xl shadow-md">
-            🏛️
-          </div>
-
-          <div>
-            <h1 className="text-3xl font-extrabold text-gray-900 m-0 tracking-tight leading-tight">Welfare Schemes</h1>
-            <p className="text-sm text-gray-500 m-0 mt-2 leading-relaxed max-w-sm mx-auto">{t.tagline}</p>
+          {/* Main Logo & Title */}
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-900 to-blue-900 flex items-center justify-center text-3xl shadow-lg shadow-indigo-900/10">
+              🏛️
+            </div>
+            <div>
+              <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight m-0">
+                Welfare Schemes
+              </h1>
+              <p className="text-xs md:text-sm text-slate-500 font-semibold max-w-xs mx-auto mt-2 leading-relaxed">
+                {t.tagline}
+              </p>
+            </div>
           </div>
 
           {/* Language selector chips */}
-          <div className="flex gap-2">
+          <div className="flex gap-2 bg-slate-50 p-1 rounded-full border border-slate-200/60">
             {LANGS.map((l) => (
               <button 
                 key={l.code} 
                 onClick={() => { setLang(l.code); localStorage.setItem("language", l.code); }}
-                className={`px-4 py-2 rounded-full border-0 text-xs font-semibold cursor-pointer transition-all duration-150 ${
+                className={`px-5 py-2 rounded-full border-0 text-xs font-bold cursor-pointer transition-all duration-200 ${
                   lang === l.code 
-                    ? "bg-blue-900 text-white shadow-sm" 
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    ? "bg-indigo-900 text-white shadow-md" 
+                    : "bg-transparent text-slate-500 hover:text-slate-900"
                 }`}
               >
                 {l.label}
@@ -178,81 +184,89 @@ export default function HomePage() {
             ))}
           </div>
 
-          {/* Safety Verification Trust Box */}
-          <div className="w-full bg-emerald-50 border border-emerald-100 rounded-2xl p-5 text-left box-border">
-            <p className="text-xs font-bold text-emerald-800 m-0 mb-2.5 flex items-center gap-1.5">
-              <span>🛡️</span> Safe, Verified & Private
-            </p>
-            <ul className="text-xs text-emerald-700 m-0 p-0 list-none space-y-1.5 font-semibold">
-              <li className="flex items-start gap-2">
-                <span>•</span>
-                <span>We never ask for Aadhaar number or bank account credentials.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span>•</span>
-                <span>All application links navigate directly to official government portals.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span>•</span>
-                <span>Your profile data remains encrypted locally on your phone.</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Voice Search Radar Panel */}
-          <div className="w-full bg-purple-50/50 border border-purple-100/60 rounded-3xl p-5 box-border">
-            <p className="text-xs font-bold text-purple-900 m-0 mb-1 flex items-center justify-center gap-1.5">
-              <span>🎤</span> {t.speak}
-            </p>
-            <p className="text-[11px] text-purple-700 m-0 mb-4 font-semibold">{t.speakHint}</p>
+          {/* Voice Search Area */}
+          <div className="w-full bg-slate-50 border border-slate-200/60 rounded-3xl p-6 box-border flex flex-col items-center gap-4">
+            <div className="text-center">
+              <p className="text-xs font-extrabold text-indigo-950 m-0 flex items-center justify-center gap-1.5 uppercase tracking-wide">
+                <span>🎤</span> {t.speak}
+              </p>
+              <p className="text-[10px] text-slate-500 font-semibold m-0 mt-1">
+                {t.speakHint}
+              </p>
+            </div>
 
             {/* Pulsing Voice Mic Button */}
-            <button
-              onClick={listening ? stopVoice : startVoice}
-              className={`w-16 h-16 rounded-full border-0 cursor-pointer flex items-center justify-center text-2xl mx-auto mb-3 shadow-md transition-all duration-300 active:scale-95 ${
-                listening 
-                  ? "bg-red-600 text-white animate-pulse ring-8 ring-red-100" 
-                  : "bg-purple-600 text-white hover:bg-purple-700 shadow-purple-200"
-              }`}
-            >
-              {listening ? "⏹" : "🎤"}
-            </button>
+            <div className="relative my-2">
+              {listening && (
+                <>
+                  <span className="absolute inset-0 rounded-full bg-red-500/10 animate-ping"></span>
+                  <span className="absolute -inset-2 rounded-full bg-red-500/5 animate-[ping_2s_infinite]"></span>
+                </>
+              )}
+              <button
+                onClick={listening ? stopVoice : startVoice}
+                className={`relative w-16 h-16 rounded-full border-none cursor-pointer flex items-center justify-center text-xl shadow-lg transition-all duration-300 active:scale-95 z-10 ${
+                  listening 
+                    ? "bg-red-600 text-white shadow-red-200" 
+                    : "bg-gradient-to-br from-indigo-600 to-blue-600 text-white hover:scale-102 shadow-indigo-100"
+                }`}
+              >
+                {listening ? (
+                  <span className="text-base font-bold">⏹</span>
+                ) : (
+                  <span className="text-lg">🎤</span>
+                )}
+              </button>
+            </div>
 
             {listening && (
-              <div className="flex items-center justify-center gap-1.5 mb-2">
-                <span className="text-[10px] text-red-600 font-bold uppercase tracking-wider">Listening Input...</span>
+              <div className="flex items-center justify-center gap-1">
+                <span className="w-1 h-3 bg-red-500 rounded-full animate-bounce"></span>
+                <span className="w-1 h-4 bg-red-500 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                <span className="w-1 h-3 bg-red-500 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                <span className="text-[10px] text-red-600 font-extrabold uppercase tracking-widest ml-1">
+                  Listening...
+                </span>
               </div>
             )}
 
             {transcript && (
-              <div className="bg-white rounded-xl p-3 mb-2 border border-purple-100 text-left">
-                <p className="text-xs text-gray-700 m-0 font-medium italic">"{transcript}"</p>
+              <div className="w-full bg-white rounded-2xl p-4 border border-slate-200 text-left shadow-sm animate-[fadeIn_0.25s_ease-out]">
+                <p className="text-xs text-slate-700 m-0 font-medium italic leading-relaxed">
+                  "{transcript}"
+                </p>
               </div>
             )}
 
             {searching && (
-              <p className="text-xs text-purple-800 font-bold animate-pulse m-0">Matching schemes in database...</p>
+              <div className="flex items-center gap-2 text-xs text-indigo-900 font-bold animate-pulse">
+                <span>⚡</span> Analyzing database and matching schemes...
+              </div>
             )}
 
             {voiceError && (
-              <p className="text-xs text-red-600 font-bold m-0">{voiceError}</p>
+              <div className="text-xs text-red-600 font-bold bg-red-50 border border-red-100/60 rounded-xl px-4 py-2 text-center w-full">
+                ⚠️ {voiceError}
+              </div>
             )}
 
             {/* Voice query matching list */}
             {voiceResults && !searching && (
-              <div className="mt-4 border-t border-purple-100/50 pt-4 text-left">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2.5">
+              <div className="w-full mt-2 border-t border-slate-200/60 pt-4 text-left flex flex-col gap-2.5 animate-[fadeIn_0.3s_ease-out]">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest m-0 mb-1">
                   Suggested Matches ({voiceResults.schemes.length})
                 </p>
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2 w-full">
                   {voiceResults.schemes.slice(0, 3).map((s) => (
                     <div 
                       key={s.scheme_id}
                       onClick={() => router.push(`/schemes/${s.scheme_id}`)}
-                      className="bg-white border border-purple-100/40 rounded-xl p-3.5 cursor-pointer flex justify-between items-center transition-all hover:border-purple-300"
+                      className="bg-white border border-slate-200 hover:border-indigo-600 rounded-2xl p-4 cursor-pointer flex justify-between items-center transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
                     >
-                      <span className="text-xs font-semibold text-gray-800 flex-1 pr-2 truncate">{s.name}</span>
-                      <span className="text-purple-600 text-sm">›</span>
+                      <span className="text-xs font-bold text-slate-800 flex-1 pr-2 truncate">
+                        {s.name}
+                      </span>
+                      <span className="text-indigo-600 text-sm font-bold">→</span>
                     </div>
                   ))}
                 </div>
@@ -262,7 +276,7 @@ export default function HomePage() {
                       localStorage.setItem("user_profile", JSON.stringify(voiceResults.profile));
                       router.push("/schemes");
                     }}
-                    className="w-full bg-purple-600 hover:bg-purple-700 text-white border-0 rounded-xl py-2.5 px-4 text-xs font-bold cursor-pointer mt-3 transition-colors shadow-sm"
+                    className="w-full bg-indigo-900 hover:bg-indigo-800 text-white border-0 rounded-2xl py-3 px-4 text-xs font-bold cursor-pointer mt-1 transition-all duration-200 shadow-sm active:scale-98"
                   >
                     See all {voiceResults.schemes.length} schemes →
                   </button>
@@ -270,35 +284,56 @@ export default function HomePage() {
               </div>
             )}
           </div>
+
+          {/* Safety Verification Trust Box */}
+          <div className="w-full bg-emerald-50/50 border border-emerald-100/60 rounded-3xl p-5 text-left box-border">
+            <p className="text-xs font-extrabold text-emerald-800 m-0 mb-3 flex items-center gap-1.5 uppercase tracking-wide">
+              <span>🛡️</span> Secure, Verified & Private
+            </p>
+            <ul className="text-[11px] text-emerald-700/95 m-0 p-0 list-none space-y-2 font-semibold leading-relaxed">
+              <li className="flex items-start gap-2.5">
+                <span className="text-emerald-500">•</span>
+                <span>We never ask for Aadhaar numbers, OTPs, or bank account credentials.</span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <span className="text-emerald-500">•</span>
+                <span>All application links navigate directly to official government portals.</span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <span className="text-emerald-500">•</span>
+                <span>Your profile data remains encrypted locally inside your browser cache.</span>
+              </li>
+            </ul>
+          </div>
         </div>
 
         {/* CTA buttons */}
-        <div className="flex flex-col gap-3 mt-4 border-t border-gray-50 pt-6">
+        <div className="flex flex-col gap-3.5 border-t border-slate-100 pt-6 flex-shrink-0">
           {hasProfile ? (
-            <>
+            <div className="flex flex-col gap-2.5 w-full">
               <button 
                 onClick={() => router.push("/schemes")}
-                className="w-full bg-blue-900 text-white border-0 rounded-xl py-4 text-sm font-bold cursor-pointer transition-transform duration-100 active:scale-98 shadow-md hover:bg-blue-800"
+                className="w-full bg-indigo-900 hover:bg-indigo-800 text-white border-none rounded-2xl py-4 text-sm font-bold cursor-pointer transition-all duration-200 shadow-md active:scale-98 shadow-indigo-900/10"
               >
                 {t.ctaSchemes}
               </button>
               <button 
                 onClick={() => router.push("/profile")}
-                className="w-full bg-white text-gray-700 border border-gray-200 rounded-xl py-4 text-sm font-semibold cursor-pointer transition-colors hover:bg-gray-50"
+                className="w-full bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 rounded-2xl py-4 text-sm font-bold cursor-pointer transition-colors duration-200"
               >
                 {t.ctaProfile}
               </button>
-            </>
+            </div>
           ) : (
             <button 
               onClick={() => router.push("/onboarding")}
-              className="w-full bg-blue-900 text-white border-0 rounded-xl py-4 text-sm font-bold cursor-pointer transition-transform duration-100 active:scale-98 shadow-md hover:bg-blue-800"
+              className="w-full bg-indigo-900 hover:bg-indigo-800 text-white border-none rounded-2xl py-4 text-sm font-bold cursor-pointer transition-all duration-200 shadow-md active:scale-98 shadow-indigo-900/10"
             >
               {t.cta}
             </button>
           )}
-          <p className="text-center text-[10px] text-gray-400 font-semibold m-0 mt-1">
-            Takes less than 1 minute • No signup or accounts required
+          <p className="text-center text-[10px] text-slate-400 font-bold m-0 tracking-wide uppercase">
+            Takes less than 1 minute • No signup required
           </p>
         </div>
 

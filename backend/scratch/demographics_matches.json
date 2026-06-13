@@ -1,0 +1,362 @@
+[
+  {
+    "type": "value",
+    "path": "en.basicDetails.schemeType.value",
+    "value_preview": "central-sector-scheme"
+  },
+  {
+    "type": "value",
+    "path": "en.basicDetails.schemeType.label",
+    "value_preview": "Central Sector Scheme"
+  },
+  {
+    "type": "value",
+    "path": "en.basicDetails.schemeSubCategory[1].value",
+    "value_preview": "Financial assistance"
+  },
+  {
+    "type": "value",
+    "path": "en.basicDetails.schemeSubCategory[1].label",
+    "value_preview": "Financial assistance"
+  },
+  {
+    "type": "value",
+    "path": "en.basicDetails.nodalMinistryName.label",
+    "value_preview": "Ministry Of Agriculture and Farmers Welfare"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.references[0].title",
+    "value_preview": "Scheme Guidelines"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.references[2].title",
+    "value_preview": "New Farmer Registration Form"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.references[2].url",
+    "value_preview": "https://pmkisan.gov.in/RegistrationFormupdated.aspx"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.references[3].title",
+    "value_preview": "Know Your Registration"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.references[3].url",
+    "value_preview": "https://www.pmkisan.gov.in/KnowYour_Registration.aspx"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.detailedDescription_md",
+    "value_preview": "The scheme &amp;quot;Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)&amp;quot; implemented by the Department of Agriculture, Cooperation &amp;amp; Farmers’ Welfare, Ministry of Agriculture and Farmers We"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.benefits_md",
+    "value_preview": "\n  - **Financial Assistance:** An amount of ₹6,000/- per year in 3 equal installments of ₹2,000/- every four months is provided to each eligible family.\n<br>\n\n"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.exclusions_md",
+    "value_preview": "The following categories of beneficiaries of higher economic status shall not be eligible for benefit under the scheme:\n\n1. All Institutional Land holders.\n1. Farmer families in which one or more of i"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.briefDescription",
+    "value_preview": "With a view to provide income support to all landholding farmers’ families in the country, having cultivable land, the Central Government has implemented a Central Sector Scheme, namely, “Pradhan Mant"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.detailedDescription[0].type",
+    "value_preview": "align_justify"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.detailedDescription[0].children[0].children[0].text",
+    "value_preview": "The scheme \"Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)\" implemented by the Department of Agriculture, Cooperation & Farmers’ Welfare, Ministry of Agriculture and Farmers Welfare,  aims to supplement"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.benefits[0].type",
+    "value_preview": "align_justify"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.benefits[0].children[0].type",
+    "value_preview": "ul_list"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.benefits[0].children[0].children[0].type",
+    "value_preview": "list_item"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.benefits[0].children[0].children[0].children[0].text",
+    "value_preview": "Financial Assistance: "
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.benefits[0].children[0].children[0].children[1].text",
+    "value_preview": "An amount of ₹6,000/- per year in 3 equal installments of ₹2,000/- every four months is provided to each eligible family."
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.exclusions[0].children[0].text",
+    "value_preview": "The following categories of beneficiaries of higher economic status shall not be eligible for benefit under the scheme:"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.exclusions[1].type",
+    "value_preview": "ol_list"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.exclusions[1].children[0].type",
+    "value_preview": "list_item"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.exclusions[1].children[0].children[0].text",
+    "value_preview": "All Institutional Land holders."
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.exclusions[1].children[1].type",
+    "value_preview": "list_item"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.exclusions[1].children[2].type",
+    "value_preview": "list_item"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.exclusions[1].children[2].children[0].text",
+    "value_preview": "Former and present holders of constitutional posts"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.exclusions[1].children[3].type",
+    "value_preview": "list_item"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.exclusions[1].children[3].children[0].text",
+    "value_preview": "Former and present Ministers/ State Ministers and former/present Members of LokSabha/ RajyaSabha/ State Legislative Assemblies/ State Legislative Councils,former and present Mayors of Municipal Corpor"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.exclusions[1].children[4].type",
+    "value_preview": "list_item"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.exclusions[1].children[4].children[0].text",
+    "value_preview": "All serving or retired officers and employees of Central/ State Government Ministries /Offices/Departments and its field units Central or State PSEs and Attached offices /Autonomous Institutions under"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.exclusions[1].children[5].type",
+    "value_preview": "list_item"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.exclusions[1].children[5].children[0].text",
+    "value_preview": "All superannuated/retired pensioners whose monthly pension is Rs.10,000/-or more (Excluding Multi Tasking Staff / Class IV/Group D employees) of above category"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.exclusions[1].children[6].type",
+    "value_preview": "list_item"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.exclusions[1].children[6].children[0].text",
+    "value_preview": "All Persons who paid Income Tax in last assessment year"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.exclusions[1].children[7].type",
+    "value_preview": "list_item"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeContent.exclusions[1].children[7].children[0].text",
+    "value_preview": "Professionals like Doctors, Engineers, Lawyers, Chartered Accountants, and Architects registered with Professional bodies and carrying out profession by undertaking practices."
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[0].url",
+    "value_preview": "https://pmkisan.gov.in/RegistrationFormnew.aspx"
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[0].process[0].children[0].text",
+    "value_preview": "Step 1: "
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[0].process[1].children[0].text",
+    "value_preview": "Step 2: "
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[0].process[1].children[1].text",
+    "value_preview": "Click on \"New Farmer Registration\" option."
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[0].process[2].children[0].text",
+    "value_preview": "Step 3: "
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[0].process[3].children[0].text",
+    "value_preview": "Step 4: "
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[0].process[4].children[0].text",
+    "value_preview": "Step 5: "
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[0].process[5].children[0].text",
+    "value_preview": "Step 6: "
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[0].process[6].children[0].text",
+    "value_preview": "Know Your Status: "
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[0].process[6].children[1].link",
+    "value_preview": "https://pmkisan.gov.in/BeneficiaryStatus_New.aspx"
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[0].process_md",
+    "value_preview": "**Step 1:** Visit the [PM-KISAN Portal](https://pmkisan.gov.in/).\n**Step 2:** Click on &quot;New Farmer Registration&quot; option.\n**Step 3:** Enter Your Aadhaar Number and Mobile Number.\n**Step 4:** "
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[1].mode",
+    "value_preview": "Online - via CSC"
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[1].process[0].children[0].text",
+    "value_preview": "Step 1: "
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[1].process[0].children[1].text",
+    "value_preview": "Visit the nearest "
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[1].process[0].children[2].link",
+    "value_preview": "https://locator.csccloud.in/"
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[1].process[0].children[2].children[0].text",
+    "value_preview": "CSC Centres"
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[1].process[1].children[0].text",
+    "value_preview": "Step 2: "
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[1].process[1].children[1].text",
+    "value_preview": "The VLE will fill in the complete details of farmer registration details like State, district, subdistrict block, and village, key in the Aadhaar number, Name of the beneficiary, category, Bank detail"
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[1].process[2].children[0].text",
+    "value_preview": "Step 3: "
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[1].process[3].children[0].text",
+    "value_preview": "Step 4: "
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[1].process[4].children[0].text",
+    "value_preview": "Step 5: "
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[1].process[5].children[0].text",
+    "value_preview": "Step 6: "
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[1].process[5].children[1].text",
+    "value_preview": "After saving the application form, make the payment through CSC ID."
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[1].process[6].children[0].text",
+    "value_preview": "Know Your Status: "
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[1].process[6].children[1].link",
+    "value_preview": "https://pmkisan.gov.in/BeneficiaryStatus_New.aspx"
+  },
+  {
+    "type": "value",
+    "path": "en.applicationProcess[1].process_md",
+    "value_preview": "**Step 1:** Visit the nearest [CSC Centres](https://locator.csccloud.in/).\n**Step 2:** The VLE will fill in the complete details of farmer registration details like State, district, subdistrict block,"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeDefinitions[0].definition[0].children[0].text",
+    "value_preview": "A landholder farmer's family is defined as \"a family comprising of husband, wife and minor children who own cultivable land as per the land records of the concerned State/UT\". "
+  },
+  {
+    "type": "value",
+    "path": "en.schemeDefinitions[0].definition[1].children[0].text",
+    "value_preview": "The existing land-ownership system will be used for identification of beneficiaries for calculation of benefit."
+  },
+  {
+    "type": "value",
+    "path": "en.schemeDefinitions[0].source",
+    "value_preview": "Scheme guideline"
+  },
+  {
+    "type": "value",
+    "path": "en.schemeDefinitions[0].definitions_md",
+    "value_preview": "A landholder farmer&#39;s family is defined as &quot;a family comprising of husband, wife and minor children who own cultivable land as per the land records of the concerned State/UT&quot;. \nThe exist"
+  },
+  {
+    "type": "value",
+    "path": "en.eligibilityCriteria.eligibilityDescription_md",
+    "value_preview": "\n- All landholding farmers&#39; families, which have cultivable land holding in their names are eligible to get benefit under the scheme.\n\n<br>\n\n"
+  },
+  {
+    "type": "value",
+    "path": "en.eligibilityCriteria.eligibilityDescription[0].type",
+    "value_preview": "ul_list"
+  },
+  {
+    "type": "value",
+    "path": "en.eligibilityCriteria.eligibilityDescription[0].children[0].type",
+    "value_preview": "list_item"
+  },
+  {
+    "type": "value",
+    "path": "en.eligibilityCriteria.eligibilityDescription[0].children[0].children[0].text",
+    "value_preview": "All landholding farmers' families, which have cultivable land holding in their names are eligible to get benefit under the scheme."
+  }
+]

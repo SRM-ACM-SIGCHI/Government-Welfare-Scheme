@@ -1,0 +1,17 @@
+{
+  "status": "Success",
+  "statusCode": 200,
+  "errorDescription": "",
+  "error": "{}",
+  "data": {
+    "_id": "65a3ec2ca733b1d732807dda",
+    "applicationChannel": [
+      {
+        "applicationName": "UMANG",
+        "applicationUrl": "https://web.umang.gov.in/web_new/department?url=kisansuvidha_new&dept_id=196&dept_name=Kisan%20Suvidha",
+        "applicationLogo": "https://media.umangapp.in/cdn/landing/theme/icons/logo.svg"
+      }
+    ],
+    "schemeId": "62a70e86f038bd8499a6aa53"
+  }
+}

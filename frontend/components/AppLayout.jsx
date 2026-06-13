@@ -28,7 +28,6 @@ export default function AppLayout({ children, activeTab }) {
   const changeLanguage = (newLang) => {
     setLang(newLang);
     localStorage.setItem("language", newLang);
-    // Reload page to propagate language change to all components
     window.location.reload();
   };
 
@@ -37,7 +36,7 @@ export default function AppLayout({ children, activeTab }) {
     setSyncStatus("");
     try {
       const res = await fetch(`${API_URL}/schemes/sync-scraped?max_schemes=5`, {
-        method: "POST"
+        method: "POST",
       });
       if (res.ok) {
         setSyncStatus("success");
@@ -54,43 +53,47 @@ export default function AppLayout({ children, activeTab }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-[#f9fafb]">
+    <div className="min-h-screen flex flex-col md:flex-row bg-[#f8fafc] font-sans antialiased text-slate-800">
       
       {/* 1. Desktop Sidebar Navigation */}
-      <aside className="hidden md:flex flex-col w-[280px] bg-white border-r border-gray-200 h-screen sticky top-0 z-50 p-6 box-border justify-between select-none shrink-0">
+      <aside className="hidden md:flex flex-col w-[280px] bg-white border-r border-slate-200/80 h-screen sticky top-0 z-50 p-6 box-border justify-between select-none shrink-0 shadow-[4px_0_24px_rgba(0,0,0,0.015)]">
         
         {/* Branding */}
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push("/")}>
-            <div className="w-10 h-10 rounded-xl bg-blue-900 flex items-center justify-center text-xl text-white shadow-md">
+        <div className="flex flex-col gap-8">
+          <div className="flex items-center gap-3.5 cursor-pointer group" onClick={() => router.push("/")}>
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-indigo-900 to-blue-900 flex items-center justify-center text-xl text-white shadow-md shadow-indigo-900/10 group-hover:scale-105 transition-transform duration-200">
               🏛️
             </div>
             <div>
-              <h1 className="text-base font-bold text-gray-900 m-0 tracking-tight leading-tight">Welfare Info</h1>
-              <span className="text-[11px] font-semibold text-emerald-600 tracking-wider uppercase">Is Wealth</span>
+              <h1 className="text-base font-extrabold text-slate-900 m-0 tracking-tight leading-tight group-hover:text-blue-900 transition-colors">
+                Welfare Info
+              </h1>
+              <span className="text-[10px] font-bold text-emerald-600 tracking-widest uppercase">
+                India Platform
+              </span>
             </div>
           </div>
 
-          <hr className="border-gray-100 my-1" />
+          <hr className="border-slate-100/80 my-1" />
 
           {/* Navigation Links */}
-          <nav className="flex flex-col gap-2">
+          <nav className="flex flex-col gap-1.5">
             {NAV_ITEMS.map((item) => {
               const isActive = pathname === item.path || activeTab === item.path;
               return (
                 <button
                   key={item.path}
                   onClick={() => router.push(item.path)}
-                  className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl border-0 text-sm font-semibold cursor-pointer transition-all duration-200 text-left ${
+                  className={`w-full flex items-center gap-3.5 px-4.5 py-3 rounded-2xl border-0 text-sm font-semibold cursor-pointer transition-all duration-200 text-left ${
                     isActive
-                      ? "bg-blue-50 text-blue-900 shadow-sm"
-                      : "bg-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      ? "bg-indigo-50/70 text-indigo-950 shadow-sm border-l-4 border-indigo-900"
+                      : "bg-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                   }`}
                 >
-                  <span className={`text-lg transition-transform duration-200 ${isActive ? "scale-110" : ""}`}>
+                  <span className={`text-lg transition-transform duration-200 ${isActive ? "scale-110" : "opacity-80"}`}>
                     {item.icon}
                   </span>
-                  {item.name}
+                  <span>{item.name}</span>
                 </button>
               );
             })}
@@ -98,68 +101,70 @@ export default function AppLayout({ children, activeTab }) {
         </div>
 
         {/* Sidebar Footer (Language Swapper & Admin Tools) */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-5">
           
           {/* Admin Sync Tool */}
-          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 flex flex-col gap-3">
+          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4.5 flex flex-col gap-3">
             <div className="flex items-center gap-2">
-              <span className="text-xs">⚙️</span>
-              <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Admin Actions</span>
+              <span className="text-xs text-slate-400">⚙️</span>
+              <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
+                Database Admin
+              </span>
             </div>
             <button
               onClick={handleSyncSchemes}
               disabled={syncLoading}
-              className={`w-full py-2.5 px-4 rounded-xl border border-gray-200 text-xs font-semibold cursor-pointer shadow-sm flex items-center justify-center gap-2 transition-all duration-200 ${
+              className={`w-full py-2.5 px-4 rounded-xl border border-slate-200 text-xs font-bold cursor-pointer shadow-sm flex items-center justify-center gap-2 transition-all duration-200 active:scale-98 ${
                 syncLoading
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "bg-white text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                  ? "bg-slate-100 text-slate-400 cursor-not-allowed border-transparent"
+                  : "bg-white text-slate-700 hover:bg-slate-100 hover:text-slate-900"
               }`}
             >
               <span className={syncLoading ? "animate-spin" : ""}>🔄</span>
-              {syncLoading ? "Syncing..." : "Sync Fresh Schemes"}
+              <span>{syncLoading ? "Syncing..." : "Sync Fresh Schemes"}</span>
             </button>
             {syncStatus === "success" && (
-              <span className="text-[11px] font-semibold text-emerald-600 text-center animate-fade-in">
-                ✅ Scraper Sync started in backend!
+              <span className="text-[10px] font-bold text-emerald-600 text-center animate-[fadeIn_0.2s_ease-out]">
+                ✅ Sync started successfully!
               </span>
             )}
             {syncStatus === "error" && (
-              <span className="text-[11px] font-semibold text-red-500 text-center animate-fade-in">
+              <span className="text-[10px] font-bold text-red-500 text-center animate-[fadeIn_0.2s_ease-out]">
                 ❌ Sync request failed.
               </span>
             )}
           </div>
 
           {/* Language Switcher */}
-          <div className="flex justify-between items-center bg-gray-50 p-1.5 rounded-xl border border-gray-200">
+          <div className="flex justify-between items-center bg-slate-50 p-1.5 rounded-xl border border-slate-200/80">
             <button
               onClick={() => changeLanguage("en")}
-              className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold border-0 cursor-pointer transition-all duration-150 ${
-                lang === "en" ? "bg-white text-gray-900 shadow-sm" : "bg-transparent text-gray-500 hover:text-gray-900"
+              className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold border-0 cursor-pointer transition-all duration-200 ${
+                lang === "en" ? "bg-white text-indigo-950 shadow-sm" : "bg-transparent text-slate-400 hover:text-slate-900"
               }`}
             >
               EN
             </button>
             <button
               onClick={() => changeLanguage("ta")}
-              className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold border-0 cursor-pointer transition-all duration-150 ${
-                lang === "ta" ? "bg-white text-gray-900 shadow-sm" : "bg-transparent text-gray-500 hover:text-gray-900"
+              className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold border-0 cursor-pointer transition-all duration-200 ${
+                lang === "ta" ? "bg-white text-indigo-950 shadow-sm" : "bg-transparent text-slate-400 hover:text-slate-900"
               }`}
             >
               தமிழ்
             </button>
             <button
               onClick={() => changeLanguage("hi")}
-              className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold border-0 cursor-pointer transition-all duration-150 ${
-                lang === "hi" ? "bg-white text-gray-900 shadow-sm" : "bg-transparent text-gray-500 hover:text-gray-900"
+              className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold border-0 cursor-pointer transition-all duration-200 ${
+                lang === "hi" ? "bg-white text-indigo-950 shadow-sm" : "bg-transparent text-slate-400 hover:text-slate-900"
               }`}
             >
               हिंदी
             </button>
           </div>
 
-          <span className="text-[10px] text-gray-400 text-center block mt-1">
-            © 2026 Government Welfare Schemes
+          <span className="text-[10px] text-slate-400 text-center block mt-1 font-medium">
+            © 2026 Welfare Info Platform
           </span>
         </div>
       </aside>

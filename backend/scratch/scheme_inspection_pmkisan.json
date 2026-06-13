@@ -1,0 +1,303 @@
+{
+  "en": {
+    "basicDetails": {
+      "tags": [
+        "Farmers",
+        "Income Support",
+        "Agricultural Inputs",
+        "Kisan",
+        "Agriculture"
+      ],
+      "schemeName": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+      "schemeShortTitle": "PM-KISAN",
+      "nodalMinistryName": {
+        "label": "Ministry Of Agriculture and Farmers Welfare"
+      }
+    },
+    "schemeContent": {
+      "schemeImageUrl": "",
+      "briefDescription": "With a view to provide income support to all landholding farmers’ families in the country, having cultivable land, the Central Government has implemented a Central Sector Scheme, namely, “Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)”. "
+    }
+  },
+  "hi": {
+    "basicDetails": {
+      "tags": [
+        "किसान",
+        "आय सहायता",
+        "कृषि निवेश",
+        "किसान",
+        "कृषि"
+      ],
+      "schemeName": "प्रधानमंत्री किसान सम्मान निधि (पीएम-किसान)",
+      "schemeShortTitle": "PM-KISAN",
+      "nodalMinistryName": {
+        "label": "Ministry Of Agriculture and Farmers Welfare"
+      }
+    },
+    "schemeContent": {
+      "briefDescription": "देश के सभी भूमि धारक किसान परिवारों को आय सहायता प्रदान करने के उद्देश्य से, जिनके पास खेती योग्य भूमि है, केंद्र सरकार ने \"प्रधानमंत्री किसान सम्मान निधि (पीएम-किसान)\" नामक एक केंद्रीय क्षेत्र योजना लागू की है।",
+      "schemeImageUrl": ""
+    }
+  },
+  "slug": "pm-kisan",
+  "as": {
+    "basicDetails": {
+      "tags": [
+        "কৃষক",
+        "আয় সমৰ্থন",
+        "কৃষিৰ ইনপুটসমূহ",
+        "কিষাণ",
+        "কৃষি"
+      ],
+      "schemeName": "প্ৰধানমন্ত্ৰী কিষাণ সন্মান নিধি (পিএম-কিষাণ)",
+      "schemeShortTitle": "PM-KISAN",
+      "nodalMinistryName": {
+        "label": "Ministry Of Agriculture and Farmers Welfare"
+      }
+    },
+    "schemeContent": {
+      "briefDescription": "দেশৰ খেতি কৰিব পৰা থকা সকলো অধিকাৰী কৃষক পৰিয়ালক উপাৰ্জন সমৰ্থন প্ৰদান কৰাৰ লক্ষ্যৰে কেন্দ্ৰীয় চৰকাৰে \"প্ৰধানমন্ত্ৰী কিষাণ সন্মান নিধি (পিএম-কিষাণ)\" নামৰ এক কেন্দ্ৰীয় খণ্ডৰ আঁচনি ৰূপায়ণ কৰিছে।",
+      "schemeImageUrl": ""
+    }
+  },
+  "bn": {
+    "basicDetails": {
+      "tags": [
+        "কৃষকরা",
+        "আয় সহায়তা",
+        "কৃষি উপকরণ",
+        "কিষাণ",
+        "কৃষি"
+      ],
+      "schemeName": "প্রধানমন্ত্রী কিষাণ সম্মান নিধি (পিএম-কিষাণ)",
+      "schemeShortTitle": "PM-KISAN",
+      "nodalMinistryName": {
+        "label": "Ministry Of Agriculture and Farmers Welfare"
+      }
+    },
+    "schemeContent": {
+      "briefDescription": "দেশের সমস্ত জমির মালিক কৃষক পরিবার, যাদের চাষযোগ্য জমি রয়েছে, তাদের আয় সহায়তা প্রদানের লক্ষ্যে কেন্দ্রীয় সরকার \"প্রধানমন্ত্রী কিষাণ সম্মান নিধি\" (পিএম-কিষাণ) নামে একটি কেন্দ্রীয় ক্ষেত্রের প্রকল্প বাস্তবায়ন করেছে।",
+      "schemeImageUrl": ""
+    }
+  },
+  "gu": {
+    "basicDetails": {
+      "tags": [
+        "ખેડૂતો",
+        "આવક સહાય",
+        "કૃષિ ઇનપુટ્સ",
+        "કિસાન",
+        "ખેતીવાડી"
+      ],
+      "schemeName": "પ્રધાનમંત્રી કિસાન સન્માન નિધિ (પીએમ-કિસાન)",
+      "schemeShortTitle": "PM-KISAN",
+      "nodalMinistryName": {
+        "label": "Ministry Of Agriculture and Farmers Welfare"
+      }
+    },
+    "schemeContent": {
+      "briefDescription": "દેશમાં ખેતી યોગ્ય જમીન ધરાવતા તમામ જમીન ધારક ખેડૂત પરિવારોને આવક સહાય પૂરી પાડવા માટે કેન્દ્ર સરકારે \"પ્રધાનમંત્રી કિસાન સન્માન નિધિ (પીએમ-કિસાન)\" નામની કેન્દ્રીય ક્ષેત્રની યોજના અમલમાં મૂકી છે.",
+      "schemeImageUrl": ""
+    }
+  },
+  "kn": {
+    "basicDetails": {
+      "tags": [
+        "ರೈತರು",
+        "ಆದಾಯ ಬೆಂಬಲ",
+        "ಕೃಷಿ ಒಳಹರಿವು",
+        "ಕಿಸಾನ್",
+        "ಕೃಷಿ"
+      ],
+      "schemeName": "ಪ್ರಧಾನ ಮಂತ್ರಿ ಕಿಸಾನ್ ಸಮ್ಮಾನ್ ನಿಧಿ (ಪಿಎಂ-ಕಿಸಾನ್)",
+      "schemeShortTitle": "PM-KISAN",
+      "nodalMinistryName": {
+        "label": "Ministry Of Agriculture and Farmers Welfare"
+      }
+    },
+    "schemeContent": {
+      "briefDescription": "ಕೃಷಿ ಯೋಗ್ಯ ಭೂಮಿಯನ್ನು ಹೊಂದಿರುವ ದೇಶದ ಎಲ್ಲಾ ಭೂ ಹಿಡುವಳಿ ರೈತರ ಕುಟುಂಬಗಳಿಗೆ ಆದಾಯ ಬೆಂಬಲವನ್ನು ಒದಗಿಸುವ ಉದ್ದೇಶದಿಂದ, ಕೇಂದ್ರ ಸರ್ಕಾರವು \"ಪ್ರಧಾನ ಮಂತ್ರಿ ಕಿಸಾನ್ ಸಮ್ಮಾನ್ ನಿಧಿ (ಪಿಎಂ-ಕಿಸಾನ್)\" ಎಂಬ ಕೇಂದ್ರ ವಲಯದ ಯೋಜನೆಯನ್ನು ಜಾರಿಗೆ ತಂದಿದೆ.",
+      "schemeImageUrl": ""
+    }
+  },
+  "ks": {
+    "basicDetails": {
+      "tags": [
+        "کاشتکار۔",
+        "آمدنی ہنز حمایت",
+        "زرعی ان پٹ",
+        "کسان۔",
+        "زراعت۔"
+      ],
+      "schemeName": "پردھان منتری کسان سمان ندھی (پی ایم-کسان)",
+      "schemeShortTitle": "PM-KISAN",
+      "nodalMinistryName": {
+        "label": "Ministry Of Agriculture and Farmers Welfare"
+      }
+    },
+    "schemeContent": {
+      "briefDescription": "مٗلکس منٛز تمام مٲلکن ہنٛدین کسانن ہنٛدین خاندانن آمدنی منٛز مدد فراہم کرنہٕ خٲطرٕ، یمن نش قابل کاشت زمین چھ، مرکزی حکومتن چھ اکھ مرکزی سیکٹرٕچ سکیم لاگو کٔرمٕژ، ییٚمیک ناو \"پردھان منتری کسان سمان ندھی (پی ایم-کسان)\" چھ۔",
+      "schemeImageUrl": ""
+    }
+  },
+  "mai": {
+    "basicDetails": {
+      "tags": [
+        "किसानसभ",
+        "आय सहायता",
+        "कृषि निवेश",
+        "किसान",
+        "कृषि"
+      ],
+      "schemeName": "प्रधानमंत्री किसान सम्मान निधि (पीएम-किसान)",
+      "schemeShortTitle": "PM-KISAN",
+      "nodalMinistryName": {
+        "label": "Ministry Of Agriculture and Farmers Welfare"
+      }
+    },
+    "schemeContent": {
+      "briefDescription": "देश मे खेती योग्य जमीन वला सभ जमीन धारक किसान परिवार केँ आय सहायता प्रदान करय के दृष्टि सँ केंद्र सरकार केंद्रीय क्षेत्र योजना, \"प्रधानमंत्री किसान सम्मान निधि (पीएम-किसान)\" लागू केलकै।",
+      "schemeImageUrl": ""
+    }
+  },
+  "ml": {
+    "basicDetails": {
+      "tags": [
+        "കർഷകർ",
+        "വരുമാന പിന്തുണ",
+        "കാർഷിക ഇൻപുട്ടുകൾ",
+        "കിസാൻ",
+        "കൃഷി"
+      ],
+      "schemeName": "പ്രധാൻ മന്ത്രി കിസാൻ സമ്മാൻ നിധി (പിഎം-കിസാൻ)",
+      "schemeShortTitle": "PM-KISAN",
+      "nodalMinistryName": {
+        "label": "Ministry Of Agriculture and Farmers Welfare"
+      }
+    },
+    "schemeContent": {
+      "briefDescription": "കൃഷിയോഗ്യമായ ഭൂമിയുള്ള രാജ്യത്തെ എല്ലാ ഭൂവുടമകളായ കർഷക കുടുംബങ്ങൾക്കും വരുമാന പിന്തുണ നൽകുക എന്ന ലക്ഷ്യത്തോടെ കേന്ദ്ര ഗവൺമെന്റ് \"പ്രധാൻ മന്ത്രി കിസാൻ സമ്മാൻ നിധി (പിഎം-കിസാൻ)\" എന്ന പേരിൽ ഒരു കേന്ദ്രമേഖല പദ്ധതി നടപ്പാക്കിയിട്ടുണ്ട്.",
+      "schemeImageUrl": ""
+    }
+  },
+  "mr": {
+    "basicDetails": {
+      "tags": [
+        "शेतकरी",
+        "उत्पन्नाचे पाठबळ",
+        "कृषी आदान",
+        "किसान",
+        "शेती"
+      ],
+      "schemeName": "प्रधानमंत्री किसान सन्मान निधी (पीएम-किसान)",
+      "schemeShortTitle": "PM-KISAN",
+      "nodalMinistryName": {
+        "label": "Ministry Of Agriculture and Farmers Welfare"
+      }
+    },
+    "schemeContent": {
+      "briefDescription": "देशातील सर्व जमीनधारक शेतकरी कुटुंबांना, ज्यांच्याकडे लागवडीयोग्य जमीन आहे, त्यांना उत्पन्न सहाय्य पुरविण्याच्या उद्देशाने केंद्र सरकारने 'प्रधानमंत्री किसान सन्मान निधी' (पीएम-किसान) ही केंद्रीय क्षेत्राची योजना राबवली आहे.",
+      "schemeImageUrl": ""
+    }
+  },
+  "or": {
+    "basicDetails": {
+      "tags": [
+        "ଚାଷୀ ମାନେ",
+        "ଆୟ ସହାୟତା",
+        "କୃଷି ନିବେଶ",
+        "କିସାନ୍",
+        "କୃଷି"
+      ],
+      "schemeName": "ପ୍ରଧାନମନ୍ତ୍ରୀ କିଷାନ ସମ୍ମାନ ନିଧି (ପିଏମ-କିଷାନ)",
+      "schemeShortTitle": "PM-KISAN",
+      "nodalMinistryName": {
+        "label": "Ministry Of Agriculture and Farmers Welfare"
+      }
+    },
+    "schemeContent": {
+      "briefDescription": "କୃଷି ଉପଯୋଗୀ ଜମି ଥିବା ଦେଶର ସମସ୍ତ ଜମିଧାରୀ କୃଷକ ପରିବାରକୁ ଆୟ ସହାୟତା ପ୍ରଦାନ କରିବା ଉଦ୍ଦେଶ୍ୟରେ କେନ୍ଦ୍ର ସରକାର \"ପ୍ରଧାନମନ୍ତ୍ରୀ କିଷାନ ସମ୍ମାନ ନିଧି (ପିଏମ-କିଷାନ)\" ନାମରେ ଏକ କେନ୍ଦ୍ରୀୟ କ୍ଷେତ୍ର ଯୋଜନା କାର୍ଯ୍ୟକାରୀ କରିଛନ୍ତି।",
+      "schemeImageUrl": ""
+    }
+  },
+  "pa": {
+    "basicDetails": {
+      "tags": [
+        "ਕਿਸਾਨ",
+        "ਆਮਦਨ ਸਹਾਇਤਾ",
+        "ਖੇਤੀਬਾਡ਼ੀ ਇਨਪੁਟਸ",
+        "ਕਿਸਾਨ",
+        "ਖੇਤੀਬਾਡ਼ੀ"
+      ],
+      "schemeName": "ਪ੍ਰਧਾਨ ਮੰਤਰੀ ਕਿਸਾਨ ਸਨਮਾਨ ਨਿਧੀ (ਪੀਐੱਮ-ਕਿਸਾਨ)",
+      "schemeShortTitle": "PM-KISAN",
+      "nodalMinistryName": {
+        "label": "Ministry Of Agriculture and Farmers Welfare"
+      }
+    },
+    "schemeContent": {
+      "briefDescription": "ਦੇਸ਼ ਵਿੱਚ ਖੇਤੀਬਾਡ਼ੀ ਯੋਗ ਜ਼ਮੀਨ ਵਾਲੇ ਸਾਰੇ ਜ਼ਮੀਨ ਧਾਰਕ ਕਿਸਾਨ ਪਰਿਵਾਰਾਂ ਨੂੰ ਆਮਦਨ ਸਹਾਇਤਾ ਪ੍ਰਦਾਨ ਕਰਨ ਦੇ ਉਦੇਸ਼ ਨਾਲ, ਕੇਂਦਰ ਸਰਕਾਰ ਨੇ ਇੱਕ ਕੇਂਦਰੀ ਖੇਤਰ ਦੀ ਯੋਜਨਾ, \"ਪ੍ਰਧਾਨ ਮੰਤਰੀ ਕਿਸਾਨ ਸਨਮਾਨ ਨਿਧੀ (ਪੀਐੱਮ-ਕਿਸਾਨ)\" ਲਾਗੂ ਕੀਤੀ ਹੈ।",
+      "schemeImageUrl": ""
+    }
+  },
+  "ta": {
+    "basicDetails": {
+      "tags": [
+        "விவசாயிகள்",
+        "வருமான ஆதரவு",
+        "விவசாய இடுபொருள்கள்",
+        "கிசான்",
+        "விவசாயம்"
+      ],
+      "schemeName": "பிரதான் மந்திரி கிசான் சம்மன் நிதி (பிஎம்-கிசான்)",
+      "schemeShortTitle": "PM-KISAN",
+      "nodalMinistryName": {
+        "label": "Ministry Of Agriculture and Farmers Welfare"
+      }
+    },
+    "schemeContent": {
+      "briefDescription": "நாட்டில் சாகுபடி செய்யக்கூடிய நிலம் கொண்ட அனைத்து நில உரிமையாளர்களின் குடும்பங்களுக்கும் வருமான ஆதரவை வழங்கும் நோக்கில், மத்திய அரசு \"பிரதான் மந்திரி கிசான் சம்மன் நிதி (பிஎம்-கிசான்)\" என்ற மத்திய துறை திட்டத்தை செயல்படுத்தியுள்ளது.",
+      "schemeImageUrl": ""
+    }
+  },
+  "te": {
+    "basicDetails": {
+      "tags": [
+        "రైతులు",
+        "ఆదాయ మద్దతు",
+        "వ్యవసాయ ఇన్పుట్లు",
+        "కిసాన్",
+        "వ్యవసాయం"
+      ],
+      "schemeName": "ప్రధాన మంత్రి కిసాన్ సమ్మాన్ నిధి (పీఎం-కిసాన్)",
+      "schemeShortTitle": "PM-KISAN",
+      "nodalMinistryName": {
+        "label": "Ministry Of Agriculture and Farmers Welfare"
+      }
+    },
+    "schemeContent": {
+      "briefDescription": "సాగు భూమి ఉన్న దేశంలోని అన్ని భూస్వాములైన రైతు కుటుంబాలకు ఆదాయ సహాయాన్ని అందించే ఉద్దేశ్యంతో, కేంద్ర ప్రభుత్వం \"ప్రధాన మంత్రి కిసాన్ సమ్మాన్ నిధి (పిఎం-కిసాన్)\" అనే కేంద్ర రంగ పథకాన్ని అమలు చేసింది.",
+      "schemeImageUrl": ""
+    }
+  },
+  "ur": {
+    "basicDetails": {
+      "tags": [
+        "کسان",
+        "آمدنی کی حمایت",
+        "زرعی ان پٹ",
+        "کسان",
+        "زراعت"
+      ],
+      "schemeName": "پردھان منتری کسان سمان ندھی (پی ایم-کسان)",
+      "schemeShortTitle": "PM-KISAN",
+      "nodalMinistryName": {
+        "label": "Ministry Of Agriculture and Farmers Welfare"
+      }
+    },
+    "schemeContent": {
+      "briefDescription": "ملک میں تمام زمیندار کسانوں کے خاندانوں کو آمدنی میں مدد فراہم کرنے کے لیے، جن کے پاس قابل کاشت زمین ہے، مرکزی حکومت نے ایک مرکزی سیکٹر اسکیم نافذ کی ہے، جس کا نام \"پردھان منتری کسان سمان ندھی (پی ایم-کسان)\" ہے۔",
+      "schemeImageUrl": ""
+    }
+  }
+}

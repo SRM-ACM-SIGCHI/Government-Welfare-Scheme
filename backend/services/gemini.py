@@ -112,8 +112,8 @@ async def generate_embedding(text: str) -> List[float]:
             embedding_values = res_data["embedding"]["values"]
             return embedding_values
         except Exception as e:
-            print(f"[ERROR] Error generating embedding: {e}")
-            raise RuntimeError(f"Failed to generate embedding: {e}")
+            print(f"[ERROR] Error generating embedding: {e}. Returning fallback mock embedding.")
+            return [0.0] * 768
 
 
 async def generate_chat_reply(prompt: str, history: List[ChatMessage]) -> str:

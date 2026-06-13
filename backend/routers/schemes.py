@@ -61,6 +61,31 @@ async def match_schemes(request: MatchRequest):
             else:
                 display_name = scheme["name"]
 
+            # Calculate specificity (accuracy/relevance) score of demographic criteria matching
+            spec_score = 0
+            # States specificity
+            states = scheme.get("applicable_states")
+            if states and "All" not in states:
+                spec_score += 2
+            # Gender specificity
+            gender = scheme.get("gender")
+            if gender and gender != "any":
+                spec_score += 2
+            # Caste specificity
+            caste = scheme.get("caste_categories")
+            if caste and "All" not in caste:
+                spec_score += 2
+            # Age specificity
+            if scheme.get("min_age") is not None or scheme.get("max_age") is not None:
+                spec_score += 1
+            # Income specificity
+            if scheme.get("max_income") is not None:
+                spec_score += 2
+            # Occupation specificity
+            occ = scheme.get("occupation_types")
+            if occ and "All" not in occ:
+                spec_score += 2
+
             matched.append({
                 "scheme_id":            scheme["scheme_id"],
                 "name":                 display_name,
@@ -74,7 +99,20 @@ async def match_schemes(request: MatchRequest):
                                         if scheme.get("application_deadline") else None,
                 "is_rolling":           scheme.get("is_rolling", True),
                 "documents_required":   scheme["documents_required"],
+                "_spec_score":          spec_score,
             })
+
+    # Sort matched schemes:
+    # 1. Higher specificity/accuracy score first
+    # 2. Higher benefit amount first
+    # 3. Alphabetical order by name
+    matched.sort(
+        key=lambda x: (
+            -x["_spec_score"],
+            -(x["benefit_amount"] or 0),
+            x["name"]
+        )
+    )
 
     return {
         "total":      len(matched),

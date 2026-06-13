@@ -1,0 +1,14 @@
+{
+  "status": "Success",
+  "statusCode": 200,
+  "errorDescription": "",
+  "error": "null",
+  "data": {
+    "hits": {
+      "items": [],
+      "total": 0
+    },
+    "facets": [],
+    "error": "Sort Option: sorting option default not found"
+  }
+}
