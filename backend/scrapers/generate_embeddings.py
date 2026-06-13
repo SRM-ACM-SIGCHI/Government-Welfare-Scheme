@@ -20,15 +20,21 @@ async def generate_scheme_embedding(pool, scheme, sem, progress_counter):
         search_text = build_scheme_search_text(scheme)
         
         vector = None
-        for attempt in range(4):
+        for attempt in range(5):
             try:
                 vector = await generate_embedding(search_text)
-                if all(v == 0.0 for v in vector):
-                    await asyncio.sleep(1.0 * (attempt + 1))
-                    continue
                 break
             except Exception as e:
-                await asyncio.sleep(1.5 * (attempt + 1))
+                err_str = str(e)
+                if "429" in err_str or "Too Many Requests" in err_str:
+                    sleep_time = 15 * (attempt + 1)
+                    print(f"  [RATE LIMIT] Quota exceeded on '{name}'. Waiting {sleep_time}s to reset...", flush=True)
+                    await asyncio.sleep(sleep_time)
+                else:
+                    await asyncio.sleep(2.0 * (attempt + 1))
+        
+        # Pace the requests to avoid hitting rate limits (e.g. 15 RPM for free keys)
+        await asyncio.sleep(3.5)
         
         if not vector or all(v == 0.0 for v in vector):
             print(f"  [FAILED] No vector generated for: {name} ({scheme_id})", flush=True)
@@ -46,7 +52,7 @@ async def generate_scheme_embedding(pool, scheme, sem, progress_counter):
                     )
                 progress_counter["success"] += 1
                 curr = progress_counter["success"] + progress_counter["failed"]
-                if curr % 50 == 0 or curr == progress_counter["total"]:
+                if curr % 20 == 0 or curr == progress_counter["total"]:
                     print(f"  [PROGRESS] Embedded {curr}/{progress_counter['total']} schemes...", flush=True)
                 return True
             except Exception as e:
@@ -86,7 +92,7 @@ async def generate_all_embeddings():
         ssl="require",
         statement_cache_size=0,
         min_size=2,
-        max_size=15
+        max_size=5
     )
 
     progress_counter = {
@@ -95,10 +101,10 @@ async def generate_all_embeddings():
         "total": len(rows)
     }
 
-    # Process concurrently using a semaphore to avoid rate limits
-    sem = asyncio.Semaphore(12) 
+    # Use a small semaphore to stay under the 15 requests/minute free quota limit
+    sem = asyncio.Semaphore(1) 
     
-    print("Generating embeddings concurrently...", flush=True)
+    print("Generating embeddings concurrently (paced to stay within rate limits)...", flush=True)
     tasks = [generate_scheme_embedding(pool, dict(row), sem, progress_counter) for row in rows]
     await asyncio.gather(*tasks)
     
@@ -108,4 +114,6 @@ async def generate_all_embeddings():
     print(f"  Errors / Failures:      {progress_counter['failed']}", flush=True)
 
 if __name__ == "__main__":
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
     asyncio.run(generate_all_embeddings())
