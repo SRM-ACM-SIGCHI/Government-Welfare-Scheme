@@ -2,15 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import * as Icons from "lucide-react";
 import AppLayout from "../../components/AppLayout";
-
-const STATUS_LABELS = {
-  saved:        { text: "Saved",        color: "bg-blue-50 text-blue-700 border-blue-100" },
-  applied:      { text: "Applied",      color: "bg-amber-50 text-amber-800 border-amber-100" },
-  under_review: { text: "Under Review", color: "bg-purple-50 text-purple-700 border-purple-100" },
-  approved:     { text: "Approved",     color: "bg-emerald-50 text-emerald-700 border-emerald-100" },
-  rejected:     { text: "Rejected",     color: "bg-rose-50 text-rose-700 border-rose-100" },
-};
+import { STATUS_COLORS } from "../../lib/constants";
+import EmptyState from "../../components/ui/EmptyState";
 
 export default function TrackerPage() {
   const router = useRouter();
@@ -114,9 +109,9 @@ export default function TrackerPage() {
               <button
                 key={st}
                 onClick={() => setFilter(st)}
-                className={`px-3 py-1.5 rounded-full border-0 text-[10px] font-extrabold cursor-pointer transition-all duration-150 uppercase tracking-wider whitespace-nowrap ${
+                className={`px-3 py-1.5 rounded-full border border-slate-200 text-[10px] font-extrabold cursor-pointer transition-all duration-150 uppercase tracking-wider whitespace-nowrap ${
                   filter === st
-                    ? "bg-indigo-900 text-white shadow-sm"
+                    ? "bg-brand-navy-950 text-white shadow-sm border-transparent"
                     : "bg-slate-100 text-slate-500 hover:bg-slate-200"
                 }`}
               >
@@ -128,28 +123,20 @@ export default function TrackerPage() {
 
         {/* Empty State */}
         {filtered.length === 0 && (
-          <div className="bg-white border border-slate-200/80 rounded-3xl p-12 text-center shadow-sm select-none">
-            <span className="text-5xl block mb-4">📋</span>
-            <h3 className="text-base font-extrabold text-slate-700 m-0 mb-2 uppercase tracking-wide">
-              No Tracked Schemes Found
-            </h3>
-            <p className="text-xs text-slate-400 leading-relaxed max-w-sm mx-auto mb-6">
-              Track schemes from your matches page to see and manage their application deadlines, notes, and statuses here.
-            </p>
-            <button
-              onClick={() => router.push("/schemes")}
-              className="bg-indigo-900 hover:bg-indigo-850 text-white border-0 rounded-2xl px-6 py-3.5 text-xs font-bold cursor-pointer shadow-sm transition-transform active:scale-98"
-            >
-              Explore Match Schemes
-            </button>
-          </div>
+          <EmptyState
+            iconName="ClipboardList"
+            title="No Tracked Schemes Found"
+            description="Track schemes from your matches page to see and manage their application deadlines, notes, and statuses here."
+            actionLabel="Explore Match Schemes"
+            onActionClick={() => router.push("/schemes")}
+          />
         )}
 
         {/* Cards Grid */}
         {filtered.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filtered.map((s) => {
-              const label = STATUS_LABELS[s.status] || STATUS_LABELS.saved;
+              const label = STATUS_COLORS[s.status] || STATUS_COLORS.saved;
               const days = calculateDaysLeft(s.reminder_date);
               
               return (
@@ -162,7 +149,7 @@ export default function TrackerPage() {
                     <div className="flex justify-between items-start gap-4 mb-3">
                       <h3 
                         onClick={() => router.push(`/schemes/${s.scheme_id}`)}
-                        className="text-sm font-bold text-slate-900 leading-snug m-0 cursor-pointer hover:text-indigo-900 transition-colors"
+                        className="text-sm font-bold text-slate-900 leading-snug m-0 cursor-pointer hover:text-brand-navy-950 transition-colors"
                       >
                         {s.name}
                       </h3>
@@ -180,7 +167,7 @@ export default function TrackerPage() {
                             ? "bg-amber-50 text-amber-800 border-amber-100 animate-pulse" 
                             : "bg-slate-50 text-slate-500 border-slate-100"
                       }`}>
-                        <span>📅</span>
+                        <Icons.Calendar className="w-3.5 h-3.5" />
                         <span>
                           {days < 0 
                             ? `Overdue by ${Math.abs(days)} day${Math.abs(days) !== 1 ? "s" : ""}` 
@@ -226,7 +213,7 @@ export default function TrackerPage() {
                           </button>
                           <button
                             onClick={() => handleSaveEdit(s.scheme_id)}
-                            className="px-3 py-1.5 border-0 bg-indigo-900 text-white rounded-lg text-[10px] font-bold cursor-pointer"
+                            className="px-3 py-1.5 border-0 bg-brand-navy-950 hover:bg-brand-navy-800 text-white rounded-lg text-[10px] font-bold cursor-pointer"
                           >
                             Save
                           </button>
@@ -267,16 +254,18 @@ export default function TrackerPage() {
                       {editingId !== s.scheme_id && (
                         <button
                           onClick={() => handleStartEdit(s)}
-                          className="px-3 py-1.5 border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 rounded-xl text-[10px] font-bold cursor-pointer transition-colors shadow-sm"
+                          className="px-3 py-1.5 border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 rounded-xl text-[10px] font-bold cursor-pointer transition-colors shadow-sm flex items-center gap-1"
                         >
-                          ✏️ Edit notes
+                          <Icons.Edit2 className="w-3.5 h-3.5" />
+                          <span>Edit notes</span>
                         </button>
                       )}
                       <button
                         onClick={() => handleRemove(s.scheme_id)}
-                        className="px-3 py-1.5 border border-transparent bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl text-[10px] font-bold cursor-pointer transition-colors"
+                        className="px-3 py-1.5 border border-transparent bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl text-[10px] font-bold cursor-pointer transition-colors flex items-center gap-1"
                       >
-                        🗑️ Delete
+                        <Icons.Trash2 className="w-3.5 h-3.5" />
+                        <span>Delete</span>
                       </button>
                     </div>
                   </div>

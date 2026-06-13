@@ -1,19 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import * as Icons from "lucide-react";
 import AppLayout from "../../components/AppLayout";
-import ChatBot from "../../components/ChatBot";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+import { API_URL } from "../../lib/constants";
+import { Skeleton } from "../../components/ui/Skeleton";
 
 // Dynamically import Leaflet MapComponent with SSR disabled to prevent Next.js window compilation errors
 const MapComponent = dynamic(() => import("../../components/MapComponent"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full min-h-[450px] bg-slate-100 rounded-3xl flex items-center justify-center text-slate-400 font-extrabold border border-slate-200 shadow-inner select-none">
-      ⚡ Loading Interactive Map...
+    <div className="w-full h-full min-h-[450px] bg-slate-100 rounded-3xl flex flex-col items-center justify-center text-slate-400 font-extrabold border border-slate-200 shadow-inner select-none gap-2">
+      <Icons.Loader2 className="w-6 h-6 animate-spin text-brand-navy-500" />
+      <span>Loading Interactive Map...</span>
     </div>
   ),
 });
@@ -127,14 +128,14 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
 
 function CenterSkeleton() {
   return (
-    <div className="bg-white border border-slate-100 rounded-3xl p-5 mb-3.5 animate-pulse shadow-sm">
+    <div className="bg-white border border-slate-200 rounded-3xl p-5 mb-3.5 animate-pulse shadow-sm">
       <div className="flex justify-between items-start mb-3">
-        <div className="h-5 w-3/5 bg-slate-100 rounded-md" />
-        <div className="h-5 w-1/4 bg-slate-100 rounded-full" />
+        <Skeleton className="h-5 w-3/5 rounded-md" />
+        <Skeleton className="h-5 w-1/4 rounded-full" />
       </div>
-      <div className="h-3 w-11/12 bg-slate-100 rounded-md mb-3" />
-      <div className="h-3 w-2/5 bg-slate-100 rounded-md mb-4" />
-      <div className="h-9 bg-slate-100 rounded-2xl w-full" />
+      <Skeleton className="h-3 w-11/12 rounded-md mb-3" />
+      <Skeleton className="h-3 w-2/5 rounded-md mb-4" />
+      <Skeleton className="h-9 w-full rounded-2xl" />
     </div>
   );
 }
@@ -147,37 +148,38 @@ function CenterCard({ center, dict, isActive, onSelect }) {
     <div
       onClick={onSelect}
       className={`bg-white border rounded-3xl p-5 mb-3.5 cursor-pointer shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 select-none ${
-        isActive ? "border-indigo-600 ring-2 ring-indigo-50" : "border-slate-200"
+        isActive ? "border-brand-navy-950 ring-2 ring-brand-navy-950/10" : "border-slate-200"
       }`}
     >
       <div className="flex justify-between items-start mb-2.5 gap-3">
-        <h3 className="text-sm font-bold text-slate-900 leading-snug flex-1">
+        <h3 className="text-xs font-extrabold text-slate-900 leading-snug flex-1">
           {center.name}
         </h3>
         <span
           className={`text-[9px] font-extrabold px-2.5 py-0.5 rounded-full border whitespace-nowrap uppercase tracking-wider ${
-            isCsc ? "bg-blue-50/70 text-blue-700 border-blue-100" : "bg-pink-50/70 text-pink-700 border-pink-100"
+            isCsc ? "bg-blue-50 text-blue-700 border-blue-100" : "bg-rose-50 text-rose-700 border-rose-100"
           }`}
         >
           {isCsc ? dict.csc : dict.postOffice}
         </span>
       </div>
 
-      <p className="text-xs text-slate-500 mb-3.5 leading-relaxed">
-        📍 {center.address}
+      <p className="text-xs text-slate-500 mb-3.5 leading-relaxed flex items-start gap-1">
+        <Icons.MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+        <span>{center.address}</span>
       </p>
 
       <div className="flex flex-col gap-2 mb-4 border-t border-slate-50 pt-3.5">
         {center.working_hours && (
           <div className="flex justify-between text-[11px] text-slate-400 font-semibold">
-            <span>🕒 {dict.hours}</span>
+            <span className="flex items-center gap-1"><Icons.Clock className="w-3 h-3" /> {dict.hours}</span>
             <span className="font-bold text-slate-700">{center.working_hours}</span>
           </div>
         )}
         {center.phone_number && (
           <div className="flex justify-between text-[11px] text-slate-400 font-semibold">
-            <span>📞 {dict.phone}</span>
-            <a href={`tel:${center.phone_number}`} className="font-bold text-indigo-600 hover:text-indigo-900 no-underline transition-colors" onClick={e => e.stopPropagation()}>
+            <span className="flex items-center gap-1"><Icons.Phone className="w-3 h-3" /> {dict.phone}</span>
+            <a href={`tel:${center.phone_number}`} className="font-bold text-brand-navy-500 hover:text-brand-navy-700 no-underline transition-colors" onClick={e => e.stopPropagation()}>
               {center.phone_number}
             </a>
           </div>
@@ -186,11 +188,11 @@ function CenterCard({ center, dict, isActive, onSelect }) {
 
       <div className="flex justify-between items-center">
         {center.distance !== undefined ? (
-          <span className="text-[11px] font-extrabold text-emerald-700 bg-emerald-50/80 px-2.5 py-1 rounded-md border border-emerald-100/40">
-            🚀 {center.distance} {dict.kmAway}
+          <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-100">
+            {center.distance} {dict.kmAway}
           </span>
         ) : (
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{center.state}</span>
+          <span className="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest">{center.state}</span>
         )}
 
         <a
@@ -198,9 +200,10 @@ function CenterCard({ center, dict, isActive, onSelect }) {
           target="_blank"
           rel="noopener noreferrer"
           onClick={e => e.stopPropagation()}
-          className="bg-indigo-900 hover:bg-indigo-800 text-white no-underline text-xs font-bold px-4 py-2.5 rounded-2xl inline-flex items-center gap-1.5 transition-transform duration-100 active:scale-95 shadow-sm"
+          className="bg-brand-navy-950 hover:bg-brand-navy-800 text-white no-underline text-xs font-bold px-4 py-2.5 rounded-2xl inline-flex items-center gap-1.5 transition-transform duration-100 active:scale-95 shadow-sm"
         >
-          🗺️ {dict.getDirections}
+          <Icons.Navigation className="w-3.5 h-3.5 text-brand-amber-400" />
+          <span>{dict.getDirections}</span>
         </a>
       </div>
     </div>
@@ -393,7 +396,6 @@ export default function NearbyCentersPage() {
         body: JSON.stringify(payload)
       });
       
-      // Save locally in all cases to guarantee offline fallback and immediate client-side listing
       const localAddedRaw = localStorage.getItem("added_centers") || "[]";
       let localAdded = [];
       try {
@@ -419,7 +421,6 @@ export default function NearbyCentersPage() {
         if (coords) {
           fetchNearbyCenters(coords.latitude, coords.longitude);
         } else {
-          // reload state capital list if active
           handleStateChange(selectedState || "TN");
         }
       }, 1500);
@@ -429,7 +430,6 @@ export default function NearbyCentersPage() {
     }
   };
 
-  // Determine center coordinates of Leaflet map container
   const mapCenterLat = coords ? coords.latitude : (centers.length > 0 ? centers[0].latitude : 13.0827);
   const mapCenterLng = coords ? coords.longitude : (centers.length > 0 ? centers[0].longitude : 80.2707);
 
@@ -448,12 +448,17 @@ export default function NearbyCentersPage() {
       <div className="w-full max-w-md mx-auto md:max-w-none md:mx-0 h-full flex flex-col md:flex-row gap-6 md:h-[calc(100vh-4rem)] box-border">
         
         {/* Left Column: Form and Centers list */}
-        <div className="flex-1 flex flex-col min-w-0 bg-slate-50 md:bg-white md:border md:border-slate-200 md:rounded-3xl md:shadow-sm overflow-hidden h-full">
+        <div className="flex-1 flex flex-col min-w-0 bg-slate-50 md:bg-white md:border md:border-slate-200/80 md:rounded-3xl md:shadow-sm overflow-hidden h-full">
           
           {/* Banner */}
-          <div className="bg-gradient-to-br from-indigo-900 to-blue-900 px-6 py-5 text-white flex-shrink-0 md:rounded-t-3xl shadow-sm">
-            <h1 className="text-base font-extrabold m-0 flex items-center gap-2">📍 {d.title}</h1>
-            <p className="text-[11px] text-indigo-200/90 mt-1.5 m-0 leading-relaxed font-semibold">{d.subtitle}</p>
+          <div className="bg-brand-navy-950 px-6 py-5 text-white flex-shrink-0 md:rounded-t-3xl shadow-sm">
+            <h1 className="text-sm md:text-base font-extrabold m-0 flex items-center gap-2 uppercase">
+              <Icons.MapPin className="w-5 h-5 text-brand-amber-400 stroke-[2.2]" />
+              <span>{d.title}</span>
+            </h1>
+            <p className="text-[11px] text-slate-300 mt-1.5 m-0 leading-relaxed font-semibold">
+              {d.subtitle}
+            </p>
           </div>
 
           {/* Tabs Selector */}
@@ -462,21 +467,21 @@ export default function NearbyCentersPage() {
               onClick={() => { setActiveTab("find"); setFormMsg({ text: "", type: "" }); }}
               className={`flex-1 py-4 bg-transparent border-0 border-b-2 font-bold text-xs transition-all duration-200 cursor-pointer ${
                 activeTab === "find" 
-                  ? "border-indigo-600 text-indigo-900" 
+                  ? "border-brand-navy-950 text-brand-navy-950" 
                   : "border-transparent text-slate-400 hover:text-slate-900"
               }`}
             >
-              🔍 {d.tabFind}
+              {d.tabFind}
             </button>
             <button
               onClick={() => { setActiveTab("add"); setStatusMsg(""); }}
               className={`flex-1 py-4 bg-transparent border-0 border-b-2 font-bold text-xs transition-all duration-200 cursor-pointer ${
                 activeTab === "add" 
-                  ? "border-indigo-600 text-indigo-900" 
+                  ? "border-brand-navy-950 text-brand-navy-950" 
                   : "border-transparent text-slate-400 hover:text-slate-900"
               }`}
             >
-              ➕ {d.tabAdd}
+              {d.tabAdd}
             </button>
           </div>
 
@@ -485,27 +490,30 @@ export default function NearbyCentersPage() {
             
             {/* Tab 1: Find Centers */}
             {activeTab === "find" && (
-              <div className="space-y-4 animate-[fadeIn_0.2s_ease-out]">
+              <div className="space-y-4 animate-fade-in">
                 
                 {/* Geolocation Lock box */}
-                <div className="bg-white border border-slate-200/80 rounded-3xl p-5 shadow-sm space-y-4">
+                <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm space-y-4">
                   <button
                     onClick={requestGPSLocation}
                     disabled={loading}
-                    className="w-full bg-indigo-900 hover:bg-indigo-800 text-white border-none rounded-2xl py-3 text-xs font-bold cursor-pointer transition-all duration-200 active:scale-98 shadow-sm disabled:opacity-60 flex items-center justify-center gap-2"
+                    className="w-full bg-brand-navy-950 hover:bg-brand-navy-800 text-white border-none rounded-2xl py-3.5 text-xs font-bold cursor-pointer transition-all duration-150 active:scale-98 shadow-sm disabled:opacity-60 flex items-center justify-center gap-2"
                   >
-                    🧭 {loading ? "Locating..." : d.useLocation}
+                    <Icons.Navigation className="w-4 h-4 text-brand-amber-400 stroke-[2]" />
+                    <span>{loading ? "Locating..." : d.useLocation}</span>
                   </button>
 
                   {statusMsg && (
-                    <p className="text-xs font-bold text-red-600 text-center m-0 leading-normal">
-                      ⚠️ {statusMsg}
+                    <p className="text-xs font-bold text-rose-600 text-center m-0 leading-normal flex items-center justify-center gap-1 animate-fade-in">
+                      <Icons.AlertTriangle className="w-3.5 h-3.5" />
+                      <span>{statusMsg}</span>
                     </p>
                   )}
 
                   {coords && (
-                    <p className="text-xs text-emerald-600 font-bold text-center m-0">
-                      ✅ GPS Connected: {coords.latitude.toFixed(4)}, {coords.longitude.toFixed(4)}
+                    <p className="text-xs text-emerald-600 font-bold text-center m-0 flex items-center justify-center gap-1 animate-fade-in">
+                      <Icons.CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
+                      <span>GPS Connected: {coords.latitude.toFixed(4)}, {coords.longitude.toFixed(4)}</span>
                     </p>
                   )}
 
@@ -523,7 +531,7 @@ export default function NearbyCentersPage() {
                     <select
                       value={selectedState}
                       onChange={(e) => handleStateChange(e.target.value)}
-                      className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 bg-white outline-none focus:border-indigo-600 cursor-pointer"
+                      className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 bg-white outline-none focus:border-brand-navy-950 cursor-pointer"
                     >
                       <option value="">-- Choose State --</option>
                       {STATES.map(st => (
@@ -533,8 +541,8 @@ export default function NearbyCentersPage() {
                   </div>
                 </div>
 
-                {/* Mobile Leaflet Map View: Renders interactively under coordinates picker */}
-                <div className="md:hidden w-full h-64 flex-shrink-0 rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm relative z-10">
+                {/* Mobile Map View */}
+                <div className="md:hidden w-full h-64 flex-shrink-0 rounded-3xl overflow-hidden border border-slate-200 shadow-sm relative z-10">
                   <MapComponent 
                     centers={centers}
                     userCoords={coords}
@@ -566,7 +574,7 @@ export default function NearbyCentersPage() {
 
                   {!loading && centers.length === 0 && !statusMsg && (
                     <div className="bg-white border border-slate-200 rounded-3xl p-8 text-center shadow-sm select-none">
-                      <p className="text-4xl m-0 mb-3">🧭</p>
+                      <Icons.Compass className="w-10 h-10 text-slate-300 mx-auto mb-3 animate-pulse-subtle" />
                       <p className="text-xs text-slate-400 leading-relaxed font-semibold m-0 max-w-[240px] mx-auto">
                         Connect your GPS coordinates or select a manual state fallback to discover nearby Post Offices and Common Service Centres.
                       </p>
@@ -579,15 +587,15 @@ export default function NearbyCentersPage() {
 
             {/* Tab 2: Add Center Form */}
             {activeTab === "add" && (
-              <form onSubmit={handleAddCenter} className="bg-white border border-slate-200/80 rounded-3xl p-5 shadow-sm space-y-4 animate-[fadeIn_0.2s_ease-out]">
+              <form onSubmit={handleAddCenter} className="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm space-y-4 animate-fade-in">
                 
                 {formMsg.text && (
                   <div className={`border rounded-2xl p-4 text-xs font-bold flex items-center gap-2 ${
                     formMsg.type === "success" 
                       ? "bg-emerald-50 text-emerald-800 border-emerald-100" 
-                      : "bg-red-50 text-red-800 border-red-100"
+                      : "bg-rose-50 text-rose-800 border-rose-100"
                   }`}>
-                    <span>{formMsg.type === "success" ? "✅" : "⚠️"}</span>
+                    <Icons.AlertCircle className="w-4 h-4 shrink-0" />
                     <span>{formMsg.text}</span>
                   </div>
                 )}
@@ -602,7 +610,7 @@ export default function NearbyCentersPage() {
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
                     placeholder="e.g. George Town Sub Post Office"
-                    className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 outline-none focus:border-indigo-600 box-border shadow-sm placeholder-slate-400"
+                    className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 outline-none focus:border-brand-navy-950 box-border shadow-sm placeholder-slate-400"
                   />
                 </div>
 
@@ -616,8 +624,8 @@ export default function NearbyCentersPage() {
                       onClick={() => setFormType("csc")}
                       className={`flex-1 py-3 rounded-2xl border font-bold text-xs cursor-pointer transition-colors active:scale-[0.99] ${
                         formType === "csc" 
-                          ? "border-indigo-900 bg-indigo-50/50 text-indigo-900" 
-                          : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-800"
+                          ? "border-brand-navy-950 bg-brand-navy-50/50 text-brand-navy-950" 
+                          : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-800 hover:border-slate-300"
                       }`}
                     >
                       💻 {d.csc}
@@ -627,8 +635,8 @@ export default function NearbyCentersPage() {
                       onClick={() => setFormType("post_office")}
                       className={`flex-1 py-3 rounded-2xl border font-bold text-xs cursor-pointer transition-colors active:scale-[0.99] ${
                         formType === "post_office" 
-                          ? "border-indigo-900 bg-indigo-50/50 text-indigo-900" 
-                          : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-800"
+                          ? "border-brand-navy-950 bg-brand-navy-50/50 text-brand-navy-950" 
+                          : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-800 hover:border-slate-300"
                       }`}
                     >
                       📮 {d.postOffice}
@@ -646,7 +654,7 @@ export default function NearbyCentersPage() {
                     value={formAddress}
                     onChange={(e) => setFormAddress(e.target.value)}
                     placeholder="Complete street address details..."
-                    className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 outline-none resize-none box-border focus:border-indigo-600 font-sans leading-relaxed shadow-sm placeholder-slate-400"
+                    className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 outline-none resize-none box-border focus:border-brand-navy-950 font-sans leading-relaxed shadow-sm placeholder-slate-400"
                   />
                 </div>
 
@@ -658,7 +666,7 @@ export default function NearbyCentersPage() {
                     <select
                       value={formState}
                       onChange={(e) => setFormState(e.target.value)}
-                      className="w-full py-3 px-3 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 bg-white outline-none focus:border-indigo-600 h-[45px] cursor-pointer"
+                      className="w-full py-3 px-3 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 bg-white outline-none focus:border-brand-navy-950 h-[45px] cursor-pointer"
                     >
                       {STATES.map(s => (
                         <option key={s.code} value={s.code}>{s.name}</option>
@@ -671,7 +679,8 @@ export default function NearbyCentersPage() {
                       onClick={fillGPSInForm}
                       className="w-full h-[45px] bg-slate-100 border border-slate-200 rounded-2xl text-[10px] text-slate-700 font-extrabold cursor-pointer transition-colors hover:bg-slate-200 flex items-center justify-center gap-1.5 active:scale-98 uppercase tracking-wider"
                     >
-                      🎯 {d.fillGps}
+                      <Icons.Navigation className="w-3.5 h-3.5 text-brand-navy-500" />
+                      <span>{d.fillGps}</span>
                     </button>
                   </div>
                 </div>
@@ -688,7 +697,7 @@ export default function NearbyCentersPage() {
                       value={formLat}
                       onChange={(e) => setFormLat(e.target.value)}
                       placeholder="e.g. 13.0899"
-                      className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 outline-none box-border focus:border-indigo-600 shadow-sm placeholder-slate-400"
+                      className="w-full py-3.5 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 outline-none box-border focus:border-brand-navy-950 shadow-sm placeholder-slate-400"
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -702,7 +711,7 @@ export default function NearbyCentersPage() {
                       value={formLng}
                       onChange={(e) => setFormLng(e.target.value)}
                       placeholder="e.g. 80.2872"
-                      className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 outline-none box-border focus:border-indigo-600 shadow-sm placeholder-slate-400"
+                      className="w-full py-3.5 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 outline-none box-border focus:border-brand-navy-950 shadow-sm placeholder-slate-400"
                     />
                   </div>
                 </div>
@@ -716,7 +725,7 @@ export default function NearbyCentersPage() {
                     value={formPhone}
                     onChange={(e) => setFormPhone(e.target.value)}
                     placeholder="e.g. 044-25220031"
-                    className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 outline-none box-border focus:border-indigo-600 shadow-sm placeholder-slate-400"
+                    className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 outline-none box-border focus:border-brand-navy-950 shadow-sm placeholder-slate-400"
                   />
                 </div>
 
@@ -729,15 +738,16 @@ export default function NearbyCentersPage() {
                     value={formHours}
                     onChange={(e) => setFormHours(e.target.value)}
                     placeholder="e.g. 9:00 AM - 5:00 PM"
-                    className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 outline-none box-border focus:border-indigo-600 shadow-sm placeholder-slate-400"
+                    className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 outline-none box-border focus:border-brand-navy-950 shadow-sm placeholder-slate-400"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white border-0 rounded-2xl py-3.5 text-xs font-bold cursor-pointer transition-transform duration-100 active:scale-[0.99] shadow-sm"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white border-0 rounded-2xl py-4 text-xs font-bold cursor-pointer transition-transform duration-100 active:scale-[0.99] shadow-md flex items-center justify-center gap-1.5"
                 >
-                  🚀 {d.submitBtn}
+                  <Icons.Save className="w-4 h-4" />
+                  <span>{d.submitBtn}</span>
                 </button>
               </form>
             )}
@@ -745,7 +755,7 @@ export default function NearbyCentersPage() {
           </div>
         </div>
 
-        {/* Right Column: Desktop Leaflet Map Pane */}
+        {/* Right Column: Desktop Map Pane */}
         <div className="hidden md:flex flex-1 bg-white border border-slate-200 rounded-3xl shadow-sm p-4 overflow-hidden h-full relative">
           <MapComponent 
             centers={centers}
@@ -757,10 +767,6 @@ export default function NearbyCentersPage() {
             previewCenter={previewCenter}
           />
         </div>
-      </div>
-      
-      <div className="md:hidden">
-        <ChatBot language={language} />
       </div>
     </AppLayout>
   );
