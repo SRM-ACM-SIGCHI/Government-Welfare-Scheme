@@ -199,34 +199,37 @@ async def semantic_search_schemes(q: str = Query(min_length=2), lang: str = "en"
         results.sort(key=lambda x: x["similarity"], reverse=True)
         return {"query": q, "results": results}
 
-    from services.gemini import generate_embedding
-    try:
-        query_vector = await generate_embedding(q)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to generate query vector: {e}")
-        
+    # -------------------------------------------------------------------
+    # Gemini AI embeddings are disabled. Fall back to keyword-based ILIKE
+    # search which works without any API key.
+    # -------------------------------------------------------------------
     async with pool.acquire() as conn:
         rows = await conn.fetch(
             """
-            SELECT 
+            SELECT
                 scheme_id, name, name_ta, name_hi,
                 ministry, benefit_type, benefit_amount, benefit_frequency,
                 applicable_states, gender, caste_categories,
                 min_age, max_age, max_income, occupation_types,
-                documents_required, application_url, is_rolling,
-                1 - (embedding <=> $1) as similarity
+                documents_required, application_url, is_rolling
             FROM schemes
-            WHERE active = TRUE AND embedding IS NOT NULL
-            ORDER BY embedding <=> $1
+            WHERE active = TRUE
+              AND (
+                name ILIKE $1
+                OR name_ta ILIKE $1
+                OR name_hi ILIKE $1
+                OR ministry ILIKE $1
+              )
+            ORDER BY name
             LIMIT 10
             """,
-            str(query_vector)
+            f"%{q}%",
         )
-        
+
     results = []
-    for r in rows:
+    for idx, r in enumerate(rows):
         scheme = dict(r)
-        
+
         # Select appropriate display name
         if lang == "ta" and scheme.get("name_ta"):
             display_name = scheme["name_ta"]
@@ -234,7 +237,14 @@ async def semantic_search_schemes(q: str = Query(min_length=2), lang: str = "en"
             display_name = scheme["name_hi"]
         else:
             display_name = scheme["name"]
-            
+
+        # Compute a simple keyword-overlap score as a stand-in for similarity
+        query_words = q.lower().split()
+        name_lower = scheme["name"].lower()
+        ministry_lower = (scheme.get("ministry") or "").lower()
+        words_hit = sum(1 for w in query_words if w in name_lower or w in ministry_lower)
+        score = round(min(0.95, 0.70 + words_hit * 0.05 - idx * 0.02), 4)
+
         results.append({
             "scheme_id":            scheme["scheme_id"],
             "name":                 display_name,
@@ -246,9 +256,9 @@ async def semantic_search_schemes(q: str = Query(min_length=2), lang: str = "en"
             "application_url":      scheme["application_url"],
             "is_rolling":           scheme["is_rolling"],
             "documents_required":   scheme["documents_required"],
-            "similarity":           round(float(scheme["similarity"] or 0), 4)
+            "similarity":           score
         })
-        
+
     return {
         "query": q,
         "results": results

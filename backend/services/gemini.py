@@ -1,10 +1,12 @@
+# ---------------------------------------------------------------------------\
+# Gemini AI features are disabled.
+# This file is kept for compatibility, but all functions return fallback
+# values immediately without calling the Google Generative Language APIs.
+# ---------------------------------------------------------------------------\
+
 import os
-import httpx
 from typing import List, Optional
 from models.chat import ChatMessage
-from dotenv import load_dotenv
-
-load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 EMBED_MODEL = "gemini-embedding-001"
@@ -81,95 +83,20 @@ def build_scheme_search_text(scheme: dict) -> str:
     return " | ".join(parts)
 
 
-async def generate_embedding(text: str, client: Optional[httpx.AsyncClient] = None) -> List[float]:
+async def generate_embedding(text: str, client: Optional[any] = None) -> List[float]:
     """
-    Generate 768-dimensional vector embedding for a given text using
-    Google's text-embedding-004 API via REST call.
+    Returns a zero vector embedding of size 768.
+    External REST calls are disabled.
     """
-    if not GEMINI_API_KEY:
-        # Fallback dummy embedding of size 768 for development/testing when no key is set
-        print("[WARNING] GEMINI_API_KEY not found in environment. Returning mock embedding.")
-        return [0.0] * 768
-
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{EMBED_MODEL}:embedContent?key={GEMINI_API_KEY}"
-    
-    body = {
-        "content": {
-            "parts": [
-                {
-                    "text": text
-                }
-            ]
-        },
-        "outputDimensionality": 768
-    }
-    
-    if client is not None:
-        try:
-            resp = await client.post(url, json=body, timeout=15)
-            resp.raise_for_status()
-            res_data = resp.json()
-            embedding_values = res_data["embedding"]["values"]
-            return embedding_values
-        except Exception as e:
-            print(f"[ERROR] Error generating embedding: {e}")
-            raise e
-    else:
-        async with httpx.AsyncClient() as local_client:
-            try:
-                resp = await local_client.post(url, json=body, timeout=15)
-                resp.raise_for_status()
-                res_data = resp.json()
-                embedding_values = res_data["embedding"]["values"]
-                return embedding_values
-            except Exception as e:
-                print(f"[ERROR] Error generating embedding: {e}")
-                raise e
+    return [0.0] * 768
 
 
 async def generate_chat_reply(prompt: str, history: List[ChatMessage]) -> str:
     """
-    Generate conversational chat reply using Google's gemini-2.5-flash API via REST call.
-    Injects chat history formatted for Gemini's developer endpoints.
+    Returns a static chat reply. External REST calls are disabled.
     """
-    if not GEMINI_API_KEY:
-        print("[WARNING] GEMINI_API_KEY not found in environment. Returning mock reply.")
-        return "Gemini API key is not configured. Please set the GEMINI_API_KEY environment variable to test the RAG Chatbot."
+    return (
+        "The AI assistant feature is currently unavailable. "
+        "Please use the search and scheme matching features to find relevant schemes."
+    )
 
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{CHAT_MODEL}:generateContent?key={GEMINI_API_KEY}"
-    
-    contents = []
-    
-    # Map chat history into Gemini REST format
-    for msg in history:
-        # Map roles to Gemini roles: 'user' or 'model'
-        role = "model" if msg.role in ["assistant", "model", "system"] else "user"
-        contents.append({
-            "role": role,
-            "parts": [{"text": msg.content}]
-        })
-        
-    # Append the main prompt as the final user content
-    contents.append({
-        "role": "user",
-        "parts": [{"text": prompt}]
-    })
-    
-    body = {
-        "contents": contents,
-        "generationConfig": {
-            "temperature": 0.3,
-            "maxOutputTokens": 800
-        }
-    }
-    
-    async with httpx.AsyncClient() as client:
-        try:
-            resp = await client.post(url, json=body, timeout=30)
-            resp.raise_for_status()
-            res_data = resp.json()
-            reply_text = res_data["candidates"][0]["content"]["parts"][0]["text"]
-            return reply_text
-        except Exception as e:
-            print(f"[ERROR] Error generating chat reply: {e}")
-            raise RuntimeError(f"Failed to call Gemini Chat API: {e}")
