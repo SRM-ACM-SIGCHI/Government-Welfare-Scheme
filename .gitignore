@@ -43,3 +43,10 @@ backend/next_data.json
 backend/*.xml
 backend/sitemap.xml
 
+# PWA generated service worker files
+frontend/public/sw.js
+frontend/public/workbox-*.js
+frontend/public/sw.js.map
+frontend/public/workbox-*.js.map
+
+

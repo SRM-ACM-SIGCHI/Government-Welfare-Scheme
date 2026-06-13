@@ -117,6 +117,7 @@ export default function SchemesPage() {
   const [profile, setProfile] = useState(null);
   const [filter, setFilter] = useState("all");
   const [language, setLanguage] = useState("en");
+  const [offlineMode, setOfflineMode] = useState(false);
 
   // Semantic search state
   const [searchQuery, setSearchQuery] = useState("");
@@ -128,6 +129,7 @@ export default function SchemesPage() {
   const [selectedDetails, setSelectedDetails] = useState(null);
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [detailsError, setDetailsError] = useState(null);
+  const [isTracked, setIsTracked] = useState(false);
 
   // Real-time eligibility state
   const [eligibilityCheck, setEligibilityCheck] = useState(null);
@@ -165,12 +167,32 @@ export default function SchemesPage() {
       const data = await res.json();
       const loadedSchemes = data.schemes || [];
       setSchemes(loadedSchemes);
+      setOfflineMode(false);
       
+      // Cache matching schemes for offline use
+      try {
+        localStorage.setItem("cached_schemes", JSON.stringify(loadedSchemes));
+      } catch (e) {}
+
       // Auto-select first scheme on desktop
       if (loadedSchemes.length > 0 && window.innerWidth >= 768) {
         setSelectedSchemeId(loadedSchemes[0].scheme_id);
       }
     } catch (err) {
+      console.warn("Failed to fetch matching schemes. Trying local cache fallback.", err);
+      // Attempt offline caching load
+      try {
+        const cached = localStorage.getItem("cached_schemes");
+        if (cached) {
+          const loadedSchemes = JSON.parse(cached);
+          setSchemes(loadedSchemes);
+          setOfflineMode(true);
+          if (loadedSchemes.length > 0 && window.innerWidth >= 768) {
+            setSelectedSchemeId(loadedSchemes[0].scheme_id);
+          }
+          return;
+        }
+      } catch (e) {}
       setError(err.message);
     } finally {
       setLoading(false);
@@ -231,6 +253,14 @@ export default function SchemesPage() {
         const details = await res.json();
         setSelectedDetails(details);
 
+        // Cache scheme details locally
+        try {
+          const cached = localStorage.getItem("cached_scheme_details") || "{}";
+          const dict = JSON.parse(cached);
+          dict[selectedSchemeId] = details;
+          localStorage.setItem("cached_scheme_details", JSON.stringify(dict));
+        } catch (e) {}
+
         // 2. Fetch eligibility logs in parallel
         if (profile) {
           setCheckingEligibility(true);
@@ -244,6 +274,19 @@ export default function SchemesPage() {
           }
         }
       } catch (err) {
+        console.warn("Failed to fetch scheme details. Trying cache fallback.", err);
+        // Attempt offline fallback from cached details
+        try {
+          const cached = localStorage.getItem("cached_scheme_details");
+          if (cached) {
+            const dict = JSON.parse(cached);
+            if (dict[selectedSchemeId]) {
+              setSelectedDetails(dict[selectedSchemeId]);
+              setOfflineMode(true);
+              return;
+            }
+          }
+        } catch (e) {}
         setDetailsError(err.message);
       } finally {
         setDetailsLoading(false);
@@ -253,6 +296,43 @@ export default function SchemesPage() {
 
     fetchDetailsAndCheck();
   }, [selectedSchemeId, profile]);
+
+  useEffect(() => {
+    if (!selectedSchemeId) {
+      setIsTracked(false);
+      return;
+    }
+    const raw = localStorage.getItem("tracked_schemes") || "[]";
+    try {
+      const list = JSON.parse(raw);
+      setIsTracked(list.some(s => s.scheme_id === selectedSchemeId));
+    } catch (e) {
+      setIsTracked(false);
+    }
+  }, [selectedSchemeId]);
+
+  const handleToggleTrack = () => {
+    if (!selectedDetails) return;
+    const raw = localStorage.getItem("tracked_schemes") || "[]";
+    let list = [];
+    try { list = JSON.parse(raw); } catch (e) {}
+
+    if (isTracked) {
+      list = list.filter(s => s.scheme_id !== selectedSchemeId);
+      setIsTracked(false);
+    } else {
+      list.push({
+        scheme_id: selectedSchemeId,
+        name: selectedDetails.name,
+        status: "saved",
+        notes: "",
+        reminder_date: "",
+        saved_at: new Date().toISOString()
+      });
+      setIsTracked(true);
+    }
+    localStorage.setItem("tracked_schemes", JSON.stringify(list));
+  };
 
   const FILTERS = ["all", "cash_transfer", "scholarship", "subsidy", "insurance", "housing"];
   const activeSchemes = isSearching ? searchResults : schemes;
@@ -302,9 +382,16 @@ export default function SchemesPage() {
                   {isSearching ? "Search Results" : "Your Matches"}
                 </h1>
                 {!loading && (
-                  <p className="text-[11px] text-slate-400 font-bold mt-1.5 m-0 uppercase tracking-wider">
-                    {filtered.length} scheme{filtered.length !== 1 ? "s" : ""} matched
-                  </p>
+                  <div className="flex items-center gap-2 mt-1.5">
+                    <p className="text-[11px] text-slate-400 font-bold m-0 uppercase tracking-wider">
+                      {filtered.length} scheme{filtered.length !== 1 ? "s" : ""} matched
+                    </p>
+                    {offlineMode && (
+                      <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-800 border border-amber-200 text-[9px] font-extrabold px-2 py-0.5 rounded-md uppercase tracking-wider">
+                        ⚠️ Offline
+                      </span>
+                    )}
+                  </div>
                 )}
               </div>
               <button
@@ -521,6 +608,25 @@ export default function SchemesPage() {
                           </div>
                         </div>
                       )}
+                    </div>
+
+                    {/* Track Application Panel */}
+                    <div className="bg-white border border-slate-200/80 rounded-3xl p-5 shadow-sm">
+                      <h3 className="text-xs font-bold text-slate-900 mb-1.5 uppercase tracking-wide">Application Tracking</h3>
+                      <p className="text-[11px] text-slate-400 font-semibold mb-4 leading-relaxed">
+                        {isTracked ? "This scheme is saved to your tracker. You can set reminders and write notes." : "Save this scheme to your tracker to monitor your application progress."}
+                      </p>
+                      <button
+                        onClick={handleToggleTrack}
+                        className={`w-full rounded-2xl py-3.5 text-xs font-bold text-center border cursor-pointer transition-all duration-200 active:scale-[0.99] flex items-center justify-center gap-2 ${
+                          isTracked
+                            ? "bg-rose-50 border-rose-200 text-rose-700 hover:bg-rose-100"
+                            : "bg-indigo-900 border-transparent text-white hover:bg-indigo-850"
+                        }`}
+                      >
+                        <span>📋</span>
+                        <span>{isTracked ? "Stop Tracking Scheme" : "Track & Save Scheme"}</span>
+                      </button>
                     </div>
 
                     {/* Official Portal Finder */}

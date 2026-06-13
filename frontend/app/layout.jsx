@@ -3,7 +3,13 @@ import "./globals.css";
 export const metadata = {
   title: "Information Is Wealth",
   description: "Find government welfare schemes you are eligible for",
+  manifest: "/manifest.json",
 };
+
+export const viewport = {
+  themeColor: "#1e1b4b",
+};
+
 
 export default function RootLayout({ children }) {
   return (

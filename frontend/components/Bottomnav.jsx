@@ -9,6 +9,7 @@ export default function BottomNav() {
   const TABS = [
     { name: "Schemes", path: "/schemes", icon: "🏛️" },
     { name: "AI Search", path: "/search", icon: "🧠" },
+    { name: "Tracker", path: "/tracker", icon: "📋" },
     { name: "Nearby", path: "/nearby", icon: "📍" },
     { name: "Profile", path: "/profile", icon: "👤" },
   ];

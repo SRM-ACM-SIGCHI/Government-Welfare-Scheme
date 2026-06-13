@@ -45,6 +45,8 @@ export default function SchemeDetailPage({ params }) {
   const [error,   setError]   = useState(null);
   const [profile, setProfile] = useState(null);
   const [eligibilityCheck, setEligibilityCheck] = useState(null);
+  const [offlineMode, setOfflineMode] = useState(false);
+  const [isTracked, setIsTracked] = useState(false);
 
   useEffect(() => {
     const raw = localStorage.getItem("user_profile");
@@ -54,6 +56,43 @@ export default function SchemeDetailPage({ params }) {
     fetchSchemeAndCheck();
   }, [id]);
 
+  useEffect(() => {
+    if (!id) {
+      setIsTracked(false);
+      return;
+    }
+    const raw = localStorage.getItem("tracked_schemes") || "[]";
+    try {
+      const list = JSON.parse(raw);
+      setIsTracked(list.some(s => s.scheme_id === id));
+    } catch (e) {
+      setIsTracked(false);
+    }
+  }, [id]);
+
+  const handleToggleTrack = () => {
+    if (!scheme) return;
+    const raw = localStorage.getItem("tracked_schemes") || "[]";
+    let list = [];
+    try { list = JSON.parse(raw); } catch (e) {}
+
+    if (isTracked) {
+      list = list.filter(s => s.scheme_id !== id);
+      setIsTracked(false);
+    } else {
+      list.push({
+        scheme_id: id,
+        name: scheme.name,
+        status: "saved",
+        notes: "",
+        reminder_date: "",
+        saved_at: new Date().toISOString()
+      });
+      setIsTracked(true);
+    }
+    localStorage.setItem("tracked_schemes", JSON.stringify(list));
+  };
+
   const fetchSchemeAndCheck = async () => {
     try {
       // 1. Fetch details
@@ -61,6 +100,15 @@ export default function SchemeDetailPage({ params }) {
       if (!res.ok) throw new Error("Scheme not found");
       const data = await res.json();
       setScheme(data);
+      setOfflineMode(false);
+
+      // Cache details locally
+      try {
+        const cached = localStorage.getItem("cached_scheme_details") || "{}";
+        const dict = JSON.parse(cached);
+        dict[id] = data;
+        localStorage.setItem("cached_scheme_details", JSON.stringify(dict));
+      } catch (e) {}
 
       // 2. Fetch eligibility logs if user profile exists
       const raw = localStorage.getItem("user_profile");
@@ -75,6 +123,20 @@ export default function SchemeDetailPage({ params }) {
         }
       }
     } catch (err) {
+      console.warn("Failed to fetch scheme details. Trying cache fallback.", err);
+      // Attempt offline fallback
+      try {
+        const cached = localStorage.getItem("cached_scheme_details");
+        if (cached) {
+          const dict = JSON.parse(cached);
+          if (dict[id]) {
+            setScheme(dict[id]);
+            setOfflineMode(true);
+            setError(null);
+            return;
+          }
+        }
+      } catch (e) {}
       setError(err.message);
     } finally {
       setLoading(false);
@@ -133,9 +195,16 @@ export default function SchemeDetailPage({ params }) {
           </button>
           <div className="flex justify-between items-start gap-4 mb-3">
             <h1 className="text-lg font-extrabold text-slate-900 leading-snug m-0">{scheme.name}</h1>
-            <span className={`text-[9px] font-extrabold px-2.5 py-0.5 rounded-full border whitespace-nowrap uppercase tracking-wider ${bt.bg}`}>
-              {bt.label}
-            </span>
+            <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+              <span className={`text-[9px] font-extrabold px-2.5 py-0.5 rounded-full border whitespace-nowrap uppercase tracking-wider ${bt.bg}`}>
+                {bt.label}
+              </span>
+              {offlineMode && (
+                <span className="bg-amber-50 text-amber-800 border border-amber-100/60 text-[9px] font-extrabold px-2 py-0.5 rounded-md whitespace-nowrap uppercase tracking-wider">
+                  ⚠️ Offline
+                </span>
+              )}
+            </div>
           </div>
           <p className="text-[11px] font-bold text-slate-400 m-0 mb-4 uppercase tracking-widest">{scheme.ministry}</p>
           
@@ -206,6 +275,25 @@ export default function SchemeDetailPage({ params }) {
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Track Application Panel */}
+          <div className="bg-white border border-slate-200/80 rounded-3xl p-5 shadow-sm">
+            <h3 className="text-xs font-bold text-slate-900 mb-1.5 uppercase tracking-wide">Application Tracking</h3>
+            <p className="text-[11px] text-slate-400 font-semibold mb-4 leading-relaxed">
+              {isTracked ? "This scheme is saved to your tracker. You can set reminders and write notes." : "Save this scheme to your tracker to monitor your application progress."}
+            </p>
+            <button
+              onClick={handleToggleTrack}
+              className={`w-full rounded-2xl py-3.5 text-xs font-bold text-center border cursor-pointer transition-all duration-200 active:scale-[0.99] flex items-center justify-center gap-2 ${
+                isTracked
+                  ? "bg-rose-50 border-rose-200 text-rose-700 hover:bg-rose-100"
+                  : "bg-indigo-900 border-transparent text-white hover:bg-indigo-850"
+              }`}
+            >
+              <span>📋</span>
+              <span>{isTracked ? "Stop Tracking Scheme" : "Track & Save Scheme"}</span>
+            </button>
           </div>
 
           {/* myscheme.gov.in portal lookup */}

@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-EMBED_MODEL = "text-embedding-004"
+EMBED_MODEL = "gemini-embedding-2"
 CHAT_MODEL = "gemini-2.5-flash"
 
 def build_scheme_search_text(scheme: dict) -> str:

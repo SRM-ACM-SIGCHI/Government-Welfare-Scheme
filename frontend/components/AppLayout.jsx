@@ -9,6 +9,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 const NAV_ITEMS = [
   { name: "Matched Schemes", path: "/schemes", icon: "🏛️" },
   { name: "AI Search", path: "/search", icon: "🧠" },
+  { name: "Tracker", path: "/tracker", icon: "📋" },
   { name: "Nearby Centers", path: "/nearby", icon: "📍" },
   { name: "My Profile", path: "/profile", icon: "👤" },
 ];
@@ -19,10 +20,24 @@ export default function AppLayout({ children, activeTab }) {
   const [lang, setLang] = useState("en");
   const [syncLoading, setSyncLoading] = useState(false);
   const [syncStatus, setSyncStatus] = useState(""); // "", "success", "error"
+  const [isOnline, setIsOnline] = useState(true);
 
   useEffect(() => {
     const savedLang = localStorage.getItem("language") || "en";
     setLang(savedLang);
+
+    // Track browser online/offline status
+    if (typeof window !== "undefined") {
+      setIsOnline(navigator.onLine);
+      const handleOnline = () => setIsOnline(true);
+      const handleOffline = () => setIsOnline(false);
+      window.addEventListener("online", handleOnline);
+      window.addEventListener("offline", handleOffline);
+      return () => {
+        window.removeEventListener("online", handleOnline);
+        window.removeEventListener("offline", handleOffline);
+      };
+    }
   }, []);
 
   const changeLanguage = (newLang) => {
@@ -53,7 +68,14 @@ export default function AppLayout({ children, activeTab }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-[#f8fafc] font-sans antialiased text-slate-800">
+    <div className="min-h-screen flex flex-col bg-[#f8fafc] font-sans antialiased text-slate-800">
+      {!isOnline && (
+        <div className="bg-amber-600 text-white text-[11px] font-bold text-center py-2.5 px-4 sticky top-0 z-[1000] shadow-sm select-none flex items-center justify-center gap-2 animate-[slideDown_0.25s_ease-out]">
+          <span>⚠️</span>
+          <span>Running in Offline Mode. Matched schemes and details are loaded from your device's cache.</span>
+        </div>
+      )}
+      <div className="flex-1 flex flex-col md:flex-row">
       
       {/* 1. Desktop Sidebar Navigation */}
       <aside className="hidden md:flex flex-col w-[280px] bg-white border-r border-slate-200/80 h-screen sticky top-0 z-50 p-6 box-border justify-between select-none shrink-0 shadow-[4px_0_24px_rgba(0,0,0,0.015)]">
@@ -179,6 +201,7 @@ export default function AppLayout({ children, activeTab }) {
         {/* Mobile bottom navigation bar */}
         <BottomNav />
       </main>
+      </div>
 
       {/* Dynamic Keyframe Injection for sync transition */}
       <style>{`
