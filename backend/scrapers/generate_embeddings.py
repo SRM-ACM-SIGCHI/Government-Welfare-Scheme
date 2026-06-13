@@ -2,6 +2,7 @@ import asyncio
 import asyncpg
 import os
 import sys
+import httpx
 
 # Ensure backend directory is in the import path
 BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -13,16 +14,16 @@ from dotenv import load_dotenv
 
 load_dotenv(os.path.join(BACKEND_DIR, ".env"))
 
-async def generate_scheme_embedding(pool, scheme, sem, progress_counter):
+async def generate_scheme_embedding(pool, scheme, sem, progress_counter, client):
+    scheme_id = scheme["scheme_id"]
+    name = scheme["name"]
+    search_text = build_scheme_search_text(scheme)
+    
+    vector = None
     async with sem:
-        scheme_id = scheme["scheme_id"]
-        name = scheme["name"]
-        search_text = build_scheme_search_text(scheme)
-        
-        vector = None
         for attempt in range(5):
             try:
-                vector = await generate_embedding(search_text)
+                vector = await generate_embedding(search_text, client=client)
                 break
             except Exception as e:
                 err_str = str(e)
@@ -33,33 +34,33 @@ async def generate_scheme_embedding(pool, scheme, sem, progress_counter):
                 else:
                     await asyncio.sleep(2.0 * (attempt + 1))
         
-        # Pace the requests to avoid hitting rate limits (e.g. 15 RPM for free keys)
-        await asyncio.sleep(3.5)
+        # Pace the requests to stay under 100 RPM limit for free tier
+        await asyncio.sleep(1.0)
         
-        if not vector or all(v == 0.0 for v in vector):
-            print(f"  [FAILED] No vector generated for: {name} ({scheme_id})", flush=True)
-            progress_counter["failed"] += 1
-            return False
-
-        # Save to database
-        for attempt in range(3):
-            try:
-                async with pool.acquire() as conn:
-                    await conn.execute(
-                        "UPDATE schemes SET embedding = $1 WHERE scheme_id = $2",
-                        str(vector),
-                        scheme_id
-                    )
-                progress_counter["success"] += 1
-                curr = progress_counter["success"] + progress_counter["failed"]
-                if curr % 20 == 0 or curr == progress_counter["total"]:
-                    print(f"  [PROGRESS] Embedded {curr}/{progress_counter['total']} schemes...", flush=True)
-                return True
-            except Exception as e:
-                await asyncio.sleep(1.0 * (attempt + 1))
-        
+    if not vector or all(v == 0.0 for v in vector):
+        print(f"  [FAILED] No vector generated for: {name} ({scheme_id})", flush=True)
         progress_counter["failed"] += 1
         return False
+
+    # Save to database (outside sem)
+    for attempt in range(3):
+        try:
+            async with pool.acquire() as conn:
+                await conn.execute(
+                    "UPDATE schemes SET embedding = $1 WHERE scheme_id = $2",
+                    str(vector),
+                    scheme_id
+                )
+            progress_counter["success"] += 1
+            curr = progress_counter["success"] + progress_counter["failed"]
+            if curr % 20 == 0 or curr == progress_counter["total"]:
+                print(f"  [PROGRESS] Embedded {curr}/{progress_counter['total']} schemes...", flush=True)
+            return True
+        except Exception as e:
+            await asyncio.sleep(1.0 * (attempt + 1))
+    
+    progress_counter["failed"] += 1
+    return False
 
 async def generate_all_embeddings():
     db_url = os.getenv("DATABASE_URL")
@@ -101,12 +102,13 @@ async def generate_all_embeddings():
         "total": len(rows)
     }
 
-    # Use a small semaphore to stay under the 15 requests/minute free quota limit
-    sem = asyncio.Semaphore(1) 
+    # Use a semaphore of 2 to stay under the 100 RPM limit safely
+    sem = asyncio.Semaphore(2) 
     
     print("Generating embeddings concurrently (paced to stay within rate limits)...", flush=True)
-    tasks = [generate_scheme_embedding(pool, dict(row), sem, progress_counter) for row in rows]
-    await asyncio.gather(*tasks)
+    async with httpx.AsyncClient() as client:
+        tasks = [generate_scheme_embedding(pool, dict(row), sem, progress_counter, client) for row in rows]
+        await asyncio.gather(*tasks)
     
     await pool.close()
     print("\n=== Embedding CLI Job Complete ===", flush=True)

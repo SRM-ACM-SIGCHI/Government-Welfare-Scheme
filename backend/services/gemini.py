@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-EMBED_MODEL = "gemini-embedding-2"
+EMBED_MODEL = "gemini-embedding-001"
 CHAT_MODEL = "gemini-2.5-flash"
 
 def build_scheme_search_text(scheme: dict) -> str:
@@ -81,7 +81,7 @@ def build_scheme_search_text(scheme: dict) -> str:
     return " | ".join(parts)
 
 
-async def generate_embedding(text: str) -> List[float]:
+async def generate_embedding(text: str, client: Optional[httpx.AsyncClient] = None) -> List[float]:
     """
     Generate 768-dimensional vector embedding for a given text using
     Google's text-embedding-004 API via REST call.
@@ -104,7 +104,7 @@ async def generate_embedding(text: str) -> List[float]:
         "outputDimensionality": 768
     }
     
-    async with httpx.AsyncClient() as client:
+    if client is not None:
         try:
             resp = await client.post(url, json=body, timeout=15)
             resp.raise_for_status()
@@ -114,6 +114,17 @@ async def generate_embedding(text: str) -> List[float]:
         except Exception as e:
             print(f"[ERROR] Error generating embedding: {e}")
             raise e
+    else:
+        async with httpx.AsyncClient() as local_client:
+            try:
+                resp = await local_client.post(url, json=body, timeout=15)
+                resp.raise_for_status()
+                res_data = resp.json()
+                embedding_values = res_data["embedding"]["values"]
+                return embedding_values
+            except Exception as e:
+                print(f"[ERROR] Error generating embedding: {e}")
+                raise e
 
 
 async def generate_chat_reply(prompt: str, history: List[ChatMessage]) -> str:
