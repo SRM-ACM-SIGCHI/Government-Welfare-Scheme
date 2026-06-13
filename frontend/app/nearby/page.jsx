@@ -19,12 +19,15 @@ const MapComponent = dynamic(() => import("../../components/MapComponent"), {
   ),
 });
 
-const STATES = [
-  { code: "TN", name: "Tamil Nadu" },
-  { code: "MH", name: "Maharashtra" },
-  { code: "KA", name: "Karnataka" },
-  { code: "DL", name: "Delhi" },
-  { code: "UP", name: "Uttar Pradesh" }
+const CITIES = [
+  { name: "Chennai", stateCode: "TN", lat: 13.0827, lng: 80.2707 },
+  { name: "Mumbai", stateCode: "MH", lat: 18.9220, lng: 72.8347 },
+  { name: "Bengaluru", stateCode: "KA", lat: 12.9716, lng: 77.5946 },
+  { name: "New Delhi", stateCode: "DL", lat: 28.6139, lng: 77.2090 },
+  { name: "Lucknow", stateCode: "UP", lat: 26.8467, lng: 80.9462 },
+  { name: "Pune", stateCode: "MH", lat: 18.5204, lng: 73.8567 },
+  { name: "Hyderabad", stateCode: "TG", lat: 17.3850, lng: 78.4867 },
+  { name: "Kolkata", stateCode: "WB", lat: 22.5726, lng: 88.3639 }
 ];
 
 const DICT = {
@@ -32,9 +35,9 @@ const DICT = {
     title: "Nearby Assistance Centers",
     subtitle: "Find post offices and CSCs near you to help submit scheme applications",
     useLocation: "Find Centers Near Me",
-    gpsDenied: "Location permission denied. Please select a state manually.",
-    gpsError: "Could not retrieve your location. Try manually choosing a state.",
-    manualSelect: "Choose Your State Manually",
+    gpsDenied: "Location permission denied. Please select a city manually.",
+    gpsError: "Could not retrieve your location. Try manually choosing a city.",
+    manualSelect: "Choose Your City Manually",
     kmAway: "km away",
     hours: "Hours:",
     phone: "Phone:",
@@ -60,9 +63,9 @@ const DICT = {
     title: "அருகிலுள்ள உதவி மையங்கள்",
     subtitle: "விண்ணப்பிக்க உதவ அருகிலுள்ள தபால் நிலையங்கள் மற்றும் இ-சேவை மையங்களைக் கண்டறியவும்",
     useLocation: "என் இருப்பிடத்தை பயன்படுத்து",
-    gpsDenied: "இருப்பிட அனுமதி மறுக்கப்பட்டது. தயவுசெய்து மாநிலத்தை கைமுறையாக தேர்ந்தெடுக்கவும்.",
-    gpsError: "உங்கள் இருப்பிடத்தைக் கண்டறிய முடியவில்லை. மாநிலத்தை தேர்ந்தெடுக்கவும்.",
-    manualSelect: "கைமுறையாக மாநிலத்தை தேர்ந்தெடுக்கவும்",
+    gpsDenied: "இருப்பிட அனுமதி மறுக்கப்பட்டது. தயவுசெய்து நகரத்தை கைமுறையாக தேர்ந்தெடுக்கவும்.",
+    gpsError: "உங்கள் இருப்பிடத்தைக் கண்டறிய முடியவில்லை. நகரத்தை தேர்ந்தெடுக்கவும்.",
+    manualSelect: "கைமுறையாக நகரத்தை தேர்ந்தெடுக்கவும்",
     kmAway: "கி.மீ தூரம்",
     hours: "நேரம்:",
     phone: "தொலைபேசி:",
@@ -218,7 +221,7 @@ export default function NearbyCentersPage() {
   const [centers, setCenters] = useState([]);
   const [statusMsg, setStatusMsg] = useState("");
   const [coords, setCoords] = useState(null);
-  const [selectedState, setSelectedState] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
   const [selectedCenterId, setSelectedCenterId] = useState(null);
 
   // Add Center Form State
@@ -248,7 +251,7 @@ export default function NearbyCentersPage() {
     setLoading(true);
     setStatusMsg("");
     setCenters([]);
-    setSelectedState("");
+    setSelectedCity("");
     setSelectedCenterId(null);
 
     navigator.geolocation.getCurrentPosition(
@@ -341,21 +344,18 @@ export default function NearbyCentersPage() {
     setCenters(results.slice(0, 5));
   };
 
-  const handleStateChange = async (stateCode) => {
-    if (!stateCode) return;
-    setSelectedState(stateCode);
+  const handleCityChange = async (cityName) => {
+    if (!cityName) return;
+    setSelectedCity(cityName);
     setLoading(true);
     setStatusMsg("");
     setCoords(null);
     setSelectedCenterId(null);
     
-    let lat = 13.0827, lng = 80.2707; 
-    if (stateCode === "MH") { lat = 18.9220; lng = 72.8347; } 
-    if (stateCode === "KA") { lat = 12.9716; lng = 77.5946; } 
-    if (stateCode === "DL") { lat = 28.6139; lng = 77.2090; } 
-    if (stateCode === "UP") { lat = 26.8467; lng = 80.9462; } 
-
-    await fetchNearbyCenters(lat, lng);
+    const cityObj = CITIES.find(c => c.name === cityName);
+    if (cityObj) {
+      await fetchNearbyCenters(cityObj.lat, cityObj.lng);
+    }
   };
 
   const fillGPSInForm = () => {
@@ -421,7 +421,7 @@ export default function NearbyCentersPage() {
         if (coords) {
           fetchNearbyCenters(coords.latitude, coords.longitude);
         } else {
-          handleStateChange(selectedState || "TN");
+          handleCityChange(selectedCity || "Chennai");
         }
       }, 1500);
 
@@ -523,19 +523,19 @@ export default function NearbyCentersPage() {
                     <hr className="flex-1 border-0 border-t border-slate-100" />
                   </div>
 
-                  {/* State Select Fallback */}
+                  {/* City Select Fallback */}
                   <div className="space-y-2">
                     <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
                       {d.manualSelect}
                     </label>
                     <select
-                      value={selectedState}
-                      onChange={(e) => handleStateChange(e.target.value)}
+                      value={selectedCity}
+                      onChange={(e) => handleCityChange(e.target.value)}
                       className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700 bg-white outline-none focus:border-brand-navy-950 cursor-pointer"
                     >
-                      <option value="">-- Choose State --</option>
-                      {STATES.map(st => (
-                        <option key={st.code} value={st.code}>{st.name}</option>
+                      <option value="">-- Choose City --</option>
+                      {CITIES.map(city => (
+                        <option key={city.name} value={city.name}>{city.name} ({city.stateCode})</option>
                       ))}
                     </select>
                   </div>
