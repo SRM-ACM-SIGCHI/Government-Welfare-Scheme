@@ -20,22 +20,21 @@ async def generate_scheme_embedding(pool, scheme, sem, progress_counter, client)
     search_text = build_scheme_search_text(scheme)
     
     vector = None
-    async with sem:
-        for attempt in range(5):
-            try:
+    for attempt in range(5):
+        try:
+            async with sem:
                 vector = await generate_embedding(search_text, client=client)
-                break
-            except Exception as e:
-                err_str = str(e)
-                if "429" in err_str or "Too Many Requests" in err_str:
-                    sleep_time = 15 * (attempt + 1)
-                    print(f"  [RATE LIMIT] Quota exceeded on '{name}'. Waiting {sleep_time}s to reset...", flush=True)
-                    await asyncio.sleep(sleep_time)
-                else:
-                    await asyncio.sleep(2.0 * (attempt + 1))
-        
-        # Pace the requests to stay under 100 RPM limit for free tier
-        await asyncio.sleep(1.0)
+                # Pace the requests to stay under 100 RPM limit for free tier
+                await asyncio.sleep(0.7)
+            break
+        except Exception as e:
+            err_str = str(e)
+            if "429" in err_str or "Too Many Requests" in err_str:
+                sleep_time = 15 * (attempt + 1)
+                print(f"  [RATE LIMIT] Quota exceeded on '{name}'. Waiting {sleep_time}s to reset...", flush=True)
+                await asyncio.sleep(sleep_time)
+            else:
+                await asyncio.sleep(2.0 * (attempt + 1))
         
     if not vector or all(v == 0.0 for v in vector):
         print(f"  [FAILED] No vector generated for: {name} ({scheme_id})", flush=True)
@@ -102,8 +101,8 @@ async def generate_all_embeddings():
         "total": len(rows)
     }
 
-    # Use a semaphore of 2 to stay under the 100 RPM limit safely
-    sem = asyncio.Semaphore(2) 
+    # Use a semaphore of 1 to stay under the 100 RPM limit safely with sequential requests
+    sem = asyncio.Semaphore(1) 
     
     print("Generating embeddings concurrently (paced to stay within rate limits)...", flush=True)
     async with httpx.AsyncClient() as client:
