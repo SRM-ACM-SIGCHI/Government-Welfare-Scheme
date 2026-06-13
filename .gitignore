@@ -33,3 +33,13 @@ Thumbs.db
 # IDEs
 .vscode/
 .idea/
+
+# Scrapers & Scratch / Temporary Files
+backend/scrapers/output/
+backend/scratch/
+scrapers/output/
+backend/sample.html
+backend/next_data.json
+backend/*.xml
+backend/sitemap.xml
+
