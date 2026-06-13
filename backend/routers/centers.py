@@ -55,8 +55,11 @@ async def fetch_osm_post_offices(lat: float, lng: float, radius_meters: int = 20
     out center;
     """
     try:
+        headers = {
+            "User-Agent": "GovernmentWelfareSchemesPortal/1.0 (contact: admin@welfareschemes.gov)"
+        }
         async with httpx.AsyncClient() as client:
-            resp = await client.post(overpass_url, data={"data": query}, timeout=10)
+            resp = await client.post(overpass_url, data={"data": query}, headers=headers, timeout=10)
             if resp.status_code != 200:
                 return []
             data = resp.json()
