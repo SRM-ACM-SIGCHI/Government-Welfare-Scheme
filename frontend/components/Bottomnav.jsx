@@ -1,48 +1,45 @@
 "use client";
 
+import React from "react";
 import { usePathname, useRouter } from "next/navigation";
+import * as Icons from "lucide-react";
+import { NAV_ITEMS } from "../lib/constants";
 
 export default function BottomNav() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const TABS = [
-    { name: "Schemes", path: "/schemes", icon: "🏛️" },
-    { name: "AI Search", path: "/search", icon: "🧠" },
-    { name: "Tracker", path: "/tracker", icon: "📋" },
-    { name: "Nearby", path: "/nearby", icon: "📍" },
-    { name: "Profile", path: "/profile", icon: "👤" },
-  ];
-
   return (
-    <div className="md:hidden fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md h-16 bg-white/95 backdrop-blur-md border-t border-gray-200/80 flex justify-around items-center z-[990] shadow-[0_-4px_20px_rgba(0,0,0,0.03)] pb-[env(safe-area-inset-bottom,0px)] px-3 box-border">
-      {TABS.map((tab) => {
-        const isActive = pathname === tab.path;
+    <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white/95 backdrop-blur-md border-t border-slate-200/80 flex justify-around items-center z-[990] shadow-[0_-4px_20px_rgba(0,0,0,0.03)] pb-[env(safe-area-inset-bottom,0px)] px-3 box-border">
+      {NAV_ITEMS.map((item) => {
+        const isActive = pathname === item.path;
+        const IconComponent = Icons[item.iconName] || Icons.HelpCircle;
+        
         return (
           <button
-            key={tab.path}
-            onClick={() => router.push(tab.path)}
-            className={`flex-1 h-full flex flex-col items-center justify-center bg-transparent border-0 cursor-pointer gap-1 transition-all duration-250 select-none ${
-              isActive ? "text-blue-900" : "text-gray-400 hover:text-gray-600"
+            key={item.path}
+            onClick={() => router.push(item.path)}
+            className={`flex-1 h-full flex flex-col items-center justify-center bg-transparent border-0 cursor-pointer gap-1 transition-all duration-200 select-none ${
+              isActive ? "text-brand-navy-950" : "text-slate-400 hover:text-slate-600"
             }`}
           >
             <span
-              className={`text-xl transition-all duration-300 ${
-                isActive ? "scale-115 -translate-y-0.5" : "scale-100"
+              className={`transition-all duration-200 ${
+                isActive ? "scale-110 -translate-y-[2px]" : "scale-100"
               }`}
             >
-              {tab.icon}
+              <IconComponent className={`w-5 h-5 ${isActive ? "stroke-[2.5]" : "stroke-[1.8]"}`} />
             </span>
             <span
               className={`text-[10px] tracking-wide transition-all duration-200 ${
-                isActive ? "font-bold" : "font-semibold"
+                isActive ? "font-bold text-brand-navy-950" : "font-semibold text-slate-400"
               }`}
             >
-              {tab.name}
+              {item.shortName}
             </span>
             {/* Active underline indicator */}
             {isActive && (
-              <span className="w-5 h-0.5 bg-blue-900 rounded-full animate-[fadeIn_0.2s_ease-out]"></span>
+              <span className="w-5 h-0.5 bg-brand-navy-950 rounded-full animate-fade-in"></span>
             )}
           </button>
         );
