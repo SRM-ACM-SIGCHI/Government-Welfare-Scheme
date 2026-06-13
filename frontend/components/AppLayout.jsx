@@ -10,10 +10,7 @@ export default function AppLayout({ children, activeTab }) {
   const router = useRouter();
   const pathname = usePathname();
   const [lang, setLang] = useState("en");
-  const [syncLoading, setSyncLoading] = useState(false);
-  const [syncStatus, setSyncStatus] = useState(""); // "", "success", "error"
   const [isOnline, setIsOnline] = useState(true);
-  const [showAdmin, setShowAdmin] = useState(false);
 
   useEffect(() => {
     const savedLang = localStorage.getItem("language") || "en";
@@ -39,26 +36,7 @@ export default function AppLayout({ children, activeTab }) {
     window.location.reload();
   };
 
-  const handleSyncSchemes = async () => {
-    setSyncLoading(true);
-    setSyncStatus("");
-    try {
-      const res = await fetch(`${API_URL}/schemes/sync-scraped?max_schemes=5`, {
-        method: "POST",
-      });
-      if (res.ok) {
-        setSyncStatus("success");
-        setTimeout(() => setSyncStatus(""), 4000);
-      } else {
-        setSyncStatus("error");
-      }
-    } catch (e) {
-      setSyncStatus("error");
-      setTimeout(() => setSyncStatus(""), 4000);
-    } finally {
-      setSyncLoading(false);
-    }
-  };
+
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 font-sans antialiased text-slate-800">
@@ -104,7 +82,7 @@ export default function AppLayout({ children, activeTab }) {
                   <button
                     key={item.path}
                     onClick={() => router.push(item.path)}
-                    className={`w-full flex items-center gap-3.5 px-4.5 py-3 rounded-2xl border-0 text-xs font-bold cursor-pointer transition-all duration-200 text-left ${
+                    className={`w-full flex items-center gap-3.5 px-5 py-3 rounded-2xl border-0 text-xs font-bold cursor-pointer transition-all duration-200 text-left ${
                       isActive
                         ? "bg-brand-navy-950 text-white shadow-md shadow-brand-navy-950/10 border-l-4 border-brand-amber-500"
                         : "bg-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-900"
@@ -149,45 +127,7 @@ export default function AppLayout({ children, activeTab }) {
               </button>
             </div>
 
-            {/* Collapsible Admin Section */}
-            <div className="border border-slate-200 rounded-2xl overflow-hidden bg-slate-50/50">
-              <button
-                onClick={() => setShowAdmin(!showAdmin)}
-                className="w-full flex items-center justify-between px-4 py-2.5 bg-transparent border-0 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest cursor-pointer hover:bg-slate-100/50 transition-colors"
-              >
-                <span className="flex items-center gap-1.5">
-                  <Icons.Settings className="w-3 h-3" /> System Admin
-                </span>
-                <Icons.ChevronDown className={`w-3 h-3 transition-transform duration-200 ${showAdmin ? "rotate-180" : ""}`} />
-              </button>
-              
-              {showAdmin && (
-                <div className="p-3 border-t border-slate-200/60 bg-white flex flex-col gap-2 animate-fade-in">
-                  <button
-                    onClick={handleSyncSchemes}
-                    disabled={syncLoading}
-                    className={`w-full py-2 px-3 rounded-lg border border-slate-200 text-[10px] font-bold cursor-pointer shadow-sm flex items-center justify-center gap-2 transition-all duration-150 active:scale-98 ${
-                      syncLoading
-                        ? "bg-slate-100 text-slate-400 cursor-not-allowed border-transparent"
-                        : "bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900"
-                    }`}
-                  >
-                    <Icons.RefreshCw className={`w-3 h-3 shrink-0 ${syncLoading ? "animate-spin" : ""}`} />
-                    <span>{syncLoading ? "Syncing..." : "Sync Fresh Schemes"}</span>
-                  </button>
-                  {syncStatus === "success" && (
-                    <span className="text-[9px] font-bold text-emerald-600 text-center animate-fade-in">
-                      Sync request sent!
-                    </span>
-                  )}
-                  {syncStatus === "error" && (
-                    <span className="text-[9px] font-bold text-rose-500 text-center animate-fade-in">
-                      Sync request failed.
-                    </span>
-                  )}
-                </div>
-              )}
-            </div>
+
 
             <span className="text-[9px] text-slate-400 text-center block mt-1 font-semibold tracking-wider">
               © 2026 INFORMATION IS WEALTH

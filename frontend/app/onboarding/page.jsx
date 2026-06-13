@@ -205,7 +205,7 @@ export default function OnboardingPage() {
                       key={r.value} 
                       type="button"
                       onClick={() => update("income_annual", r.value)}
-                      className={`text-left px-4.5 py-3.5 rounded-2xl border transition-all duration-200 cursor-pointer text-xs font-bold shadow-sm active:scale-[0.99] ${
+                      className={`text-left px-5 py-3.5 rounded-2xl border transition-all duration-200 cursor-pointer text-xs font-bold shadow-sm active:scale-[0.99] ${
                         profile.income_annual === r.value 
                           ? "border-brand-navy-950 bg-brand-navy-50/50 text-brand-navy-950" 
                           : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-800 hover:border-slate-300"
@@ -232,7 +232,7 @@ export default function OnboardingPage() {
                       key={o.value} 
                       type="button"
                       onClick={() => update("occupation_type", o.value)}
-                      className={`text-left px-4.5 py-3.5 rounded-2xl border transition-all duration-200 cursor-pointer text-xs font-bold shadow-sm active:scale-[0.99] ${
+                      className={`text-left px-5 py-3.5 rounded-2xl border transition-all duration-200 cursor-pointer text-xs font-bold shadow-sm active:scale-[0.99] ${
                         profile.occupation_type === o.value 
                           ? "border-brand-navy-950 bg-brand-navy-50/50 text-brand-navy-950" 
                           : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-800 hover:border-slate-300"
