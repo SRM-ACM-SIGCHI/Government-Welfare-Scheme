@@ -53,7 +53,7 @@ export default function SchemeDetail({
         <h2 className="text-sm md:text-base font-extrabold text-slate-900 leading-snug mb-3.5 m-0 uppercase tracking-wide">
           {scheme.name}
         </h2>
-
+ 
         <div className="flex flex-wrap gap-2">
           <Badge className={benefitConfig.bg} style={{ borderWidth: "1px" }}>
             {benefitConfig.label}
@@ -65,11 +65,11 @@ export default function SchemeDetail({
           )}
         </div>
       </div>
-
+ 
       {/* Main Details Body */}
       <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6 custom-scrollbar bg-slate-50/10">
         
-        {/* User Eligibility Card (if matching results present) */}
+        {/* 1. User Eligibility Card (if matching results present) */}
         {hasEligibility && (
           <div
             className={`border rounded-2xl p-4 flex items-start gap-4 ${
@@ -111,7 +111,64 @@ export default function SchemeDetail({
           </div>
         )}
 
-        {/* Verification & Deadline row */}
+        {/* 2. Detailed Criteria Fields */}
+        <div className="bg-white border border-slate-200/80 rounded-3xl px-5 py-2.5 shadow-sm">
+          <h3 className="text-xs font-bold text-slate-900 mt-3.5 mb-2 uppercase tracking-wide">
+            Eligibility Checklist
+          </h3>
+          {[
+            ["States", scheme.applicable_states ? scheme.applicable_states.join(", ") : "All India"],
+            ["Gender", scheme.gender ? snakeToTitle(scheme.gender) : "All"],
+            ["Categories", scheme.caste_categories ? scheme.caste_categories.join(", ") : "All categories"],
+            ["Age Bounds", scheme.min_age && scheme.max_age ? `${scheme.min_age} – ${scheme.max_age} years` : scheme.min_age ? `${scheme.min_age}+ years` : scheme.max_age ? `Up to ${scheme.max_age} years` : "No restrictions"],
+            ["Max Income", scheme.max_income ? `Rs.${scheme.max_income.toLocaleString("en-IN")}/year` : "No limit"],
+            ["Occupation", scheme.occupation_types ? scheme.occupation_types.map(o => snakeToTitle(o)).join(", ") : "Any occupation"],
+          ].map(([label, value]) => (
+            <div key={label} className="flex justify-between items-start py-3.5 border-b border-slate-100 last:border-b-0">
+              <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">{label}</span>
+              <span className="text-xs font-bold text-slate-800 text-right max-w-[60%]">{value}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* 3. Apply Link Button Card */}
+        {scheme.application_url && (
+          <div className="p-5 bg-white border border-slate-200/80 rounded-3xl shadow-sm">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Application link
+              </span>
+              <span className="text-[9px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-100 font-extrabold flex items-center gap-1">
+                <Icons.Check className="w-2.5 h-2.5" /> Verified official URL
+              </span>
+            </div>
+            <a
+              href={scheme.application_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl py-4 text-xs font-bold text-center no-underline shadow-md hover:shadow-lg transition-all duration-200 active:scale-[0.99] cursor-pointer"
+            >
+              Apply Now — Official Site ↗
+            </a>
+          </div>
+        )}
+
+        {/* 4. Required Documents Section */}
+        {scheme.documents_required && scheme.documents_required.length > 0 && (
+          <div className="bg-white border border-slate-200/80 rounded-3xl p-5 shadow-sm">
+            <h3 className="text-xs font-bold text-slate-900 mb-3.5 uppercase tracking-wide">Required Documents</h3>
+            <div className="grid grid-cols-1 gap-3">
+              {scheme.documents_required.map((docKey) => (
+                <div key={docKey} className="flex items-center gap-3 text-xs font-semibold text-slate-600">
+                  <Icons.FileText className="w-4 h-4 text-slate-400 shrink-0" />
+                  <span>{DOC_LABELS[docKey] || snakeToTitle(docKey)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+ 
+        {/* 5. Verification & Deadline row */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {scheme.verified_at && (
             <div className="bg-white border border-slate-200/80 rounded-2xl px-4 py-3 flex items-center gap-3 shadow-[0_1px_4px_rgba(15,23,42,0.01)]">
@@ -140,8 +197,8 @@ export default function SchemeDetail({
             </div>
           )}
         </div>
-
-        {/* Application Tracking Panel (optional) */}
+ 
+        {/* 6. Application Tracking Panel (optional) */}
         {showTracking && onToggleTrack && (
           <div className="bg-white border border-slate-200/80 rounded-3xl p-5 shadow-sm">
             <h3 className="text-xs font-bold text-slate-900 mb-1.5 uppercase tracking-wide">Application Tracking</h3>
@@ -163,8 +220,8 @@ export default function SchemeDetail({
             </button>
           </div>
         )}
-
-        {/* myScheme Government Cross-Check Finder */}
+ 
+        {/* 7. myScheme Government Cross-Check Finder */}
         <div className="bg-white border border-slate-200/80 rounded-3xl p-5 shadow-sm">
           <h3 className="text-xs font-bold text-slate-900 mb-1.5 uppercase tracking-wide">
             Cross-check on national database
@@ -182,64 +239,7 @@ export default function SchemeDetail({
             <span>Verify on myScheme.gov.in ↗</span>
           </a>
         </div>
-
-        {/* Detailed Criteria Fields */}
-        <div className="bg-white border border-slate-200/80 rounded-3xl px-5 py-2.5 shadow-sm">
-          <h3 className="text-xs font-bold text-slate-900 mt-3.5 mb-2 uppercase tracking-wide">
-            Eligibility Checklist
-          </h3>
-          {[
-            ["States", scheme.applicable_states ? scheme.applicable_states.join(", ") : "All India"],
-            ["Gender", scheme.gender ? snakeToTitle(scheme.gender) : "All"],
-            ["Categories", scheme.caste_categories ? scheme.caste_categories.join(", ") : "All categories"],
-            ["Age Bounds", scheme.min_age && scheme.max_age ? `${scheme.min_age} – ${scheme.max_age} years` : scheme.min_age ? `${scheme.min_age}+ years` : scheme.max_age ? `Up to ${scheme.max_age} years` : "No restrictions"],
-            ["Max Income", scheme.max_income ? `Rs.${scheme.max_income.toLocaleString("en-IN")}/year` : "No limit"],
-            ["Occupation", scheme.occupation_types ? scheme.occupation_types.map(o => snakeToTitle(o)).join(", ") : "Any occupation"],
-          ].map(([label, value]) => (
-            <div key={label} className="flex justify-between items-start py-3.5 border-b border-slate-100 last:border-b-0">
-              <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">{label}</span>
-              <span className="text-xs font-bold text-slate-800 text-right max-w-[60%]">{value}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Required Documents Section */}
-        {scheme.documents_required && scheme.documents_required.length > 0 && (
-          <div className="bg-white border border-slate-200/80 rounded-3xl p-5 shadow-sm">
-            <h3 className="text-xs font-bold text-slate-900 mb-3.5 uppercase tracking-wide">Required Documents</h3>
-            <div className="grid grid-cols-1 gap-3">
-              {scheme.documents_required.map((docKey) => (
-                <div key={docKey} className="flex items-center gap-3 text-xs font-semibold text-slate-600">
-                  <Icons.FileText className="w-4 h-4 text-slate-400 shrink-0" />
-                  <span>{DOC_LABELS[docKey] || snakeToTitle(docKey)}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
-
-      {/* Footer / Apply Link */}
-      {scheme.application_url && (
-        <div className="p-6 md:p-8 border-t border-slate-100 bg-slate-50/50 flex-shrink-0">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-              Application link
-            </span>
-            <span className="text-[9px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-100 font-extrabold flex items-center gap-1">
-              <Icons.Check className="w-2.5 h-2.5" /> Verified official URL
-            </span>
-          </div>
-          <a
-            href={scheme.application_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl py-4 text-xs font-bold text-center no-underline shadow-md hover:shadow-lg transition-all duration-200 active:scale-[0.99] cursor-pointer"
-          >
-            Apply Now — Official Site ↗
-          </a>
-        </div>
-      )}
     </div>
   );
 }
