@@ -1,0 +1,323 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Welfare Schemes",
+  "@appTitle": { "description": "App bar title" },
+
+  "tagline": "Find government schemes you are eligible for",
+  "@tagline": {},
+
+  "ctaGetStarted": "Get Started — Free",
+  "@ctaGetStarted": {},
+
+  "ctaSeeMySchemes": "See My Schemes",
+  "@ctaSeeMySchemes": {},
+
+  "ctaUpdateProfile": "Update My Profile",
+  "@ctaUpdateProfile": {},
+
+  "onboardingMinutes": "Takes less than 1 minute • No sign up required",
+  "@onboardingMinutes": {},
+
+  "safeTitle": "Safe & Verified",
+  "@safeTitle": {},
+
+  "safeLine1": "We never ask for Aadhaar or bank details",
+  "@safeLine1": {},
+
+  "safeLine2": "All links go to official government sites",
+  "@safeLine2": {},
+
+  "safeLine3": "Your data stays on your phone",
+  "@safeLine3": {},
+
+  "voiceTitle": "Speak to find schemes",
+  "@voiceTitle": {},
+
+  "voiceHint": "Tap mic and speak your details",
+  "@voiceHint": {},
+
+  "voiceListening": "Listening…",
+  "@voiceListening": {},
+
+  "voiceFinding": "Finding schemes…",
+  "@voiceFinding": {},
+
+  "voiceError": "Could not hear clearly. Please try again.",
+  "@voiceError": {},
+
+  "voiceNotSupported": "Voice input not available on this device.",
+  "@voiceNotSupported": {},
+
+  "voiceFoundSchemes": "Found {count} scheme(s) for {state} · {caste} · {occupation}",
+  "@voiceFoundSchemes": {
+    "placeholders": {
+      "count":      { "type": "int" },
+      "state":      { "type": "String" },
+      "caste":      { "type": "String" },
+      "occupation": { "type": "String" }
+    }
+  },
+
+  "seeAllSchemes": "See all {count} schemes →",
+  "@seeAllSchemes": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "onboardingStep1Title": "Where do you live?",
+  "@onboardingStep1Title": {},
+
+  "onboardingStep1Sub": "We use this to find schemes in your state",
+  "@onboardingStep1Sub": {},
+
+  "onboardingStep2Title": "Tell us about yourself",
+  "@onboardingStep2Title": {},
+
+  "onboardingStep2Sub": "This helps us match the right schemes",
+  "@onboardingStep2Sub": {},
+
+  "onboardingStep3Title": "Your income & work",
+  "@onboardingStep3Title": {},
+
+  "onboardingStep3Sub": "Many schemes depend on income and occupation",
+  "@onboardingStep3Sub": {},
+
+  "onboardingStep4Title": "Almost done!",
+  "@onboardingStep4Title": {},
+
+  "onboardingStep4Sub": "Review your profile before we find your schemes",
+  "@onboardingStep4Sub": {},
+
+  "selectState": "Select your state",
+  "@selectState": {},
+
+  "chooseState": "— Choose state —",
+  "@chooseState": {},
+
+  "genderLabel": "Gender",
+  "@genderLabel": {},
+
+  "genderMale": "Male",
+  "@genderMale": {},
+
+  "genderFemale": "Female",
+  "@genderFemale": {},
+
+  "genderOther": "Other",
+  "@genderOther": {},
+
+  "categoryLabel": "Category",
+  "@categoryLabel": {},
+
+  "ageLabel": "Your age",
+  "@ageLabel": {},
+
+  "agePlaceholder": "e.g. 28",
+  "@agePlaceholder": {},
+
+  "incomeLabel": "Annual household income",
+  "@incomeLabel": {},
+
+  "occupationLabel": "Occupation",
+  "@occupationLabel": {},
+
+  "btnContinue": "Continue →",
+  "@btnContinue": {},
+
+  "btnFindMySchemes": "Find My Schemes 🎯",
+  "@btnFindMySchemes": {},
+
+  "btnBack": "← Back",
+  "@btnBack": {},
+
+  "stepOf": "{step} of {total}",
+  "@stepOf": {
+    "placeholders": {
+      "step":  { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+
+  "profileSavedLocally": "✅ Your profile is saved only on your phone. We never upload it.",
+  "@profileSavedLocally": {},
+
+  "schemesTitle": "My Schemes",
+  "@schemesTitle": {},
+
+  "schemesSubtitle": "{count} schemes matched for you",
+  "@schemesSubtitle": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "filterAll": "All",
+  "@filterAll": {},
+
+  "openNow": "Open now",
+  "@openNow": {},
+
+  "amountVaries": "Amount varies",
+  "@amountVaries": {},
+
+  "noSchemesTitle": "No schemes found",
+  "@noSchemesTitle": {},
+
+  "noSchemesSub": "Try updating your profile or checking back later.",
+  "@noSchemesSub": {},
+
+  "searchTitle": "AI Semantic Search",
+  "@searchTitle": {},
+
+  "searchSubtitle": "Search by intent or situation instead of exact keywords",
+  "@searchSubtitle": {},
+
+  "searchPlaceholder": "e.g. financial aid for poor SC female student to study…",
+  "@searchPlaceholder": {},
+
+  "searchBtn": "Search Schemes",
+  "@searchBtn": {},
+
+  "searchHint": "Try typing your gender, state, occupation, and what help you need.",
+  "@searchHint": {},
+
+  "searching": "Analysing query & matching schemes…",
+  "@searching": {},
+
+  "searchNoResults": "No schemes matched your search. Try describing your situation differently.",
+  "@searchNoResults": {},
+
+  "searchResultsLabel": "Schemes found by intent match:",
+  "@searchResultsLabel": {},
+
+  "matchPercent": "{pct}% Match",
+  "@matchPercent": {
+    "placeholders": { "pct": { "type": "int" } }
+  },
+
+  "schemeDetailTitle": "Scheme Details",
+  "@schemeDetailTitle": {},
+
+  "benefitLabel": "Benefit",
+  "@benefitLabel": {},
+
+  "ministryLabel": "Ministry",
+  "@ministryLabel": {},
+
+  "eligibilityLabel": "Eligibility",
+  "@eligibilityLabel": {},
+
+  "documentsLabel": "Documents Required",
+  "@documentsLabel": {},
+
+  "applyNow": "Apply Now →",
+  "@applyNow": {},
+
+  "deadlineLabel": "Deadline",
+  "@deadlineLabel": {},
+
+  "rollingLabel": "Rolling / Always open",
+  "@rollingLabel": {},
+
+  "eligibleLabel": "✅ You appear eligible",
+  "@eligibleLabel": {},
+
+  "notEligibleLabel": "❌ You may not be eligible",
+  "@notEligibleLabel": {},
+
+  "profileTitle": "My Profile",
+  "@profileTitle": {},
+
+  "profileState": "State",
+  "@profileState": {},
+
+  "profileGender": "Gender",
+  "@profileGender": {},
+
+  "profileCategory": "Category",
+  "@profileCategory": {},
+
+  "profileAge": "Age",
+  "@profileAge": {},
+
+  "profileAgeYears": "{age} years",
+  "@profileAgeYears": {
+    "placeholders": { "age": { "type": "int" } }
+  },
+
+  "profileIncome": "Income",
+  "@profileIncome": {},
+
+  "profileOccupation": "Occupation",
+  "@profileOccupation": {},
+
+  "btnEditProfile": "Edit Profile",
+  "@btnEditProfile": {},
+
+  "btnSave": "Save Changes",
+  "@btnSave": {},
+
+  "btnDeleteProfile": "Delete Profile",
+  "@btnDeleteProfile": {},
+
+  "deleteConfirmTitle": "Delete Profile?",
+  "@deleteConfirmTitle": {},
+
+  "deleteConfirmMsg": "You will need to fill it in again to see matched schemes.",
+  "@deleteConfirmMsg": {},
+
+  "btnCancel": "Cancel",
+  "@btnCancel": {},
+
+  "btnDelete": "Delete",
+  "@btnDelete": {},
+
+  "profileSavedToast": "Profile saved!",
+  "@profileSavedToast": {},
+
+  "chatTitle": "AI Scheme Assistant",
+  "@chatTitle": {},
+
+  "chatSubtitle": "Ask about welfare eligibility & rules",
+  "@chatSubtitle": {},
+
+  "chatPlaceholder": "Type a question…",
+  "@chatPlaceholder": {},
+
+  "chatSafety": "Safe Chat: We never ask for Aadhaar or bank details.",
+  "@chatSafety": {},
+
+  "chatRelatedSchemes": "Related schemes (tap to view details):",
+  "@chatRelatedSchemes": {},
+
+  "chatSuggest1": "Am I eligible for PM-KISAN?",
+  "@chatSuggest1": {},
+
+  "chatSuggest2": "Are there scholarships for students?",
+  "@chatSuggest2": {},
+
+  "chatSuggest3": "Housing support for daily wage workers?",
+  "@chatSuggest3": {},
+
+  "chatSuggest4": "SSY requirements for girls?",
+  "@chatSuggest4": {},
+
+  "errorGeneric": "Something went wrong. Please try again.",
+  "@errorGeneric": {},
+
+  "errorNoConnection": "Could not connect to server. Check your connection.",
+  "@errorNoConnection": {},
+
+  "btnRetry": "Retry",
+  "@btnRetry": {},
+
+  "navHome": "Home",
+  "@navHome": {},
+
+  "navSchemes": "Schemes",
+  "@navSchemes": {},
+
+  "navSearch": "Search",
+  "@navSearch": {},
+
+  "navProfile": "Profile",
+  "@navProfile": {}
+}
