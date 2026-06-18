@@ -115,6 +115,7 @@ export const DOC_LABELS = {
 // ---------------------------------------------------------------------------
 export const NAV_ITEMS = [
   { name: "Matched Schemes", shortName: "Schemes",    path: "/schemes",  iconName: "Landmark" },
+  { name: "AI Search",       shortName: "AI Search",  path: "/search",   iconName: "Brain" },
   { name: "Tracker",         shortName: "Tracker",     path: "/tracker",  iconName: "ClipboardList" },
   { name: "Nearby Centers",  shortName: "Nearby",      path: "/nearby",   iconName: "MapPin" },
   { name: "My Profile",      shortName: "Profile",     path: "/profile",  iconName: "User" },

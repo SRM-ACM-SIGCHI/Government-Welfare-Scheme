@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import * as Icons from "lucide-react";
 import BottomNav from "./Bottomnav";
+import ChatBot from "./ChatBot";
 import { NAV_ITEMS, API_URL } from "../lib/constants";
 
 export default function AppLayout({ children, activeTab }) {
@@ -145,6 +146,7 @@ export default function AppLayout({ children, activeTab }) {
           <BottomNav />
         </main>
       </div>
+      <ChatBot language={lang} />
     </div>
   );
 }
